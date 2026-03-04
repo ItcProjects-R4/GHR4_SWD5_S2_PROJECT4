@@ -48,7 +48,20 @@ internal class Program
                     break;
                  
                 case "3":
-                    //implement update logic here
+                    Console.Write("Enter ID of employee to update: ");
+                    int uId = int.Parse(Console.ReadLine());
+                    Console.Write("Enter new Name: ");
+                    string uName = Console.ReadLine();
+                    Console.Write("Enter new Description: ");
+                    string uDesc = Console.ReadLine();
+                    Console.Write("Enter new Salary: ");
+                    int uSalary = int.Parse(Console.ReadLine());
+                    Console.Write("Enter new Job Type (0:SE,1:PM,2:Des,3:DS): ");
+                    int uType = int.Parse(Console.ReadLine());
+
+                    manager.UpdateEmployee(uId, uName, uDesc, (JobType)uType, uSalary);
+                    Console.WriteLine("Employee updated successfully");
+                    
                     break;
 
                 case "4":
