@@ -8,18 +8,9 @@ namespace EmployeeManagementSystem
 {
     public enum JobType
     {
-        Manager = 1,
-        Developer,
-        Accountant,
-        HR,
-        Tester,
+        SoftwareEngineer,
+        ProductManager,
         Designer,
-        Sales,
-        Marketing,
-        Support,
-        Security,
-        DataAnalyst,
-        ProjectManager
-
+        DataScientist
     }
 }
