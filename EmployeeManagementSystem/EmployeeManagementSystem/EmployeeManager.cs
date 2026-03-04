@@ -22,7 +22,11 @@ namespace EmployeeManagementSystem
 
         public void ViewAllEmployees()
         {
+            Console.WriteLine("Employees list ");
 
+            foreach (var emp in Employees) {
+                Console.WriteLine(emp);
+            }
         }
         public void UpdateEmployee(int id, string name, string desc, JobType type, int salary)
         {
