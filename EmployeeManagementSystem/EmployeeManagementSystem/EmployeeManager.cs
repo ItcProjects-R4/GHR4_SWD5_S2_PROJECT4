@@ -17,37 +17,27 @@ namespace EmployeeManagementSystem
 
         public void AddEmployee(Employee emp)
         {
-<<<<<<< HEAD
-            Employees.Add(emp);
-
-            Console.WriteLine("Employee added successfully");
-=======
                Employees.Add(emp);
         }
         public void UpdateEmployee(int id, string name, string desc, JobType type, int salary)
         {
-            //implement
->>>>>>> 7ad65a4682c0733fa782a8609ef21a063fca0356
+            var emp = Employees.FirstOrDefault(e => e.Id == id);
+            if (emp != null)
+            {
+                emp.Name = name;
+                emp.Description = desc;
+                emp.JobType = type;
+                emp.Salary = salary;
+                Console.WriteLine("Employee Updated Successfully .");
+            }
+            else
+            {
+                Console.WriteLine("Employee Not Found.");
+            }
         }
 
         public List<Employee> SearchBy(string searchBy, string value)
         {
-<<<<<<< HEAD
-            Console.WriteLine(" Employees List");
-
-            if (employees.Count == 0)
-            {
-                Console.WriteLine("No employees found ");
-                return;
-            }
-
-            foreach (var emp in employees)
-            {
-                Console.WriteLine(emp);
-            }
-
-            Console.WriteLine("---------------------------------");
-=======
             return searchBy.ToLower() switch
             {
                 "id" => Employees.Where(e => e.Id.ToString() == value).ToList(),
@@ -55,12 +45,11 @@ namespace EmployeeManagementSystem
                 "salary" => Employees.Where(e => e.Salary.ToString() == value).ToList(),
                 _ => new List<Employee>()
             };
->>>>>>> 7ad65a4682c0733fa782a8609ef21a063fca0356
         }
 
         public List<Employee> FilterByTitle(JobType title)
         {
-            //implement
+            return Employees.Where(e => e.JobType == title).ToList();
         }
 
         public List<Employee> GetSortedList(string sortBy)
