@@ -19,6 +19,11 @@ namespace EmployeeManagementSystem
         {
                Employees.Add(emp);
         }
+
+        public void ViewAllEmployees()
+        {
+
+        }
         public void UpdateEmployee(int id, string name, string desc, JobType type, int salary)
         {
             var emp = Employees.FirstOrDefault(e => e.Id == id);

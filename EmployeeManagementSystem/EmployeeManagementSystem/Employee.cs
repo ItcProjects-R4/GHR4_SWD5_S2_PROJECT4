@@ -13,6 +13,7 @@ namespace EmployeeManagementSystem
         public string Description { get; set; }
         public decimal Salary { get; set; }
         public JobType JobType { get; set; }
+
         public override string ToString()
         {
             return $"Id: {Id}\nName: {Name}\nSalary: {Salary}\nJob type: {JobType}\nDescription: {Description}";
