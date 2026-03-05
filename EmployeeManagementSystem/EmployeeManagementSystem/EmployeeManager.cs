@@ -17,13 +17,13 @@ namespace EmployeeManagementSystem
 
         public void AddEmployee(Employee emp)
         {
-               Employees.Add(emp);
+            Employees.Add(emp);
         }
 
-        //public List<Employee> GetAllEmployees()
-        //{
-        //    //
-        //}
+        public List<Employee> GetAllEmployees()
+        {
+            return Employees.ToList();
+        }
         public void UpdateEmployee(int id, string name, string desc, JobType type, int salary)
         {
             var emp = Employees.FirstOrDefault(e => e.Id == id);
@@ -33,7 +33,7 @@ namespace EmployeeManagementSystem
                 emp.Description = desc;
                 emp.JobType = type;
                 emp.Salary = salary;
-                
+
             }
             else
             {
@@ -68,16 +68,14 @@ namespace EmployeeManagementSystem
 
         }
 
-        //public int CountEmployees()
-        //{
-        //    //
+        public int CountEmployees()
+        {
+            return Employees.Count;
+        }
 
-        //}
-
-        //public void Clear()
-        //{
-        //    //
-
-        //}
+        public void Clear()
+        {
+            Employees.Clear();
+        }
     }
 }

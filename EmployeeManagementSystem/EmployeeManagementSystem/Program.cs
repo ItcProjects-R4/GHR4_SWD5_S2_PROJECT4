@@ -43,8 +43,13 @@ internal class Program
                     break;
 
                 case "2":
-                   //
-                 
+                    List<Employee> employees = manager.GetAllEmployees();
+                    if (!employees.Any())
+                        Console.WriteLine("No employees found.");
+
+                    employees.ForEach(e => Console.WriteLine(e + "\n-------------------\n"));
+                    break;
+
                 case "3":
                     Console.Write("Enter ID of employee to update: ");
                     int uId = int.Parse(Console.ReadLine());
@@ -59,7 +64,7 @@ internal class Program
 
                     manager.UpdateEmployee(uId, uName, uDesc, (JobType)uType, uSalary);
                     Console.WriteLine("Employee updated successfully");
-                    
+
                     break;
 
                 case "4":
@@ -109,10 +114,13 @@ internal class Program
                     break;
 
                 case "7":
-                    //
+                    Console.WriteLine("Total number of employees is: " + manager.CountEmployees());
+                    break;
 
                 case "8":
-                    //
+                    manager.Clear();
+                    Console.WriteLine("Employees cleared successfully.");
+                    break;
 
                 case "9":
                     running = false;
