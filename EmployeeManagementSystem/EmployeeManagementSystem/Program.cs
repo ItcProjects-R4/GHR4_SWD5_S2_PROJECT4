@@ -59,8 +59,23 @@ internal class Program
                     string uDesc = Console.ReadLine();
                     Console.Write("Enter new Salary: ");
                     int uSalary = int.Parse(Console.ReadLine());
-                    Console.Write("Enter new Job Type (0:SE,1:PM,2:Des,3:DS): ");
-                    int uType = int.Parse(Console.ReadLine());
+
+                    int uType;
+
+                    while (true)
+                    {
+                        Console.Write("Enter new Job Type (0:SE,1:PM,2:Des,3:DS): ");
+                        uType = int.Parse(Console.ReadLine());
+
+                        if (Enum.IsDefined(typeof(JobType), uType))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Job Type, please enter again.");
+                        }
+                    }
 
                     manager.UpdateEmployee(uId, uName, uDesc, (JobType)uType, uSalary);
                     Console.WriteLine("Employee updated successfully");
