@@ -1,4 +1,4 @@
-﻿using LMSPhase01.Enums;
+﻿using LMSPhase01.Constants;
 using LMSPhase01.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,8 +23,10 @@ namespace LMSPhase01.Configurations
                     LastName = "Karim",
                     Email = "kk@gmail.com",
                     PhoneNumber = "123456789",
-                    Role = UserRole.Instructor,
+                    Role = Roles.Instructor,
                 }
+
+
             );
         }
         

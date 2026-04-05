@@ -1,5 +1,4 @@
-﻿using LMSPhase01.Enums;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,8 +16,7 @@ namespace LMSPhase01.Models
         [MaxLength(50)]
         public string LastName { get; set; }
         public string? AvatarUrl { get; set; }
-
-        public UserRole Role { get; set; }
+        public string Role { get; set; }
 
         public ICollection<Course> Courses { get; set; }
         public ICollection<Notification> Notifications { get; set; }
