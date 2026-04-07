@@ -1,20 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace LMSPhase01.Models
 {
     public class Lesson
     {
+        [Key]
         public int Id { get; set; }
 
+        [Required]
+        [ForeignKey("Module")]
         public int ModuleId { get; set; }
-        public string Title { get; set; }
-        public string VideoUrl { get; set; }
+
+        [MaxLength(100)]
+        public string Title { get; set; } 
+
+        [MaxLength(500)]
+        [Url]
+        public string? VideoUrl { get; set; }
+
+        [Required]
         public int OrderIndex { get; set; }
 
-        // Navigation
+        // Navigations
+        [ForeignKey(nameof(ModuleId))]
         public Module Module { get; set; }
-        public List<Progress> Progresses { get; set; } = new List<Progress>();
+
+        public List<Progress> Progresses { get; set; }
     }
 }
