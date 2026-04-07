@@ -18,11 +18,11 @@ namespace LMSPhase01.Models
         public string? AvatarUrl { get; set; }
         public string Role { get; set; }
 
-        public ICollection<Course> Courses { get; set; }
-        public ICollection<Notification> Notifications { get; set; }
-        public ICollection<Submission> Submissions { get; set; }
-        public ICollection<Enrollment> Enrollments { get; set; }
-        public ICollection<Progress> Progresses { get; set; }
+        public List<Course> Courses { get; set; }
+        public List<Notification> Notifications { get; set; }
+        public List<Submission> Submissions { get; set; }
+        public List<Enrollment> Enrollments { get; set; }
+        public List<Progress> Progresses { get; set; }
 
 
 
