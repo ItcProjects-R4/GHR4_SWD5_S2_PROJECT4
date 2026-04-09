@@ -11,11 +11,11 @@ namespace LMSPhase01.Models
     public int Id { get; set; }    // Primary Key
 
     // Foreign Keys
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     public int CourseId { get; set; }
 
     public DateTime EnrolledAt { get; set; }
-    public EnrollmentStatus Status { get; set; }
+    public EnrollmentStatus Status { get; set; } 
 
     // Navigation Properties
     public ApplicationUser User { get; set; }

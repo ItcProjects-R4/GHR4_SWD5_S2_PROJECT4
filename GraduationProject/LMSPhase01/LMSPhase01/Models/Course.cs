@@ -13,7 +13,7 @@ namespace LMSPhase01.Models
         public string Description { get; set; }
 
         // Navigation properties
-        public int InstructorId { get; set; }
+        public string InstructorId { get; set; }
         public ApplicationUser Instructor { get; set; } = null!;
         
         public List<Module> Modules { get; set; }

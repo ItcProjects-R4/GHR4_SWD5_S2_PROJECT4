@@ -15,7 +15,7 @@ namespace LMSPhase01.Models
         public string? Comment { get; set; }
         public int? Grade { get; set; }
         public SubmissionStatus Status { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int AssignmentId { get; set; }
         
         [ForeignKey("UserId")]
