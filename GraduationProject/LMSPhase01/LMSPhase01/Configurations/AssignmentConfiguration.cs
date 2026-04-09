@@ -22,7 +22,7 @@ namespace GHR4_SWD5_S2_PROJECT4.GraduationProject.LMSPhase01.LMSPhase01.Configur
                 .IsRequired()
                 .HasMaxLength(500);
 
-            builder.Property(a => a.CreatedAt)
+            builder.Property(a => a.DueDate)
                 .IsRequired();
 
             builder.Property(a => a.MaxScore)

@@ -8,10 +8,9 @@ namespace LMSPhase01.Models
     public class Assignment
     {
         public int Id { get; set; }
-        public string FileUrl { get; set; }
         public string Title { get; set; }
-        public string? Description { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public string FileUrl { get; set; }
+        public DateTime DueDate { get; set; }
         public int MaxScore { get; set; }
         public int ModuleId { get; set; }
 
