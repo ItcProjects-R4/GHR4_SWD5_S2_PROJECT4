@@ -7,9 +7,9 @@ using System.Text;
 
 namespace GHR4_SWD5_S2_PROJECT4.GraduationProject.LMSPhase01.LMSPhase01.Configurations
 {
-    public class AssignmentsConfigurations : IEntityTypeConfiguration<Assignments>
+    public class AssignmentConfiguration : IEntityTypeConfiguration<Assignment>
     {
-        public void Configure(EntityTypeBuilder<Assignments> builder)
+        public void Configure(EntityTypeBuilder<Assignment> builder)
         {
             builder.HasKey(a => a.Id);
 
@@ -29,8 +29,8 @@ namespace GHR4_SWD5_S2_PROJECT4.GraduationProject.LMSPhase01.LMSPhase01.Configur
                 .IsRequired();
 
             builder.HasOne(a => a.Module)
-                .WithOne(m => m.Assignments)
-                .HasForeignKey(a => a.ModuleId)
+                .WithOne(m => m.Assignment)
+                .HasForeignKey<Assignment>(a => a.ModuleId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

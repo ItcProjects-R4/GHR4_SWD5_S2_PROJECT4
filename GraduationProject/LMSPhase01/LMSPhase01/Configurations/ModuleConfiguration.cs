@@ -36,12 +36,6 @@ namespace LMSPhase01.Configurations
                 .WithOne(l => l.Module)
                 .HasForeignKey(l => l.ModuleId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            // Module → Assignment (one-to-one)
-            //builder.HasOne(m => m.Assignment)
-            //    .WithOne(a => a.Module)
-            //    .HasForeignKey<Assignment>(a => a.ModuleId)
-            //    .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

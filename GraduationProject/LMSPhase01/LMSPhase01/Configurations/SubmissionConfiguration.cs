@@ -6,9 +6,9 @@ using System.Text;
 
 namespace GHR4_SWD5_S2_PROJECT4.GraduationProject.LMSPhase01.LMSPhase01.Configurations
 {
-    public class SubmissionsConfigurations : IEntityTypeConfiguration<Submissions>
+    public class SubmissionConfiguration : IEntityTypeConfiguration<Submission>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Submissions> builder)
+        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Submission> builder)
         {
             builder.HasKey(s => s.Id);
 
@@ -22,7 +22,7 @@ namespace GHR4_SWD5_S2_PROJECT4.GraduationProject.LMSPhase01.LMSPhase01.Configur
 
             builder.HasOne(s => s.User)
                 .WithMany(u => u.Submissions)
-                .HasForeignKey(s => s.StudentId)
+                .HasForeignKey(s => s.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

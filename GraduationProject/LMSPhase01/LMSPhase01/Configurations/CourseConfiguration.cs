@@ -39,12 +39,6 @@ namespace LMSPhase01.Configurations
                 .WithOne(m => m.Course)
                 .HasForeignKey(m => m.CourseId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            // Course → Enrollments
-            //builder.HasMany(c => c.Enrollments)
-            //    .WithOne(e => e.Course)
-            //    .HasForeignKey(e => e.CourseId)
-            //    .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
