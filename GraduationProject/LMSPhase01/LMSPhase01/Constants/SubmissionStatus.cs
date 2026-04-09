@@ -6,8 +6,7 @@ namespace LMSPhase01.Constants
 {
     public enum SubmissionStatus
     {
-        NotSubmitted,
-        Submitted,
+        Pending,
         Graded
     }
 }
