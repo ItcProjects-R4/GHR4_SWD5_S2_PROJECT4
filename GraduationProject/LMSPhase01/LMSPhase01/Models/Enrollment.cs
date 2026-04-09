@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LMSPhase01.Constants;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,7 +15,7 @@ namespace LMSPhase01.Models
     public int CourseId { get; set; }
 
     public DateTime EnrolledAt { get; set; }
-    public string Status { get; set; }
+    public EnrollmentStatus Status { get; set; }
 
     // Navigation Properties
     public ApplicationUser User { get; set; }
