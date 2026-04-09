@@ -14,7 +14,7 @@ namespace LMSPhase01.Models
     public int CourseId { get; set; }
 
     public DateTime EnrolledAt { get; set; }
-    public string Status { get; set; }
+    public enum Status {acitve, completed}
 
     // Navigation Properties
     public ApplicationUser User { get; set; }
