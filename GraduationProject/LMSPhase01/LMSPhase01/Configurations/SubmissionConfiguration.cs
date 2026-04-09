@@ -12,6 +12,10 @@ namespace GHR4_SWD5_S2_PROJECT4.GraduationProject.LMSPhase01.LMSPhase01.Configur
         {
             builder.HasKey(s => s.Id);
 
+            builder.HasIndex(p => new { p.UserId, p.AssignmentId })
+                  .IsUnique();
+
+
             builder.Property(s => s.SubmittedAt)
                 .IsRequired();
 

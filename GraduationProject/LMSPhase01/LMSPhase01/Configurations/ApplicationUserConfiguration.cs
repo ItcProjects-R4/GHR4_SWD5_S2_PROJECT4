@@ -13,7 +13,7 @@ namespace LMSPhase01.Configurations
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-          
+
             builder.HasData(
                 new ApplicationUser
                 {
@@ -24,10 +24,35 @@ namespace LMSPhase01.Configurations
                     Email = "kk@gmail.com",
                     PhoneNumber = "123456789",
                     Role = Roles.Instructor,
-                }
+                });
+
+            builder.HasMany(u => u.Courses)
+                .WithOne(c => c.Instructor)
+                .HasForeignKey(c => c.InstructorId);
 
 
-            );
+
+            builder.HasMany(u => u.Enrollments)
+                .WithOne(e => e.User)
+                .HasForeignKey(e => e.UserId);
+
+
+            builder.HasMany(u => u.Progresses)
+                .WithOne(p => p.User)
+                .HasForeignKey(p => p.UserId);
+
+
+
+            builder.HasMany(u => u.Submissions)
+                .WithOne(s => s.User)
+                .HasForeignKey(s => s.UserId);
+
+
+
+            builder.HasMany(u => u.Notifications)
+                .WithOne(n => n.User)
+                .HasForeignKey(n => n.UserId);
+               
         }
         
     }
