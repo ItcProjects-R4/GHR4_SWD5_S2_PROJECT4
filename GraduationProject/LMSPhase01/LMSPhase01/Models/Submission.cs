@@ -11,7 +11,6 @@ namespace LMSPhase01.Models
         public int Id { get; set; }
         public DateTime SubmittedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public DateTime? GradedAt { get; set; }
         public string? Link { get; set; }
         public string? Comment { get; set; }
         public int? Grade { get; set; }
