@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LMSPhase01.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initialcreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -370,8 +370,7 @@ namespace LMSPhase01.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     LessonId = table.Column<int>(type: "int", nullable: false),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false),
-                    CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LessonId1 = table.Column<int>(type: "int", nullable: true)
+                    CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -388,11 +387,6 @@ namespace LMSPhase01.Migrations
                         principalTable: "Lessons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Progresses_Lessons_LessonId1",
-                        column: x => x.LessonId1,
-                        principalTable: "Lessons",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -421,7 +415,7 @@ namespace LMSPhase01.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "AvatarUrl", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Role", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "1", 0, null, "07f7dec7-9b6d-4f65-a556-df4d29855a00", "kk@gmail.com", false, "Karima", "Karim", false, null, null, null, null, "123456789", false, "Instructor", "4255aa49-e099-475d-8dd3-7e713091bea8", false, "karimakarim" });
+                values: new object[] { "1", 0, null, "118c7642-38d6-41e4-a5fe-f598ab25c3d5", "kk@gmail.com", false, "Karima", "Karim", false, null, null, null, null, "123456789", false, "Instructor", "785c1ca3-399d-47ee-880f-54a3ab7b1292", false, "karimakarim" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -516,11 +510,6 @@ namespace LMSPhase01.Migrations
                 name: "IX_Progresses_LessonId",
                 table: "Progresses",
                 column: "LessonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Progresses_LessonId1",
-                table: "Progresses",
-                column: "LessonId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Progresses_UserId_LessonId",

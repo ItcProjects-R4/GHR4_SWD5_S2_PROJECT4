@@ -12,21 +12,17 @@ namespace LMSPhase01.Models
         public int Id { get; set; }
       
         [Required]
-        [ForeignKey("User")]
         public string UserId { get; set; }
 
         [Required]
-        [ForeignKey("Lesson")]
         public int LessonId { get; set; }
 
         public bool IsCompleted { get; set; }
         public DateTime? CompletedAt { get; set; }
 
         // Navigations
-        [ForeignKey(nameof(UserId))]
+        
         public ApplicationUser User { get; set; }
-
-        [ForeignKey(nameof(LessonId))]
         public Lesson Lesson { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GHR4_SWD5_S2_PROJECT4.GraduationProject.LMSPhase01.LMSPhase01.Configurations
+namespace LMSPhase01.Configurations
 {
     public class ProgressConfiguration : IEntityTypeConfiguration<Progress>
     {
@@ -15,16 +15,6 @@ namespace GHR4_SWD5_S2_PROJECT4.GraduationProject.LMSPhase01.LMSPhase01.Configur
                    .IsUnique();
 
 
-            builder.HasOne(p => p.User)
-                   .WithMany()
-                   .HasForeignKey(p => p.UserId);
-
-
-
-            builder.HasOne(p => p.Lesson)
-                   .WithMany()
-                   .HasForeignKey(p => p.LessonId);
-                   
         }
     }
 }

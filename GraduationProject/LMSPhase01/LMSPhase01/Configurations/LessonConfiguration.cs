@@ -14,16 +14,6 @@ namespace GHR4_SWD5_S2_PROJECT4.GraduationProject.LMSPhase01.LMSPhase01.Configur
             builder.HasIndex(l => new { l.ModuleId, l.OrderIndex })
                    .IsUnique();
 
-
-            builder.HasOne(l => l.Module)
-                   .WithMany(m => m.Lessons)
-                   .HasForeignKey(l => l.ModuleId);
-
-
-
-            builder.HasMany(l => l.Progresses)
-                   .WithOne(p => p.Lesson)
-                   .HasForeignKey(p => p.LessonId);
                  
         }
     }

@@ -108,7 +108,7 @@ namespace LMSPhase01.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "07f7dec7-9b6d-4f65-a556-df4d29855a00",
+                            ConcurrencyStamp = "118c7642-38d6-41e4-a5fe-f598ab25c3d5",
                             Email = "kk@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Karima",
@@ -117,7 +117,7 @@ namespace LMSPhase01.Migrations
                             PhoneNumber = "123456789",
                             PhoneNumberConfirmed = false,
                             Role = "Instructor",
-                            SecurityStamp = "4255aa49-e099-475d-8dd3-7e713091bea8",
+                            SecurityStamp = "785c1ca3-399d-47ee-880f-54a3ab7b1292",
                             TwoFactorEnabled = false,
                             UserName = "karimakarim"
                         });
@@ -374,9 +374,6 @@ namespace LMSPhase01.Migrations
                     b.Property<int>("LessonId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LessonId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -384,8 +381,6 @@ namespace LMSPhase01.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("LessonId");
-
-                    b.HasIndex("LessonId1");
 
                     b.HasIndex("UserId", "LessonId")
                         .IsUnique();
@@ -690,14 +685,10 @@ namespace LMSPhase01.Migrations
             modelBuilder.Entity("LMSPhase01.Models.Progress", b =>
                 {
                     b.HasOne("LMSPhase01.Models.Lesson", "Lesson")
-                        .WithMany()
+                        .WithMany("Progresses")
                         .HasForeignKey("LessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("LMSPhase01.Models.Lesson", null)
-                        .WithMany("Progresses")
-                        .HasForeignKey("LessonId1");
 
                     b.HasOne("LMSPhase01.Models.ApplicationUser", "User")
                         .WithMany("Progresses")

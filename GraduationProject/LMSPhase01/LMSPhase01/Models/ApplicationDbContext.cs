@@ -10,7 +10,7 @@ namespace LMSPhase01.Models
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=.; Database=LMS; IntegratedSecurity=True; TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=.; Database=LMS; Trusted_Connection=True; TrustServerCertificate=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
