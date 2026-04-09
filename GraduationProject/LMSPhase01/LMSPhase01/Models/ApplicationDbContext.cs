@@ -23,10 +23,10 @@ namespace LMSPhase01.Models
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Module> Modules { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
-        public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<Assignments> Assignments { get; set; }
         public DbSet<Progress> Progresses { get; set; }
-        public DbSet<Submission> Submissions { get; set; }
-        public DbSet<SubmissionFile> SubmissionFiles { get; set; }
+        public DbSet<Submissions> Submissions { get; set; }
+        public DbSet<SubmissionFiles> SubmissionFiles { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
