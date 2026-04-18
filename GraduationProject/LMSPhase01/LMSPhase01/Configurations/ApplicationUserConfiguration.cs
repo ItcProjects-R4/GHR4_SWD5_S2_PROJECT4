@@ -24,6 +24,8 @@ namespace LMSPhase01.Configurations
                     Email = "kk@gmail.com",
                     PhoneNumber = "123456789",
                     Role = Roles.Instructor,
+                    ConcurrencyStamp = "d3b07384-d9a3-4c5f-bb9a-123456789abc",
+                    SecurityStamp = "a8f5f167-f44f-4b2c-9f6e-abcdef123456"
                 });
 
             builder.HasMany(u => u.Courses)

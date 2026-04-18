@@ -108,7 +108,7 @@ namespace LMSPhase01.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "118c7642-38d6-41e4-a5fe-f598ab25c3d5",
+                            ConcurrencyStamp = "d3b07384-d9a3-4c5f-bb9a-123456789abc",
                             Email = "kk@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Karima",
@@ -117,7 +117,7 @@ namespace LMSPhase01.Migrations
                             PhoneNumber = "123456789",
                             PhoneNumberConfirmed = false,
                             Role = "Instructor",
-                            SecurityStamp = "785c1ca3-399d-47ee-880f-54a3ab7b1292",
+                            SecurityStamp = "a8f5f167-f44f-4b2c-9f6e-abcdef123456",
                             TwoFactorEnabled = false,
                             UserName = "karimakarim"
                         });

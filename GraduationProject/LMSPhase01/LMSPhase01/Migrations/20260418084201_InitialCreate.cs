@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LMSPhase01.Migrations
 {
     /// <inheritdoc />
-    public partial class initialcreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -415,7 +415,7 @@ namespace LMSPhase01.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "AvatarUrl", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Role", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "1", 0, null, "118c7642-38d6-41e4-a5fe-f598ab25c3d5", "kk@gmail.com", false, "Karima", "Karim", false, null, null, null, null, "123456789", false, "Instructor", "785c1ca3-399d-47ee-880f-54a3ab7b1292", false, "karimakarim" });
+                values: new object[] { "1", 0, null, "d3b07384-d9a3-4c5f-bb9a-123456789abc", "kk@gmail.com", false, "Karima", "Karim", false, null, null, null, null, "123456789", false, "Instructor", "a8f5f167-f44f-4b2c-9f6e-abcdef123456", false, "karimakarim" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
