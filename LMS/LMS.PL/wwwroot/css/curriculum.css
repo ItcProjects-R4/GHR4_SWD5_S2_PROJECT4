@@ -1,0 +1,62 @@
+/* Curriculum & Content List Styles */
+.curriculum-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
+}
+
+.curriculum-item:last-child {
+    border-bottom: none;
+}
+
+.curriculum-item .content-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-primary);
+}
+
+.curriculum-item .content-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-muted);
+}
+
+.course-nav-tabs .nav-link {
+    font-weight: 600;
+    color: var(--text-muted);
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 1rem 1.5rem;
+}
+
+.course-nav-tabs .nav-link.active {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+    background: none;
+}
+
+.lecture-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    transition: var(--transition-base);
+    cursor: pointer;
+}
+
+.lecture-item:hover {
+    background-color: var(--bg-color);
+}
+
+.lecture-item.active {
+    background-color: var(--accent-light);
+    color: var(--accent-color);
+    font-weight: 600;
+}

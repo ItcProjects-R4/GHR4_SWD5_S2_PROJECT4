@@ -1,0 +1,123 @@
+/* sidebar.css - Dashboard Sidebar Styles */
+
+.sidebar {
+    width: 260px;
+    background-color: var(--surface-color);
+    border-right: none;
+    box-shadow: var(--shadow-sm);
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition-base);
+    min-height: calc(100vh - 66px); /* 66px is approx navbar height */
+    position: sticky;
+    top: 66px;
+    align-self: flex-start;
+    height: calc(100vh - 66px);
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    align-items: center;
+    border-bottom: none;
+}
+
+.sidebar-logo {
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--text-primary);
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.sidebar-menu {
+    flex: 1;
+    padding: 1rem 0.75rem;
+    list-style: none;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-item {
+    margin-bottom: 2px;
+}
+
+.menu-link {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 0.875rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition-base);
+    font-weight: 500;
+    font-size: 14px;
+    border-radius: var(--radius-base);
+}
+
+.menu-link i {
+    width: 20px;
+    margin-right: 0.625rem;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.menu-link:hover {
+    color: var(--text-primary);
+    background-color: var(--surface-dim);
+}
+
+.menu-link.active {
+    color: var(--accent-color);
+    background-color: var(--accent-light);
+    font-weight: 600;
+}
+
+.menu-link.active i {
+    opacity: 1;
+}
+
+.sidebar-footer {
+    padding: 1rem 1.5rem;
+    border-top: none;
+}
+
+.user-info-brief {
+    display: flex;
+    align-items: center;
+}
+
+.user-avatar-sm {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-right: 0.625rem;
+    background-color: var(--surface-dim);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+/* Mobile Sidebar Toggle */
+@media (max-width: 991.98px) {
+    .sidebar {
+        position: fixed;
+        left: -260px;
+        z-index: 1050;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .main-content {
+        padding: 1rem;
+    }
+}

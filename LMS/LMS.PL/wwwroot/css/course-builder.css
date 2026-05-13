@@ -1,0 +1,87 @@
+/* Course Builder & Editor Styles */
+.tab-step { display: none; }
+.tab-step.active { display: block; }
+
+.step-nav {
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+}
+
+.step-nav .step-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    border: none;
+    background: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.step-nav .step-btn.active {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+}
+
+.builder-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-base);
+    margin-bottom: 0.5rem;
+}
+
+.content-type-badge {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+}
+
+.badge-video { background: #ede9fe; color: #6d28d9; }
+.badge-link  { background: #e0f2fe; color: #0369a1; }
+.badge-text  { background: #fef9c3; color: #92400e; }
+.badge-assignment { background: #dcfce7; color: #15803d; }
+
+.thumbnail-zone {
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: .2s;
+    background: var(--bg-color);
+}
+
+.thumbnail-zone:hover {
+    border-color: var(--accent-color);
+    background: var(--accent-light);
+}
+
+.content-type-card {
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: .2s;
+    text-align: center;
+}
+
+.content-type-card:hover,
+.content-type-card.selected {
+    border-color: var(--accent-color);
+    background: var(--accent-light);
+}
+
+.module-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}

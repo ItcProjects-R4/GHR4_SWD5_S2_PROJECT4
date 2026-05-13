@@ -1,0 +1,42 @@
+/* Course Detail Page Styles */
+.course-hero-dashboard {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    color: #fff;
+    padding: 2.5rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+}
+
+.star-rating { 
+    color: #f59e0b; 
+}
+
+.enroll-card {
+    position: relative;
+}
+
+.content-preview-item,
+.lesson-preview-item {
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.content-preview-item:last-child,
+.lesson-preview-item:last-child { 
+    border-bottom: none; 
+}
+
+.content-preview-item .duration,
+.lesson-preview-item .duration {
+    margin-left: auto;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.what-you-learn li { 
+    padding: 0.35rem 0; 
+}

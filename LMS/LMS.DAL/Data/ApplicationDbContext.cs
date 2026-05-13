@@ -1,0 +1,29 @@
+﻿using LMS.Domain.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+
+
+namespace LMS.DAL.Data
+{
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+
+        }
+
+        public DbSet<Course> Courses { get; set; }
+
+        public DbSet<Module> Modules { get; set; }
+
+        public DbSet<Progress> Progresses { get; set; }
+
+        public DbSet<Content> Contents { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+
+
+
+
+    }
+}

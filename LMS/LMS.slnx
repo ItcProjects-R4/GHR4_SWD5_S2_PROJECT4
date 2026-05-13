@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="LMS.BLL/LMS.BLL.csproj" />
+  <Project Path="LMS.DAL/LMS.DAL.csproj" />
+  <Project Path="LMS.Domain/LMS.Domain.csproj" Id="f5566989-be06-49d3-9a2b-f2ab6b658d12" />
+  <Project Path="LMS.PL/LMS.PL.csproj" />
+</Solution>

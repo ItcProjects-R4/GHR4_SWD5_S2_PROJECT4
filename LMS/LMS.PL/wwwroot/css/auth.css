@@ -1,0 +1,14 @@
+/* Auth Pages Styles */
+.auth-wrap {
+    min-height: calc(100vh - 57px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 540px;
+    animation: fadeIn 0.4s ease-out;
+}
