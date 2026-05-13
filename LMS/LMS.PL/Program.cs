@@ -1,5 +1,14 @@
+// Import the required packages
+using CloudinaryDotNet;
+using dotenv.net;
+using LMS.BLL.Services.Implementation;
+using LMS.BLL.Services.Interfaces;
 using LMS.DAL.Data;
 using Microsoft.EntityFrameworkCore;
+
+// Set your Cloudinary credentials
+DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +20,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 
 );
+
+
+// Register Cloudinary
+Cloudinary cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"));
+cloudinary.Api.Secure = true;
+
+builder.Services.AddSingleton(cloudinary);
+
+// Register the CloudinaryService
+
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 var app = builder.Build();
 
