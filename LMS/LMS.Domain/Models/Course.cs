@@ -9,6 +9,7 @@ namespace LMS.Domain.Models
     {
         public int Id { get; set; }
         public required string Title { get; set; }
+        public string? ThumbnailPublicId { get; set; }
         public required string ThumbnailUrl { get; set; }
         public required decimal Price { get; set; }
         public required string Description { get; set; }

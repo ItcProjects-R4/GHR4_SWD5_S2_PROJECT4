@@ -15,7 +15,9 @@ namespace LMS.Domain.Models
         public int ModuleId { get; set; }
 
         [MaxLength(100)]
-        public required string Title { get; set; } 
+        public required string Title { get; set; }
+
+        public string? VideoPublicId { get; set; }
 
         [MaxLength(500)]
         [Url]

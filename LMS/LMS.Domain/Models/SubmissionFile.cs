@@ -12,7 +12,9 @@ namespace LMS.Domain.Models
         public int Id { get; set; }  
 
         [Required]
-        public int SubmissionId { get; set; }  
+        public int SubmissionId { get; set; }
+
+        public string? FilePublicId { get; set; }
 
         [Required]
         public string FileUrl { get; set; }
