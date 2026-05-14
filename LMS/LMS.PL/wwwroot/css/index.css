@@ -345,7 +345,7 @@ a:hover { color: var(--accent-hover); }
 .main-content {
     flex: 1;
     background-color: var(--bg-color);
-    padding: 2rem;
+    padding: 3rem 2.5rem !important; /* Increased top padding to 3rem */
     overflow-y: auto;
 }
 
@@ -435,12 +435,12 @@ a:hover { color: var(--accent-hover); }
 
 .sidebar-menu {
     flex: 1;
-    padding: 1rem 0.75rem;
+    padding: 2.5rem 0.75rem 1rem 0.75rem !important; /* Increased top padding to 2.5rem */
     list-style: none;
-    margin: 0;
     display: flex;
     flex-direction: column;
 }
+
 
 .menu-item {
     margin-bottom: 2px;
@@ -1662,13 +1662,6 @@ a:hover { color: var(--accent-hover); }
     background: var(--bg-color);
     color: var(--accent-color);
 }
-
-/* ── pages.css ─────────────────────────────────────────── */
-
-@import 'auth.css';
-@import 'heroes.css';
-@import 'footer.css';
-@import 'curriculum.css';
 
 /* pages.css - Page-Specific Styles (Public, Auth, Error Pages) */
 
