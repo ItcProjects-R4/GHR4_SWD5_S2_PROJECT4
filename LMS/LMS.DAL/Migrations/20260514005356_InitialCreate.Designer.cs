@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260511173503_AddSubmissionFileandNotificationTable")]
-    partial class AddSubmissionFileandNotificationTable
+    [Migration("20260514005356_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,7 +116,8 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("FileUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("MaxScore")
                         .HasColumnType("int");
@@ -126,7 +127,8 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -162,13 +164,17 @@ namespace LMS.DAL.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("VideoPublicId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("VideoUrl")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ModuleId");
+                    b.HasIndex("ModuleId", "OrderIndex")
+                        .IsUnique();
 
                     b.ToTable("Contents");
                 });
@@ -192,13 +198,18 @@ namespace LMS.DAL.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("ThumbnailPublicId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ThumbnailUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -253,13 +264,47 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("CourseId", "OrderIndex")
+                        .IsUnique();
 
                     b.ToTable("Modules");
+                });
+
+            modelBuilder.Entity("LMS.Domain.Models.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<bool>("IsRead")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("LMS.Domain.Models.Payment", b =>
@@ -284,7 +329,8 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("TransactionId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -303,6 +349,9 @@ namespace LMS.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("datetime2");
 
@@ -318,9 +367,12 @@ namespace LMS.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("ContentId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId", "ContentId")
+                        .IsUnique();
 
                     b.ToTable("Progresses");
                 });
@@ -362,7 +414,8 @@ namespace LMS.DAL.Migrations
 
                     b.HasIndex("AssignmentId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId", "AssignmentId")
+                        .IsUnique();
 
                     b.ToTable("Submission");
                 });
@@ -376,6 +429,9 @@ namespace LMS.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePublicId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("FileSize")
@@ -536,7 +592,7 @@ namespace LMS.DAL.Migrations
                     b.HasOne("LMS.Domain.Models.Module", "Module")
                         .WithOne("Assignment")
                         .HasForeignKey("LMS.Domain.Models.Assignment", "ModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Module");
@@ -547,7 +603,7 @@ namespace LMS.DAL.Migrations
                     b.HasOne("LMS.Domain.Models.Module", "Module")
                         .WithMany("Contents")
                         .HasForeignKey("ModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Module");
@@ -558,7 +614,7 @@ namespace LMS.DAL.Migrations
                     b.HasOne("LMS.Domain.Models.ApplicationUser", "Instructor")
                         .WithMany("Courses")
                         .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Instructor");
@@ -569,13 +625,13 @@ namespace LMS.DAL.Migrations
                     b.HasOne("LMS.Domain.Models.Course", "Course")
                         .WithMany("Enrollments")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("LMS.Domain.Models.ApplicationUser", "Student")
                         .WithMany("Enrollments")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -588,7 +644,7 @@ namespace LMS.DAL.Migrations
                     b.HasOne("LMS.Domain.Models.Course", "Course")
                         .WithMany("Modules")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -598,23 +654,28 @@ namespace LMS.DAL.Migrations
                 {
                     b.HasOne("LMS.Domain.Models.Enrollment", "Enrollment")
                         .WithOne("Payment")
-                        .HasForeignKey("LMS.Domain.Models.Payment", "EnrollmentId");
+                        .HasForeignKey("LMS.Domain.Models.Payment", "EnrollmentId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Enrollment");
                 });
 
             modelBuilder.Entity("LMS.Domain.Models.Progress", b =>
                 {
+                    b.HasOne("LMS.Domain.Models.ApplicationUser", null)
+                        .WithMany("Progresses")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("LMS.Domain.Models.Content", "Content")
                         .WithMany("Progresses")
                         .HasForeignKey("ContentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("LMS.Domain.Models.ApplicationUser", "Student")
-                        .WithMany("Progresses")
+                        .WithMany()
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Content");
@@ -627,13 +688,13 @@ namespace LMS.DAL.Migrations
                     b.HasOne("LMS.Domain.Models.Assignment", "Assignment")
                         .WithMany("Submissions")
                         .HasForeignKey("AssignmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("LMS.Domain.Models.ApplicationUser", "Student")
                         .WithMany("Submissions")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Assignment");
@@ -646,7 +707,7 @@ namespace LMS.DAL.Migrations
                     b.HasOne("LMS.Domain.Models.Submission", "Submission")
                         .WithMany("SubmissionFiles")
                         .HasForeignKey("SubmissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Submission");
