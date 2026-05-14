@@ -2,10 +2,6 @@
 using CloudinaryDotNet.Actions;
 using LMS.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace LMS.BLL.Services.Implementation
 {
     public class CloudinaryService : ICloudinaryService
