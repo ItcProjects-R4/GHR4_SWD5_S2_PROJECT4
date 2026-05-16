@@ -19,7 +19,12 @@ namespace LMS.DAL.Configurations
                    .WithMany(c => c.Enrollments)
                    .HasForeignKey(e => e.CourseId)
                    .OnDelete(DeleteBehavior.Restrict);
-                   
+
+           builder.HasOne(e => e.Payment)
+                   .WithOne(p => p.Enrollment)
+                   .HasForeignKey<Payment>(p => p.EnrollmentId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

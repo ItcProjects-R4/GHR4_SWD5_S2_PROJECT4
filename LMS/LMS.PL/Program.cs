@@ -4,6 +4,8 @@ using dotenv.net;
 using LMS.BLL.Services.Implementation;
 using LMS.BLL.Services.Interfaces;
 using LMS.DAL.Data;
+using LMS.DAL.Repositories.Implementation;
+using LMS.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 // Set your Cloudinary credentials
@@ -11,6 +13,15 @@ DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpClient<IPaymobService, PaymobService>();
+
+// 3. Register Repositories and Services
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IPaymobService, PaymobService>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<ICheckoutService, CheckoutService>();
+builder.Services.AddScoped<IReportingService, ReportingService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

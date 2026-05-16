@@ -20,6 +20,7 @@ namespace LMS.Domain.Models
         //public List<Notification> Notifications { get; set; }
         //public List<Submission> Submissions { get; set; }
         public List<Enrollment> Enrollments { get; set; }
+        public List<Payment> Payments { get; set; }
         public List<Progress> Progresses { get; set; }
 
         public List<Submission> Submissions { get; set; }

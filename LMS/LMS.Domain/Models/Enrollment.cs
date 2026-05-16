@@ -1,4 +1,5 @@
 ﻿using LMS.Domain.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS.Domain.Models
 {
@@ -11,12 +12,18 @@ namespace LMS.Domain.Models
         public string StudentId { get; set; }
         public int CourseId { get; set; }
         public DateTime EnrolledAt { get; set; }
-        public EnrollmentStatus Status { get; set; } 
+        public EnrollmentStatus Status { get; set; }
 
         // Navigation Properties
+        // Navigation Properties
+        [ForeignKey("StudentId")]
         public ApplicationUser Student { get; set; }
+
+        [ForeignKey("CourseId")]
         public Course Course { get; set; }
-        public Payment Payment { get; set; }
+
+        // 1-to-1 relationship back to the Payment that funded this enrollment
+        public Payment? Payment { get; set; }
 
     }
 }

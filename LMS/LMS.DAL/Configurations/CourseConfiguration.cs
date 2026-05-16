@@ -27,6 +27,7 @@ namespace LMS.DAL.Configurations
               .IsRequired();
 
             builder.Property(c => c.Price)
+                .HasPrecision(18, 2)
                 .IsRequired();
 
             // Instructor → Courses

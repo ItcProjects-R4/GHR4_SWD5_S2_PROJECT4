@@ -21,5 +21,6 @@ namespace LMS.Domain.Models
         public List<Module> Modules { get; set; }
 
         public List<Enrollment> Enrollments { get; set; }
+        public List<Payment> Payments { get; set; }
     }
 }
