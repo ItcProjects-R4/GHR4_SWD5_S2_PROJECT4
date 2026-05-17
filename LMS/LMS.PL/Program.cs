@@ -6,6 +6,7 @@ using LMS.BLL.Services.Interfaces;
 using LMS.DAL.Data;
 using LMS.DAL.Repositories.Implementation;
 using LMS.DAL.Repositories.Interfaces;
+using LMS.DAL.Seeding;
 using Microsoft.EntityFrameworkCore;
 
 // Set your Cloudinary credentials
@@ -26,7 +27,7 @@ builder.Services.AddScoped<IReportingService, ReportingService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//db context
+//DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 
@@ -65,5 +66,11 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+//Register IdentitySeeder
+
+using (var scope = app.Services.CreateScope())
+{
+    await IdentitySeeder.SeedIdentityAsync(scope.ServiceProvider);
+}
 
 app.Run();

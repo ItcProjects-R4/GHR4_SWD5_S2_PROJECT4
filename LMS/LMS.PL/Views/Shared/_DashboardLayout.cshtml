@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LMS </title>
+    <script type="importmap"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+
+    <link rel="stylesheet" href="~/css/index.css" />
+
+    <link rel="stylesheet" href="~/LMS.PL.styles.css" asp-append-version="true" />
+
+</head>
+<body>
+    <header>
+        <!-- Global Dashboard Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-public sticky-top" style="z-index: 1040;">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-light d-lg-none me-3" id="sidebar-toggle">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <a class="navbar-brand d-flex align-items-center gap-2" href="dashboard.html">
+                        <i class="bi bi-mortarboard-fill" style="color: var(--accent-color); font-size: 1.2rem;"></i>
+                        <span style="font-weight:700; font-size:1rem; color:var(--text-primary); letter-spacing:-0.01em;">LMS Platform</span>
+                    </a>
+                </div>
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0 ms-auto">
+                        <div class="dropdown">
+                            <button class="btn btn-light position-relative d-flex align-items-center justify-content-center p-0 rounded-circle" style="width: 32px; height: 32px;" type="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-bell"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px; transform: translate(-25%, 25%);">3</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-0" style="width: 320px; max-height: 400px; overflow-y: auto;">
+                                <li class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light sticky-top">
+                                    <span class="fw-bold" style="font-size: 14px;">Notifications</span>
+                                    <span class="badge bg-danger rounded-pill" style="font-size: 10px;">3 New</span>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-3 border-bottom" href="#" style="white-space: normal;">
+                                        <div class="d-flex align-items-start">
+                                            <div class="stat-icon me-3 bg-primary bg-opacity-10 text-primary" style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                <i class="bi bi-megaphone"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1 fw-bold" style="font-size: 13px;">New Course Launched!</h6>
+                                                <p class="text-secondary mb-1" style="font-size: 11px;">Advanced AI & Machine Learning course is now available for enrollment.</p>
+                                                <span class="text-muted" style="font-size: 10px;">2 hours ago</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-3 border-bottom" href="#" style="white-space: normal;">
+                                        <div class="d-flex align-items-start">
+                                            <div class="stat-icon me-3 bg-success bg-opacity-10 text-success" style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                <i class="bi bi-award"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1 fw-bold" style="font-size: 13px;">Assignment Graded</h6>
+                                                <p class="text-secondary mb-1" style="font-size: 11px;">Your Module 2 project has been graded. Score: 85/100.</p>
+                                                <span class="text-muted" style="font-size: 10px;">5 hours ago</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-3" href="#" style="white-space: normal;">
+                                        <div class="d-flex align-items-start">
+                                            <div class="stat-icon me-3 bg-info bg-opacity-10 text-info" style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                <i class="bi bi-credit-card"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1 fw-bold" style="font-size: 13px;">Payment Successful</h6>
+                                                <p class="text-secondary mb-1" style="font-size: 11px;">Your payment for "Full-Stack Web Development" was successful.</p>
+                                                <span class="text-muted" style="font-size: 10px;">Yesterday</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="bg-light sticky-bottom border-top">
+                                    <div class="text-center py-2">
+                                        <a class="text-decoration-none text-primary" style="font-size: 12px; font-weight: 600;" href="#">Mark all as read</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn d-flex align-items-center gap-2 p-1 pe-3 border-0 bg-transparent" type="button" data-bs-toggle="dropdown">
+                                <div class="user-avatar-sm" style="width: 32px; height: 32px;">AK</div>
+                                <div class="text-start d-none d-md-block">
+                                    <div class="fw-bold small" style="line-height: 1; color: var(--text-primary);">Alex King</div>
+
+                                </div>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                <li><a class="dropdown-item py-2" href="dashboard.html"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item py-2" href="settings.html"><i class="bi bi-gear me-2"></i> Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item py-2 text-danger" href="../login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+    </header>
+    <div class="dashboard-container">
+        @* @if (User.IsInRole("Instructor"))
+        {
+            <partial name="_InstructorSidebar" />
+        }
+        else if (User.IsInRole("Student"))
+        {
+            <partial name="_StudentSidebar" />
+        }
+        else if (User.IsInRole("Assistant"))
+        {
+            <partial name="_AssistantSidebar" />
+        } *@
+        <main class="main-content d-flex flex-column">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/main.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
