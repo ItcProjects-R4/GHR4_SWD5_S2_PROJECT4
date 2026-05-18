@@ -1,4 +1,5 @@
 // Import the required packages
+using AutoMapper;
 using CloudinaryDotNet;
 using dotenv.net;
 using LMS.BLL.Services.Implementation;
@@ -7,6 +8,9 @@ using LMS.DAL.Data;
 using LMS.DAL.Repositories.Implementation;
 using LMS.DAL.Repositories.Interfaces;
 using LMS.DAL.Seeding;
+using LMS.Domain.Models;
+using LMS.PL.Mapping;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 // Set your Cloudinary credentials
@@ -43,6 +47,18 @@ builder.Services.AddSingleton(cloudinary);
 // Register the CloudinaryService
 
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+
+// Register AutoMapper
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<UserProfile>();
+});
+
+// Register Identity with roles
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();    
+
 
 var app = builder.Build();
 

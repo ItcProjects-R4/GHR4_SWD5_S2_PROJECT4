@@ -9,10 +9,10 @@ namespace LMS.DAL.Seeding
 {
     public static class IdentitySeeder
     {
-        public static async Task SeedAsync(IServiceProvider serviceProvider)
+        public static async Task SeedIdentityAsync(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string[] roles = {"Instructor", "Student", "Assistant"};
 
@@ -33,9 +33,7 @@ namespace LMS.DAL.Seeding
                     UserName = instructorEmail,
                     Email = instructorEmail,
                     FirstName = "Karima",
-                    LastName = "Karim"
-
-
+                    LastName = "Karim",
                 };
                 var res = await userManager.CreateAsync(instructor, "1234Aa##");
 
