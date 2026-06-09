@@ -25,11 +25,14 @@ builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IReportingService, ReportingService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
