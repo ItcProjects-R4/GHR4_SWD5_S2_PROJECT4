@@ -27,6 +27,9 @@ builder.Services.AddScoped<IPaymobService, PaymobService>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IReportingService, ReportingService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -73,6 +76,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
