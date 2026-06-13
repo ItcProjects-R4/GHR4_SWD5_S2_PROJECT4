@@ -97,22 +97,27 @@
     </header>
 
     <div class="dashboard-container">
-        @if (User.IsInRole("Instructor"))
+        @if (User.Identity.IsAuthenticated)
         {
-            <partial name="_InstructorSidebar" />
-        }
-        else if (User.IsInRole("Student"))
-        {
-            <partial name="_StudentSidebar" />
-        }
-        else if (User.IsInRole("Assistant"))
-        {
-            <partial name="_AssistantSidebar" />
+            if (User.IsInRole("Instructor"))
+            {
+                <partial name="~/Views/Shared/Sidebars/_InstructorSidebar.cshtml" />
+            }
+            else if (User.IsInRole("Student"))
+            {
+                <partial name="~/Views/Shared/Sidebars/_StudentSidebar.cshtml" />
+            }
+            else if (User.IsInRole("Assistant"))
+            {
+                <partial name="~/Views/Shared/Sidebars/_AssistantSidebar.cshtml" />
+            }
         }
         <main class="main-content d-flex flex-column">
             @RenderBody()
         </main>
     </div>
+   
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
