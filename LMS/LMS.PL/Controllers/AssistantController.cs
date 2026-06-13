@@ -354,6 +354,120 @@ namespace LMS.PL.Controllers
             }
 
             return RedirectToAction(nameof(Settings));
+        }        // ============================================
+        // GRADE SUBMISSION ACTIONS
+        // ============================================
+
+        [HttpGet]
+        public async Task<IActionResult> GradeSubmission(int id)
+        {
+            var submission = await _submissionService.GetSubmissionByIdAsync(id);
+            if (submission == null)
+            {
+                TempData["ErrorMessage"] = "Submission not found.";
+                return RedirectToAction(nameof(Submissions));
+            }
+
+            // If already graded, redirect to submissions
+            if (submission.Status == LMS.Domain.Enums.SubmissionStatus.Graded)
+            {
+                TempData["InfoMessage"] = "This submission has already been graded.";
+                return RedirectToAction(nameof(Submissions));
+            }
+
+            var viewModel = new GradeSubmissionViewModel
+            {
+                Id = submission.Id,
+                StudentName = submission.Student != null
+                    ? $"{submission.Student.FirstName} {submission.Student.LastName}".Trim()
+                    : "Unknown Student",
+                StudentInitial = !string.IsNullOrEmpty(submission.Student?.FirstName)
+                    ? submission.Student.FirstName.Substring(0, 1).ToUpper()
+                    : "U",
+                StudentAvatarColor = GetAvatarColor(submission.Student?.FirstName),
+                CourseTitle = submission.Assignment?.Title ?? "Untitled Course",
+                AssignmentTitle = submission.Assignment?.Title ?? "Untitled Assignment",
+                SubmittedAt = submission.SubmittedAt,
+                SubmittedTimeAgo = GetTimeAgo(submission.SubmittedAt),
+                FileName = submission.SubmissionFiles?.FirstOrDefault()?.FileName,
+                FileUrl = submission.SubmissionFiles?.FirstOrDefault()?.FileUrl,
+                FileType = submission.SubmissionFiles?.FirstOrDefault()?.FileType,
+                FileSize = submission.SubmissionFiles?.FirstOrDefault()?.FileSize,
+                IsGraded = submission.Status == LMS.Domain.Enums.SubmissionStatus.Graded,
+                StatusBadgeClass = submission.Status == LMS.Domain.Enums.SubmissionStatus.Graded
+                    ? "bg-success-subtle text-success"
+                    : "bg-warning-subtle text-warning",
+                StatusText = submission.Status == LMS.Domain.Enums.SubmissionStatus.Graded
+                    ? "Graded"
+                    : "Pending Review",
+                Grade = submission.Grade,
+                Feedback = submission.Comment
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GradeSubmission(int id, int grade, string feedback)
+        {
+            if (grade < 0 || grade > 100)
+            {
+                TempData["ErrorMessage"] = "Grade must be between 0 and 100.";
+                return RedirectToAction(nameof(GradeSubmission), new { id });
+            }
+
+            if (string.IsNullOrWhiteSpace(feedback))
+            {
+                TempData["ErrorMessage"] = "Feedback is required.";
+                return RedirectToAction(nameof(GradeSubmission), new { id });
+            }
+
+            var result = await _submissionService.GradeSubmissionAsync(id, grade, feedback);
+            if (!result)
+            {
+                TempData["ErrorMessage"] = "Failed to grade submission. Please try again.";
+                return RedirectToAction(nameof(GradeSubmission), new { id });
+            }
+
+            TempData["SuccessMessage"] = $"Submission graded successfully with score {grade}/100!";
+            return RedirectToAction(nameof(Submissions));
+        }
+
+        // ============================================
+        // HELPER METHODS
+        // ============================================
+
+        private string GetAvatarColor(string? firstName)
+        {
+            if (string.IsNullOrEmpty(firstName)) return "var(--accent-color)";
+
+            return firstName.ToUpper()[0] switch
+            {
+                'M' => "var(--accent-color)",
+                'J' => "#0dcaf0",
+                'S' => "#198754",
+                'D' => "#ffc107",
+                'A' => "#dc3545",
+                'E' => "#6f42c1",
+                _ => "var(--accent-color)"
+            };
+        }
+
+        private string GetTimeAgo(DateTime dateTime)
+        {
+            var timeSpan = DateTime.Now - dateTime;
+
+            if (timeSpan.TotalMinutes < 1)
+                return "Just now";
+            if (timeSpan.TotalMinutes < 60)
+                return $"Submitted {(int)timeSpan.TotalMinutes} minutes ago";
+            if (timeSpan.TotalHours < 24)
+                return $"Submitted {(int)timeSpan.TotalHours} hours ago";
+            if (timeSpan.TotalDays < 30)
+                return $"Submitted {(int)timeSpan.TotalDays} days ago";
+
+            return $"Submitted on {dateTime:MMM dd, yyyy}";
         }
     }
 }

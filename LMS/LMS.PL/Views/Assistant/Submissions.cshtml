@@ -101,7 +101,7 @@
                                             <div class="fw-bold text-success h5 mb-0">@sub.Grade/100</div>
                                             <span class="text-muted small" style="font-size: 10px;">Graded Score</span>
                                         </div>
-                                        <button class="btn btn-outline-secondary btn-sm px-3 py-2 rounded-3 fw-semibold"
+                                        <button type="button" class="btn btn-outline-secondary btn-sm px-3 py-2 rounded-3 fw-semibold"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#feedbackDetailModal-@sub.Id">
                                             View Feedback
@@ -113,40 +113,6 @@
                     </div>
                 </div>
             </div>
-
-            @if (sub.IsGraded)
-            {
-                <div class="modal fade" id="feedbackDetailModal-@sub.Id" tabindex="-1" aria-labelledby="feedbackDetailModalLabel-@sub.Id" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content border-0 shadow">
-                            <div class="modal-header border-0 pb-0">
-                                <h5 class="modal-title fw-bold" id="feedbackDetailModalLabel-@sub.Id">Grade & Feedback Details</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body p-4">
-                                <div class="d-flex align-items-center mb-4 border-bottom pb-3">
-                                    <div class="user-avatar-sm me-3 bg-secondary text-white" style="width: 44px; height: 44px; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center;">
-                                        @sub.StudentInitial
-                                    </div>
-                                    <div>
-                                        <h6 class="fw-bold mb-0">@sub.StudentName</h6>
-                                        <p class="text-muted small mb-0">@sub.CourseTitle</p>
-                                    </div>
-                                </div>
-                                <div class="p-3 bg-light rounded-3 mb-4 text-center">
-                                    <div class="text-muted small mb-1">Final Score</div>
-                                    <div class="h2 fw-bold mb-0 text-success">@sub.Grade/100</div>
-                                </div>
-                                <h6 class="fw-bold small mb-2 text-dark">Instructor Comments:</h6>
-                                <p class="text-secondary small mb-0" style="line-height: 1.6;">@sub.Feedback</p>
-                            </div>
-                            <div class="modal-footer border-0 pt-0">
-                                <button type="button" class="btn btn-primary px-4 fw-semibold rounded-3" data-bs-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
         }
     }
     else
@@ -158,3 +124,43 @@
         </div>
     }
 </div>
+
+<!-- ========================================== -->
+<!-- المودالات مفصولة خارج الـ loop -->
+<!-- ========================================== -->
+@if (Model != null)
+{
+    @foreach (var sub in Model.Where(s => s.IsGraded))
+    {
+        <div class="modal fade" id="feedbackDetailModal-@sub.Id" tabindex="-1" aria-labelledby="feedbackDetailModalLabel-@sub.Id" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold" id="feedbackDetailModalLabel-@sub.Id">Grade & Feedback Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+                            <div class="user-avatar-sm me-3 bg-secondary text-white" style="width: 44px; height: 44px; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center;">
+                                @sub.StudentInitial
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">@sub.StudentName</h6>
+                                <p class="text-muted small mb-0">@sub.CourseTitle</p>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-light rounded-3 mb-4 text-center">
+                            <div class="text-muted small mb-1">Final Score</div>
+                            <div class="h2 fw-bold mb-0 text-success">@sub.Grade/100</div>
+                        </div>
+                        <h6 class="fw-bold small mb-2 text-dark">Instructor Comments:</h6>
+                        <p class="text-secondary small mb-0" style="line-height: 1.6;">@sub.Feedback</p>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-primary px-4 fw-semibold rounded-3" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
