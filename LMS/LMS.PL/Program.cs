@@ -1,4 +1,5 @@
 // Import the required packages
+using AutoMapper;
 using CloudinaryDotNet;
 using dotenv.net;
 using LMS.BLL.Services.Implementation;
@@ -6,7 +7,9 @@ using LMS.BLL.Services.Interfaces;
 using LMS.DAL.Data;
 using LMS.DAL.Repositories.Implementation;
 using LMS.DAL.Repositories.Interfaces;
+using LMS.DAL.Seeding;
 using LMS.Domain.Models;
+using LMS.PL.Mapping;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,13 +30,11 @@ builder.Services.AddScoped<IReportingService, ReportingService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//db context
+//DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 
@@ -49,6 +50,18 @@ builder.Services.AddSingleton(cloudinary);
 // Register the CloudinaryService
 
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+
+// Register AutoMapper
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<UserProfile>();
+});
+
+// Register Identity with roles
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();    
+
 
 var app = builder.Build();
 
@@ -73,5 +86,11 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+//Register IdentitySeeder
+
+using (var scope = app.Services.CreateScope())
+{
+    await IdentitySeeder.SeedIdentityAsync(scope.ServiceProvider);
+}
 
 app.Run();

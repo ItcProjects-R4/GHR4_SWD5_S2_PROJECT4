@@ -1,0 +1,37 @@
+﻿@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Layout Sandbox";
+}
+
+@* <!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 fw-bold mb-0" style="color:var(--text-primary)">Layout Sandbox 🛠️</h1>
+</div>
+
+<!-- Sandbox Card -->
+<div class="card border-0 shadow-sm p-4 animate-fade-in">
+    <h3 class="h5 fw-bold mb-2">Welcome to your database-free sandbox!</h3>
+    <p class="text-secondary">
+        Your teammate's database naming conflicts can't touch this page. Use this safe space to test all your layout features.
+    </p>
+
+    <div class="mt-4">
+        <h6 class="fw-bold mb-3">Quick Navigation to Test Different Sidebars:</h6>
+        <div class="d-flex flex-column gap-2">
+            <a href="/Home/TestLayout?role=student" class="btn btn-light border text-start d-flex justify-content-between align-items-center p-3 hover-shadow-sm transition-base">
+                <span>🎓 Test **Student** Layout & Sidebar</span>
+                <span class="badge bg-primary">Load Student</span>
+            </a>
+
+            <a href="/Home/TestLayout?role=assistant" class="btn btn-light border text-start d-flex justify-content-between align-items-center p-3 hover-shadow-sm transition-base">
+                <span>🛠️ Test **Assistant** Layout & Sidebar</span>
+                <span class="badge bg-warning text-dark">Load Assistant</span>
+            </a>
+
+            <a href="/Home/TestLayout?role=instructor" class="btn btn-light border text-start d-flex justify-content-between align-items-center p-3 hover-shadow-sm transition-base">
+                <span>👨‍🏫 Test **Instructor** Layout & Sidebar</span>
+                <span class="badge bg-success">Load Instructor</span>
+            </a>
+        </div>
+    </div>
+</div> *@

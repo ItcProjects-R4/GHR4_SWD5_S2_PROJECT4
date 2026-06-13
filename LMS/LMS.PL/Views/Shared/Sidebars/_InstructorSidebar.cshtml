@@ -1,0 +1,46 @@
+﻿<aside class="sidebar">
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a asp-controller="Instructor" asp-action="Dashboard" class="menu-link @(IsActive("Instructor", "Dashboard"))">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Instructor" asp-action="Users" class="menu-link @(IsActive("Instructor", "Users"))">
+                <i class="bi bi-people"></i> Users
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Instructor" asp-action="Courses" class="menu-link @(IsActive("Instructor", "Courses"))">
+                <i class="bi bi-book"></i> Courses
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Instructor" asp-action="Submissions" class="menu-link @(IsActive("Instructor", "Submissions"))">
+                <i class="bi bi-file-earmark-check"></i> Submissions
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Instructor" asp-action="Payments" class="menu-link @(IsActive("Instructor", "Payments"))">
+                <i class="bi bi-credit-card"></i> Payments
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Instructor" asp-action="Settings" class="menu-link @(IsActive("Instructor", "Settings"))">
+                <i class="bi bi-gear"></i> Settings
+            </a>
+        </li>
+    </ul>
+</aside>
+
+@functions {
+    private string IsActive(string controller, string action)
+    {
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+        return string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase)
+               ? "active" : "";
+    }
+}

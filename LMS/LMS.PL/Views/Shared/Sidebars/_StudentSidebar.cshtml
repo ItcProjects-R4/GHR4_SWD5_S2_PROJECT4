@@ -1,0 +1,35 @@
+﻿<aside class="sidebar">
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a asp-controller="Student" asp-action="Dashboard" class="menu-link @(IsActive("Student", "Dashboard"))">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Student" asp-action="Courses" class="menu-link @(IsActive("Student", "Courses"))">
+                <i class="bi bi-book"></i> Courses
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Student" asp-action="PurchaseHistory" class="menu-link @(IsActive("Student", "PurchaseHistory"))">
+                <i class="bi bi-credit-card"></i> Purchase History
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Student" asp-action="Settings" class="menu-link @(IsActive("Student", "Settings"))">
+                <i class="bi bi-gear"></i> Settings
+            </a>
+        </li>
+    </ul>
+</aside>
+
+@functions {
+    private string IsActive(string controller, string action)
+    {
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+        return string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase)
+               ? "active" : "";
+    }
+}
