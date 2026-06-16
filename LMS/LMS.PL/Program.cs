@@ -11,6 +11,7 @@ using LMS.DAL.Seeding;
 using LMS.Domain.Models;
 using LMS.PL.Mapping;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 // Set your Cloudinary credentials
@@ -60,7 +61,10 @@ builder.Services.AddAutoMapper(cfg =>
 // Register Identity with roles
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();    
+    .AddDefaultTokenProviders();
+
+// add emailsender
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 
 var app = builder.Build();

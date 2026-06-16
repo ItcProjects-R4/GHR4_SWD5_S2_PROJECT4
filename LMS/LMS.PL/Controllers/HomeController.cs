@@ -28,6 +28,13 @@ namespace LMS.PL.Controllers
            
             return View();
         }
+        //subscribing to newsletter
+        [HttpGet]
+        public IActionResult Subscribe()
+        {
+           
+            return View();
+        }
         
 
     }

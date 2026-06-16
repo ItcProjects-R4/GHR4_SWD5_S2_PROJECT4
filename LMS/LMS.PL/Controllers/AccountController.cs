@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using CloudinaryDotNet;
 using LMS.Domain.Models;
 using LMS.PL.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
 using System.ComponentModel.DataAnnotations;
@@ -13,12 +15,14 @@ namespace LMS.PL.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly IEmailSender _emailSender;
 
-        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IMapper mapper)
+        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IMapper mapper, IEmailSender emailSender)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _mapper = mapper;
+            _emailSender = emailSender;
         }
 
 
@@ -37,38 +41,36 @@ namespace LMS.PL.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterAsync(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                //search for the user in the db by email 
-                var user = await _userManager.FindByEmailAsync(model.Email);
-
-                //if it is not registered, add them
-                if (user==null)
-                {
-                    var newUser = _mapper.Map<ApplicationUser>(model);
-
-                    var res = await _userManager.CreateAsync(newUser, model.Password);
-
-                    if (res.Succeeded)
-                    {
-                        await _userManager.AddToRoleAsync(newUser, "Student");
-                        await _signInManager.SignInAsync(newUser, isPersistent: false);
-                        return RedirectToAction("Dashboard", "Student");
-                    }
-
-                    foreach (var error in res.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-
+                return View(model);
             }
-            else
+               
+            // search for the user in the db by email
+            var user = await _userManager.FindByEmailAsync(model.Email);
+          
+            if (user != null)
             {
-                //if ModelState is not valid
-                ModelState.AddModelError(string.Empty, "User already exists");
+                ModelState.AddModelError(string.Empty, "User with this email already exists.");
+                return View(model);
+            }
+            // if not registered, add them
+            var newUser = _mapper.Map<ApplicationUser>(model);
+            newUser.UserName = model.Email;
+            var res = await _userManager.CreateAsync(newUser, model.Password);
+            if (res.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(newUser, "Student");
+                await _signInManager.SignInAsync(newUser, isPersistent: false);
+                return RedirectToAction("Dashboard", "Student");
+            }
+          
+            foreach (var error in res.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
             }
             return View(model);
+
         }
         [HttpGet]
         public IActionResult Login(string returnUrl)
@@ -136,5 +138,85 @@ namespace LMS.PL.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null) return RedirectToAction("ForgotPasswordConfirmation");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink = Url.Action("ResetPassword", "Account",
+                new { token, email = user.Email }, Request.Scheme);
+
+            await _emailSender.SendEmailAsync(
+                user.Email,
+                "Reset Your Password",
+                $"<p>Click <a href='{resetLink}'>here</a> to reset your password.</p>"
+            );
+
+            return RedirectToAction("ForgotPasswordConfirmation");
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string token = null, string email = null)
+        {
+            if (token == null || email == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            var model = new ResetPasswordViewModel
+            {
+                Token = token,
+                Email = email
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return RedirectToAction("ResetPasswordConfirmation");
+            }
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("ResetPasswordConfirmation");
+            }
+           
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            return View(model);
+        }
+        [HttpGet]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
     }
 }
