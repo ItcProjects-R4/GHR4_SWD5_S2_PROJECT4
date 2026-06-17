@@ -1,5 +1,5 @@
 ﻿using LMS.BLL.Services.Interfaces;
-using LMS.PL.ViewModels;
+using LMS.Domain.ViewModels;
 using LMS.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,9 +17,7 @@ namespace LMS.PL.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public InstructorController(IStudentService studentService,
-                                    UserManager<ApplicationUser> userManager,
-                                    RoleManager<IdentityRole> roleManager)
+        public InstructorController(IStudentService studentService, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _studentService = studentService;
             _userManager = userManager;

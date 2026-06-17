@@ -11,6 +11,7 @@ using LMS.DAL.Seeding;
 using LMS.Domain.Models;
 using LMS.PL.Mapping;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 // Set your Cloudinary credentials
@@ -21,13 +22,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient<IPaymobService, PaymobService>();
 
-// 3. Register Repositories and Services
+// Register Repositories and Services
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymobService, PaymobService>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IReportingService, ReportingService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 
 
@@ -60,7 +62,10 @@ builder.Services.AddAutoMapper(cfg =>
 // Register Identity with roles
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();    
+    .AddDefaultTokenProviders();
+
+// add emailsender
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 
 var app = builder.Build();

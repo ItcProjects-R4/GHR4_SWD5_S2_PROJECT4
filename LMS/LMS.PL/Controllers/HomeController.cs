@@ -1,4 +1,4 @@
-using LMS.PL.ViewModels;
+using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -24,6 +24,13 @@ namespace LMS.PL.Controllers
 
         [HttpGet]
         public IActionResult TestLayout()
+        {
+           
+            return View();
+        }
+        //subscribing to newsletter
+        [HttpGet]
+        public IActionResult Subscribe()
         {
            
             return View();
