@@ -1,4 +1,4 @@
-using LMS.PL.ViewModels;
+using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

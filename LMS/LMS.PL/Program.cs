@@ -22,13 +22,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient<IPaymobService, PaymobService>();
 
-// 3. Register Repositories and Services
+// Register Repositories and Services
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymobService, PaymobService>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IReportingService, ReportingService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 
 

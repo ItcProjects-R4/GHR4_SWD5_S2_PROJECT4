@@ -1,28 +1,17 @@
-﻿using AutoMapper;
-using CloudinaryDotNet;
-using LMS.Domain.Models;
-using LMS.PL.ViewModels;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using LMS.BLL.Services.Interfaces;
+using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Win32;
-using System.ComponentModel.DataAnnotations;
 
 namespace LMS.PL.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IMapper _mapper;
-        private readonly IEmailSender _emailSender;
+        private readonly IAccountService _service;
+ 
 
-        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IMapper mapper, IEmailSender emailSender)
+        public AccountController(IAccountService service)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _mapper = mapper;
-            _emailSender = emailSender;
+            _service = service;
         }
 
 
@@ -41,37 +30,21 @@ namespace LMS.PL.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterAsync(RegisterViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+
+            var result = await _service.RegisterAsync(model);
+            if (result.Succeeded)
             {
-                return View(model);
-            }
-               
-            // search for the user in the db by email
-            var user = await _userManager.FindByEmailAsync(model.Email);
-          
-            if (user != null)
-            {
-                ModelState.AddModelError(string.Empty, "User with this email already exists.");
-                return View(model);
-            }
-            // if not registered, add them
-            var newUser = _mapper.Map<ApplicationUser>(model);
-            newUser.UserName = model.Email;
-            var res = await _userManager.CreateAsync(newUser, model.Password);
-            if (res.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(newUser, "Student");
-                await _signInManager.SignInAsync(newUser, isPersistent: false);
                 return RedirectToAction("Dashboard", "Student");
             }
-          
-            foreach (var error in res.Errors)
-            {
+
+            foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
-            }
+
             return View(model);
 
         }
+
         [HttpGet]
         public IActionResult Login(string returnUrl)
         {
@@ -80,7 +53,7 @@ namespace LMS.PL.Controllers
                 ReturnUrl = returnUrl
             };
 
-            return View();
+            return View(model);
         }
 
         [ValidateAntiForgeryToken]
@@ -89,45 +62,24 @@ namespace LMS.PL.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            //find email or username in the db
+            var result = await _service.LoginAsync(model);
 
-            var isEmailValid = new EmailAddressAttribute().IsValid(model.Username);
-
-            var user = isEmailValid ? await _userManager.FindByEmailAsync(model.Username)
-                : await _userManager.FindByNameAsync(model.Username);
-
-            if (user == null)
+            if (result.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, "Email or password is incorrect");
-                return View(model);
-            }
-
-            var isPasswordValid = await _userManager.CheckPasswordAsync(user, model.Password);
-
-            if (!isPasswordValid)
-            {
-                ModelState.AddModelError(string.Empty, "Email or password is incorrect");
-                return View(model);
-
-            }
-
-            var res = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
-
-            if (res.Succeeded)
-            {
-                if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl)){
+                if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                {
                     return Redirect(model.ReturnUrl);
                 }
-
-
-                var roles = await _userManager.GetRolesAsync(user);
-
-                if(roles.Contains("Instructor")) return RedirectToAction("Dashboard", "Instructor");
-                if(roles.Contains("Student")) return RedirectToAction("Dashboard", "Student");
-                if(roles.Contains("Assistant")) return RedirectToAction("Dashboard", "Assistant");
-
+                return result.Role switch
+                {
+                    "Instructor" => RedirectToAction("Dashboard", "Instructor"),
+                    "Student" => RedirectToAction("Dashboard", "Student"),
+                    "Assistant" => RedirectToAction("Dashboard", "Assistant"),
+                    _ => RedirectToAction("Index", "Home")
+                };
             }
-            ModelState.AddModelError(string.Empty, "Email or password is incorrect.");
+
+            ModelState.AddModelError(string.Empty, result.ErrorMessage);
             return View(model);
         }
 
@@ -135,7 +87,7 @@ namespace LMS.PL.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            await _service.LogoutAsync();
             return RedirectToAction("Index", "Home");
         }
 
@@ -151,18 +103,9 @@ namespace LMS.PL.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null) return RedirectToAction("ForgotPasswordConfirmation");
+            var resetLink = Url.Action("ResetPassword", "Account", new { email = model.Email }, Request.Scheme);
 
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var resetLink = Url.Action("ResetPassword", "Account",
-                new { token, email = user.Email }, Request.Scheme);
-
-            await _emailSender.SendEmailAsync(
-                user.Email,
-                "Reset Your Password",
-                $"<p>Click <a href='{resetLink}'>here</a> to reset your password.</p>"
-            );
+            await _service.ForgotPasswordAsync(model, resetLink);
 
             return RedirectToAction("ForgotPasswordConfirmation");
         }
@@ -177,39 +120,29 @@ namespace LMS.PL.Controllers
         public IActionResult ResetPassword(string token = null, string email = null)
         {
             if (token == null || email == null)
-            {
                 return RedirectToAction("Error", "Home");
-            }
-            var model = new ResetPasswordViewModel
-            {
-                Token = token,
-                Email = email
-            };
-            return View(model);
+
+            return View(new ResetPasswordViewModel { Token = token, Email = email });
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(model);
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-            {
-                return RedirectToAction("ResetPasswordConfirmation");
-            }
-            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            if (!ModelState.IsValid) return View(model);
 
+            var result = await _service.ResetPasswordAsync(model);
             if (result.Succeeded)
             {
                 return RedirectToAction("ResetPasswordConfirmation");
             }
-           
+
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
+
             return View(model);
         }
         [HttpGet]
