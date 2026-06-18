@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 
 namespace LMS.DAL.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -30,7 +30,8 @@ namespace LMS.DAL.Data
         public DbSet<Payment> Payments { get; set; }
 
 
-
-
+        public DbSet<Submission> Submissions { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<SubmissionFile> SubmissionFiles { get; set; }
     }
 }

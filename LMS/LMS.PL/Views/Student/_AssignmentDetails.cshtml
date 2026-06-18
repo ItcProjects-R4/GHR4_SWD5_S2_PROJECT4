@@ -1,0 +1,351 @@
+@model AssignmentViewModel
+
+<div class="watch-assignment-header d-flex flex-wrap align-items-center justify-content-between pb-3 mb-4 border-bottom g-3">
+    <div class="d-flex align-items-center gap-3">
+        <div class="assignment-icon-badge bg-warning-subtle text-warning rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: #fffbe6; border: 1px solid #ffe58f;">
+            <i class="bi bi-clipboard2-check-fill fs-4 text-warning"></i>
+        </div>
+        <div>
+            <h3 class="fw-bold mb-1 text-dark" style="font-size: 1.25rem;">@Model.Title</h3>
+            <span class="text-muted" style="font-size: 0.75rem;">
+                <i class="bi bi-calendar-event me-1"></i>Due Date: @Model.DueDate.ToString("MMMM dd, yyyy @ h:mm tt")
+            </span>
+        </div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-2" style="font-size: 0.8rem; border: 1px solid rgba(0,0,0,0.08);">
+            Max Score: @Model.MaxScore pts
+        </span>
+        @if (Model.Submission != null)
+        {
+            @if (Model.Submission.Grade.HasValue)
+            {
+                <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2" style="font-size: 0.8rem; border: 1px solid #b7eb8f;">
+                    <i class="bi bi-check-circle-fill me-1"></i>Graded: @Model.Submission.Grade.Value / @Model.MaxScore
+                </span>
+            }
+            else
+            {
+                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2" style="font-size: 0.8rem; border: 1px solid #91d5ff;">
+                    <i class="bi bi-file-earmark-check-fill me-1"></i>Submitted
+                </span>
+            }
+        }
+        else
+        {
+            <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill px-3 py-2" style="font-size: 0.8rem; border: 1px solid #ffe58f;">
+                <i class="bi bi-exclamation-circle-fill me-1"></i>Not Submitted
+            </span>
+        }
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-xl-7 col-lg-6">
+        @if (!string.IsNullOrEmpty(Model.FileUrl))
+        {
+                <div class="article-link-card mb-4 p-4 rounded-4" style="background: #fffbeb; border: 1px solid #fde68a;">
+                    <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="article-icon-wrap bg-white rounded-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; border: 1px solid #fcd34d;">
+                                <i class="bi bi-file-earmark-arrow-down fs-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold text-dark" style="font-size:0.95rem;">Assignment Materials</div>
+                                <div class="text-muted" style="font-size: 0.8rem;">Click the download button to view instructions on your local machine.</div>
+                            </div>
+                        </div>
+                        <a href="@Model.FileUrl" target="_blank" download class="btn btn-warning rounded-pill px-4 fw-semibold text-dark">
+                            <i class="bi bi-download me-1"></i>Download Assignment
+                        </a>
+                    </div>
+                </div>
+        }
+        else
+        {
+            <div class="alert alert-light border rounded-4 p-4 text-center">
+                <i class="bi bi-info-circle display-6 text-muted mb-2 d-block"></i>
+                <h6 class="fw-bold text-dark">No Instruction File Available</h6>
+                <p class="text-muted mb-0 small">Please review the syllabus or contact your instructor for details.</p>
+            </div>
+        }
+    </div>
+
+    <div class="col-xl-5 col-lg-6">
+        @if (Model.Submission != null)
+        {
+            <div class="submission-history-card card border-0 shadow-sm rounded-4 p-4 mb-4" style="background: #f8fafc; border: 1px solid #e2e8f0 !important;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-dark mb-0">
+                        <i class="bi bi-clock-history text-primary me-2"></i>Submission Details
+                    </h5>
+                    <span class="text-muted small">Submitted: @Model.Submission.SubmittedAt.ToString("MMM dd, h:mm tt")</span>
+                </div>
+
+                @if (Model.Submission.Grade.HasValue)
+                {
+                    <div class="grade-report p-3 rounded-3 mb-3 d-flex align-items-center justify-content-between" style="background: #f6ffed; border: 1px solid #b7eb8f;">
+                        <div>
+                            <span class="d-block text-muted small uppercase fw-semibold" style="letter-spacing: 0.05em;">GRADE RECEIVED</span>
+                            <span class="fs-4 fw-extrabold text-success">@Model.Submission.Grade.Value <span class="text-muted fs-6 font-normal">/ @Model.MaxScore points</span></span>
+                        </div>
+                        <div class="grade-icon text-success">
+                            <i class="bi bi-patch-check-fill fs-1"></i>
+                        </div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Submission.Comment))
+                {
+                    <div class="instructor-feedback p-3 rounded-3 bg-white border mb-3">
+                        <span class="d-block text-muted small fw-bold mb-1"><i class="bi bi-chat-left-text me-1 text-primary"></i>Instructor Comment:</span>
+                        <p class="mb-0 text-dark small">@Model.Submission.Comment</p>
+                    </div>
+                }
+
+                <h6 class="fw-bold text-dark small mb-2"><i class="bi bi-files me-1"></i>Submitted Files:</h6>
+                <div class="list-group list-group-flush border rounded-3 overflow-hidden bg-white mb-2">
+                    @foreach (var file in Model.Submission.SubmissionFiles)
+                    {
+                        var displayFileName = !string.IsNullOrEmpty(file.FileName) ? file.FileName : System.IO.Path.GetFileName(file.FileUrl);
+                        var formattedSize = file.FileSize.HasValue ? $"({(file.FileSize.Value / 1024.0):F1} KB)" : "";
+
+                        <div class="list-group-item d-flex align-items-center justify-content-between py-2 px-3">
+                            <div class="d-flex align-items-center gap-2 text-truncate" style="max-width: 75%;">
+                                <i class="bi bi-file-earmark-check text-primary fs-5"></i>
+                                <div class="text-truncate">
+                                    <span class="d-block text-truncate text-dark fw-medium small">@displayFileName</span>
+                                    <span class="text-muted" style="font-size: 0.7rem;">@file.FileType · @formattedSize</span>
+                                </div>
+                            </div>
+                            <a href="@file.FileUrl" target="_blank" download class="btn btn-xs btn-outline-primary rounded-pill px-2 py-0.5" style="font-size: 0.65rem;">
+                                <i class="bi bi-download"></i>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        
+        <div class="upload-panel card border-0 shadow-sm rounded-4 p-4 bg-white" style="border: 1px solid #e2e8f0 !important;">
+            <h5 class="fw-bold text-dark mb-3">
+                <i class="bi bi-cloud-arrow-up text-warning me-2"></i>Submit Your Assignment
+            </h5>
+
+            <form id="assignmentSubmissionForm" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="@Model.Id" />
+                
+                <div id="dragDropArea" class="border-2 border-dashed rounded-4 p-4 text-center cursor-pointer mb-3" style="background: #fafafa; border-color: #d9d9d9; transition: all 0.25s; cursor: pointer;">
+                    <i class="bi bi-cloud-arrow-up-fill text-warning display-5 mb-2 d-block"></i>
+                    <h6 class="fw-bold text-dark mb-1">Drag & drop files here</h6>
+                    <p class="text-muted small mb-0">or <span class="text-warning fw-bold">browse files</span> from your device</p>
+                    <input type="file" id="submissionFiles" name="submissionFiles" multiple class="d-none" />
+                </div>
+
+                <div id="selectedFilesList" class="d-none mb-3">
+                    <span class="d-block text-muted small fw-bold mb-2">Files Selected for Upload:</span>
+                    <div class="list-group list-group-flush border rounded-3 overflow-hidden bg-white" id="filesList">
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 mb-3 p-2 rounded-3" style="background-color: #f8f9fa; border: 1px dashed #ced4da;">
+                    <i class="bi bi-info-circle-fill text-primary"></i>
+                    <span class="text-muted" style="font-size: 0.85rem;"><strong>Tip:</strong><br> Multiple files are supported. You can select all your assignment files at once.</span>
+                </div>
+
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="submit" id="submitBtn" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark d-flex align-items-center gap-2" disabled>
+                        <i class="bi bi-send-fill"></i>Submit Assignment
+                    </button>
+                </div>
+
+                <div class="progress d-none mt-3" id="uploadProgressBar" style="height: 8px; border-radius: 99px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 0%; border-radius: 99px;"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const dragDropArea = document.getElementById('dragDropArea');
+        const fileInput = document.getElementById('submissionFiles');
+        const filesList = document.getElementById('filesList');
+        const selectedFilesList = document.getElementById('selectedFilesList');
+        const submitBtn = document.getElementById('submitBtn');
+        const form = document.getElementById('assignmentSubmissionForm');
+        const progressBar = document.getElementById('uploadProgressBar');
+        const progressBarInner = progressBar.querySelector('.progress-bar');
+
+        let selectedFiles = [];
+
+        
+        dragDropArea.addEventListener('click', () => fileInput.click());
+
+        dragDropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dragDropArea.classList.add('drag-over');
+        });
+
+        dragDropArea.addEventListener('dragleave', () => {
+            dragDropArea.classList.remove('drag-over');
+        });
+
+        dragDropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dragDropArea.classList.remove('drag-over');
+            
+            if (e.dataTransfer.files.length > 0) {
+                handleNewFiles(e.dataTransfer.files);
+            }
+        });
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                handleNewFiles(fileInput.files);
+            }
+        });
+
+        function handleNewFiles(files) {
+            for (let i = 0; i < files.length; i++) {
+                
+                const duplicate = selectedFiles.some(f => f.name === files[i].name && f.size === files[i].size);
+                if (!duplicate) {
+                    selectedFiles.push(files[i]);
+                }
+            }
+            updateFilesList();
+        }
+
+        function updateFilesList() {
+            filesList.innerHTML = '';
+            
+            if (selectedFiles.length === 0) {
+                selectedFilesList.classList.add('d-none');
+                submitBtn.disabled = true;
+                return;
+            }
+
+            selectedFilesList.classList.remove('d-none');
+            submitBtn.disabled = false;
+
+            selectedFiles.forEach((file, index) => {
+                const formattedSize = (file.size / 1024).toFixed(1) + ' KB';
+                const fileItem = document.createElement('div');
+                fileItem.className = 'list-group-item d-flex align-items-center justify-content-between py-2 px-3 bg-light-subtle';
+                fileItem.innerHTML = `
+                    <div class="d-flex align-items-center gap-2 text-truncate" style="max-width: 80%;">
+                        <i class="bi bi-file-earmark-plus text-warning fs-5"></i>
+                        <div class="text-truncate">
+                            <span class="d-block text-truncate text-dark fw-medium small">${escapeHtml(file.name)}</span>
+                            <span class="text-muted" style="font-size: 0.7rem;">${formattedSize}</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-link text-danger p-0 border-0 remove-file-btn" data-index="${index}" style="font-size: 1rem; text-decoration: none;">
+                        <i class="bi bi-x-circle-fill"></i>
+                    </button>
+                `;
+                filesList.appendChild(fileItem);
+            });
+
+            
+            filesList.querySelectorAll('.remove-file-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const indexToRemove = parseInt(btn.getAttribute('data-index'));
+                    selectedFiles.splice(indexToRemove, 1);
+                    updateFilesList();
+                });
+            });
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            if (selectedFiles.length === 0) return;
+
+            submitBtn.disabled = true;
+            progressBar.classList.remove('d-none');
+            progressBarInner.style.width = '0%';
+            progressBarInner.textContent = '0%';
+
+            const formData = new FormData();
+            formData.append('id', @Model.Id);
+            
+            selectedFiles.forEach(file => {
+                formData.append('submissionFiles', file);
+            });
+
+            $.ajax({
+                url: '/Student/SubmitAssignment',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                xhr: function () {
+                    const xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener('progress', function (evt) {
+                        if (evt.lengthComputable) {
+                            const percentComplete = Math.round((evt.loaded / evt.total) * 100);
+                            progressBarInner.style.width = percentComplete + '%';
+                            progressBarInner.textContent = percentComplete + '%';
+                        }
+                    }, false);
+                    return xhr;
+                },
+                success: function (res) {
+                    progressBarInner.classList.remove('bg-warning');
+                    progressBarInner.classList.add('bg-success');
+                    progressBarInner.textContent = 'Upload Complete!';
+                    
+                    
+                    let toast = $('<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">' +
+                        '<div class="toast show bg-success text-white border-0 rounded-3 p-1" role="alert" aria-live="assertive" aria-atomic="true">' +
+                        '<div class="d-flex"><div class="toast-body"><i class="bi bi-check-circle-fill me-2"></i>Assignment files submitted successfully!</div>' +
+                        '<button type="button" class="btn-close btn-close-white m-auto me-2" data-bs-dismiss="toast" aria-label="Close"></button></div></div></div>');
+                    $('body').append(toast);
+                    setTimeout(() => toast.fadeOut(500, function() { $(this).remove(); }), 3000);
+
+                    
+                    setTimeout(() => {
+                        $.ajax({
+                            url: '/Student/AssignmentDetails/' + @Model.Id,
+                            type: 'GET',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                            success: function (html) {
+                                $('#lessonContentContainer').html(html);
+                            }
+                        });
+                    }, 1200);
+                },
+                error: function (xhr) {
+                    submitBtn.disabled = false;
+                    progressBar.classList.add('d-none');
+                    let errMsg = 'Could not upload files. Please try again.';
+                    if (xhr.responseText) errMsg = xhr.responseText;
+                    
+                    let toast = $('<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">' +
+                        '<div class="toast show bg-danger text-white border-0 rounded-3 p-1" role="alert" aria-live="assertive" aria-atomic="true">' +
+                        '<div class="d-flex"><div class="toast-body"><i class="bi bi-exclamation-triangle-fill me-2"></i>' + errMsg + '</div>' +
+                        '<button type="button" class="btn-close btn-close-white m-auto me-2" data-bs-dismiss="toast" aria-label="Close"></button></div></div></div>');
+                    $('body').append(toast);
+                    setTimeout(() => toast.fadeOut(500, function() { $(this).remove(); }), 4000);
+                }
+            });
+        });
+    })();
+</script>

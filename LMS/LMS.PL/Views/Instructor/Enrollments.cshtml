@@ -1,0 +1,57 @@
+@model List<CourseEnrollmentGroupViewModel>
+@{
+    ViewData["Title"] = "All Enrollments";
+    Layout = "_DashboardLayout";
+}
+
+<main class="instructor-main-content py-2">
+    
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 animate-fade-in">
+        <h1 class="page-title mb-0 fw-bold" style="color: #0f172a; font-size: 1.85rem;">All Enrollments</h1>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white animate-fade-in">
+        <div class="w-100">
+            <div class="input-group search-input-group">
+                <span class="input-group-text text-muted ps-3">
+                    <i class="bi bi-search fs-5"></i>
+                </span>
+                <input type="text" id="searchInput" class="form-control ps-2 py-3 shadow-none search-input" placeholder="Search students or courses...">
+            </div>
+        </div>
+    </div>
+
+    <div id="enrollmentsGrid" class="animate-fade-in">
+        <partial name="_EnrollmentList" model="Model" />
+    </div>
+
+</main>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let searchTimer;
+
+            function loadEnrollments() {
+                const search = $('#searchInput').val();
+
+                $.ajax({
+                    url: '/Instructor/Enrollments',
+                    type: 'GET',
+                    data: { search: search },
+                    success: function (data) {
+                        $('#enrollmentsGrid').html(data);
+                    },
+                    error: function () {
+                        console.error('Error loading enrollments.');
+                    }
+                });
+            }
+
+            $('#searchInput').on('input', function () {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(loadEnrollments, 250);
+            });
+        });
+    </script>
+}

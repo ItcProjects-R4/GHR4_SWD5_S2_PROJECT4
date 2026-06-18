@@ -1,0 +1,82 @@
+@model List<CourseEnrollmentGroupViewModel>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="card border-0 bg-white rounded-4 p-5 text-center shadow-sm w-100">
+        <i class="bi bi-people text-muted display-4 mb-3 d-block"></i>
+        <h5 class="fw-semibold text-secondary">No enrollments found</h5>
+    </div>
+}
+else
+{
+    @foreach (var group in Model)
+    {
+        <div class="mb-5 course-group-section animate-fade-in">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="bi bi-journal-bookmark-fill text-primary fs-4"></i>
+                    <a asp-action="CourseDetails" asp-controller="Instructor" asp-route-id="@group.CourseId" class="text-decoration-none text-dark">
+                        <h3 class="fw-bold mb-0 hover-primary-text" style="font-size: 1.35rem; transition: color 0.2s;">@group.CourseTitle</h3>
+                    </a>
+                    <span class="badge rounded-pill px-3 py-1 fw-semibold" style="font-size: 0.8rem; background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;">
+                        @group.Enrollments.Count @(group.Enrollments.Count == 1 ? "Student" : "Students")
+                    </span>
+                </div>
+                <a asp-action="CourseDetails" asp-controller="Instructor" asp-route-id="@group.CourseId" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-medium">
+                    <i class="bi bi-eye me-1"></i>View Course Details
+                </a>
+            </div>
+
+            <div class="enrollment-list-container rounded-3 overflow-hidden border">
+                @foreach (var enrollment in group.Enrollments)
+                {
+                    <div class="enrollment-list-item d-flex align-items-center justify-content-between p-3">
+                        <div class="d-flex align-items-center gap-3 flex-grow-1">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle text-white fw-bold avatar-circle-sm">
+                                @if (!string.IsNullOrEmpty(enrollment.StudentAvatarUrl))
+                                {
+                                    <img src="@enrollment.StudentAvatarUrl" alt="@enrollment.StudentFullName" class="rounded-circle w-100 h-100 object-fit-cover" />
+                                }
+                                else
+                                {
+                                    <span>@enrollment.StudentInitials</span>
+                                }
+                            </div>
+                            
+                            <div style="min-width: 160px;">
+                                <h5 class="mb-0 fw-semibold student-list-name">@enrollment.StudentFullName</h5>
+                                <div class="student-list-date">Enrolled @enrollment.EnrolledAtFormatted</div>
+                            </div>
+                            
+                            <div class="d-none d-md-flex align-items-center gap-3 flex-grow-1 px-4">
+                                <div class="progress progress-custom flex-grow-1 mb-0" style="height: 6px;">
+                                    <div class="progress-bar progress-bar-custom @(enrollment.Status == "Completed" ? "progress-completed" : "")" 
+                                         role="progressbar" 
+                                         style="width: @enrollment.ProgressPercentage%" 
+                                         aria-valuenow="@enrollment.ProgressPercentage" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                                <span class="fw-semibold text-muted" style="font-size: 0.85rem; min-width: 40px; text-align: right;">@enrollment.ProgressPercentage%</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <div>
+                                @if (enrollment.Status == "Active")
+                                {
+                                    <span class="badge badge-active px-3 py-1.5 rounded-pill fw-medium">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-completed px-3 py-1.5 rounded-pill fw-medium">Completed</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}

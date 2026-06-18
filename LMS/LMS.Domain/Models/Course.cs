@@ -13,6 +13,7 @@ namespace LMS.Domain.Models
         public required string ThumbnailUrl { get; set; }
         public required decimal Price { get; set; }
         public required string Description { get; set; }
+        public int TotalLessonCount { get; set; }
 
         // Navigation properties
         public required string InstructorId { get; set; }

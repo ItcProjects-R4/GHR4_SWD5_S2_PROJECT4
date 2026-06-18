@@ -1,0 +1,152 @@
+.search-input-group {
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease-in-out;
+}
+
+.search-input-group .form-control, 
+.search-input-group .input-group-text {
+    background-color: #f8fafc !important;
+    border: none;
+    color: #475569;
+}
+
+.search-input-group .form-control::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+.search-input-group:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    background-color: #ffffff;
+}
+
+.search-input-group:focus-within .form-control,
+.search-input-group:focus-within .input-group-text {
+    background-color: #ffffff !important;
+}
+
+.enrollment-list-container {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.enrollment-list-item {
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.enrollment-list-item:last-child {
+    border-bottom: none;
+}
+
+.enrollment-list-item:nth-child(odd) {
+    background-color: #f8fafc;
+}
+
+.enrollment-list-item:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.enrollment-list-item:hover {
+    background-color: #f1f5f9;
+}
+
+.avatar-circle-sm {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+}
+
+.student-list-name {
+    color: #0f172a;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+}
+
+.student-list-date {
+    font-size: 0.775rem;
+    color: #64748b;
+}
+
+.badge-active {
+    background-color: #ecfdf5 !important;
+    color: #10b981 !important;
+    border: 1px solid #d1fae5;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-completed {
+    background-color: #eff6ff !important;
+    color: #3b82f6 !important;
+    border: 1px solid #dbeafe;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.small-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.course-title {
+    color: #1e293b;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+}
+
+.progress-custom {
+    height: 6px;
+    background-color: #f1f5f9;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar-custom {
+    background-color: #3b82f6;
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+.progress-bar-custom.progress-completed {
+    background-color: #10b981;
+}
+
+.progress-percentage {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+.hover-primary-text:hover {
+    color: #3b82f6 !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
