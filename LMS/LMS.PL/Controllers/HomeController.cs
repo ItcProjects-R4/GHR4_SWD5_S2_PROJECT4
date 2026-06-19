@@ -1,4 +1,4 @@
-using LMS.PL.ViewModels;
+using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -21,5 +21,21 @@ namespace LMS.PL.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [HttpGet]
+        public IActionResult TestLayout()
+        {
+           
+            return View();
+        }
+        //subscribing to newsletter
+        [HttpGet]
+        public IActionResult Subscribe()
+        {
+           
+            return View();
+        }
+        
+
     }
 }

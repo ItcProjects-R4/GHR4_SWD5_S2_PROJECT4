@@ -1,0 +1,82 @@
+﻿@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_AuthLayout";
+}
+ <div class="auth-card">
+        <div class="card p-4 p-md-5">
+            <div class="mb-4">
+                <h1 class="h2 fw-bold mb-2">Create your account</h1>
+                <p class="text-muted mb-0" style="font-size:16px">Start your learning journey today</p>
+            </div>
+
+            <form asp-action="Register" asp-controller="Account" method="post" class="needs-validation" novalidate>
+            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+                <div class="row g-3 mb-3">
+
+                    @* FirstName *@
+                    <div class="col-6">
+                        <label class="form-label">First Name</label>
+                        <input asp-for="FirstName" class="form-control" placeholder="John">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+
+                    @* LastName *@
+                    <div class="col-6">
+                        <label class="form-label">Last Name</label>
+                        <input asp-for="LastName" class="form-control" placeholder="Doe">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                @* Email *@
+                <div class="mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input asp-for="Email" class="form-control" placeholder="name@example.com">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+            @* PhoneNumber *@
+            <div class="mb-3">
+                <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="01012345678" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+
+                @* Password *@
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <div class="input-group">
+                        <input asp-for="Password" class="form-control border-end-0" placeholder="••••••••">
+        
+          
+                        <button class="btn btn-light border border-start-0" type="button" onclick="this.previousElementSibling.type=this.previousElementSibling.type==='password'?'text':'password'">
+                            <i class="bi bi-eye"></i>
+                        </button> 
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                @* ConfirmPassword *@
+                <div class="mb-4">
+                    <label class="form-label">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" class="form-control" placeholder="••••••••">
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mb-3">Create Account</button>
+                <p class="text-center mb-0" style="font-size:13px;color:var(--text-muted)">
+                    Already have an account? <a asp-action="Login" asp-controller="Account" class="fw-semibold">Sign in</a>
+                </p>
+            </form>
+        </div>
+ </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+   
+}
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.0/build/css/intlTelInput.css">
+}

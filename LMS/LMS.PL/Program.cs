@@ -1,4 +1,5 @@
 // Import the required packages
+using AutoMapper;
 using CloudinaryDotNet;
 using dotenv.net;
 using LMS.BLL.Services.Implementation;
@@ -6,8 +7,11 @@ using LMS.BLL.Services.Interfaces;
 using LMS.DAL.Data;
 using LMS.DAL.Repositories.Implementation;
 using LMS.DAL.Repositories.Interfaces;
+using LMS.DAL.Seeding;
 using LMS.Domain.Models;
+using LMS.PL.Mapping;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 // Set your Cloudinary credentials
@@ -18,14 +22,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient<IPaymobService, PaymobService>();
 
-// 3. Register Repositories and Services
+// Register Repositories and Services
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymobService, PaymobService>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IReportingService, ReportingService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
+
 
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -36,7 +42,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//db context
+//DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 
@@ -52,6 +58,21 @@ builder.Services.AddSingleton(cloudinary);
 // Register the CloudinaryService
 
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+
+// Register AutoMapper
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<UserProfile>();
+});
+
+// Register Identity with roles
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+// add emailsender
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 
 var app = builder.Build();
 
@@ -76,5 +97,11 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+//Register IdentitySeeder
+
+using (var scope = app.Services.CreateScope())
+{
+    await IdentitySeeder.SeedIdentityAsync(scope.ServiceProvider);
+}
 
 app.Run();

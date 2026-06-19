@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<LMS.Domain.Models.ApplicationUser>
 @inject Microsoft.AspNetCore.Identity.UserManager<LMS.Domain.Models.ApplicationUser> UserManager
 @{
-    Layout = "_Layout";
+    Layout = "_DashboardLayout";
     var searchString = Context.Request.Query["searchString"].ToString();
     var selectedRole = Context.Request.Query["roleFilter"].ToString();
     if (string.IsNullOrEmpty(selectedRole))
