@@ -38,12 +38,13 @@
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
-                @* PhoneNumber *@
-                <div class="mb-3">
-                    <label class="form-label">Phone Number</label>
-                    <input asp-for="PhoneNumber" id="phone" class="form-control" placeholder="000-000-0000">
-                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                </div>
+            @* PhoneNumber *@
+            <div class="mb-3">
+                <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="01012345678" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
 
                 @* Password *@
                 <div class="mb-3">
@@ -74,8 +75,7 @@
  </div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.0/build/js/intlTelInput.min.js"></script>
-    <script src="~/js/phone-input.js" asp-append-version="true"></script>
+   
 }
 @section Styles {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.0/build/css/intlTelInput.css">

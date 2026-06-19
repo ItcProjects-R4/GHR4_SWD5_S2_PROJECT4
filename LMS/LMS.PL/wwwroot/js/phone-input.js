@@ -1,4 +1,4 @@
-﻿const phoneInput = document.getElementById("phone");
+﻿/*const phoneInput = document.getElementById("phone");
 if (phoneInput) { 
     const iti = window.intlTelInput(phoneInput, {
         initialCountry: "eg",
@@ -8,4 +8,4 @@ if (phoneInput) {
     document.querySelector("form").addEventListener("submit", function () {
         phoneInput.value = iti.getNumber();
     });
-}
+}*/

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using LMS.Domain.Models;
-using LMS.PL.ViewModels;
+using LMS.Domain.ViewModels;
 
 namespace LMS.PL.Mapping
 {
