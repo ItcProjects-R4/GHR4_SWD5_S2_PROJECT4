@@ -135,10 +135,10 @@ namespace LMS.PL.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> payments()
+        public async Task<IActionResult> Payments()
         {
             var reports = await _reportingService.GetFinancialReportsAsync();
-            return View("payments", reports);
+            return View("Payments", reports);
         }
     }
 }
