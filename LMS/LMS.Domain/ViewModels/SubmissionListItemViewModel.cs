@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LMS.PL.ViewModels
+namespace LMS.Domain.ViewModels
 {
     public class SubmissionListItemViewModel
     {
@@ -12,5 +12,7 @@ namespace LMS.PL.ViewModels
         public bool IsGraded { get; set; }
         public int Grade { get; set; }
         public string Feedback { get; set; } = string.Empty;
+
+
     }
 }

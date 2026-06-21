@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace LMS.PL.ViewModels
+namespace LMS.Domain.ViewModels
 {
     public class GradeSubmissionViewModel
     {

@@ -10,7 +10,7 @@ namespace LMS.PL.Controllers
         {
             return View();
         }
-
+      
         public IActionResult Privacy()
         {
             return View();
@@ -21,21 +21,5 @@ namespace LMS.PL.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-        [HttpGet]
-        public IActionResult TestLayout()
-        {
-           
-            return View();
-        }
-        //subscribing to newsletter
-        [HttpGet]
-        public IActionResult Subscribe()
-        {
-           
-            return View();
-        }
-        
-
     }
 }

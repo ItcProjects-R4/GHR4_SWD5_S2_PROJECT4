@@ -1,6 +1,6 @@
-﻿@model IEnumerable<LMS.PL.ViewModels.SubmissionListItemViewModel>
+﻿@model IEnumerable<LMS.Domain.ViewModels.SubmissionListItemViewModel>
 @{
-    Layout = "_Layout";
+    Layout = "_DashboardLayout";
     var searchString = Context.Request.Query["searchString"];
     var statusFilter = Context.Request.Query["statusFilter"].ToString();
     if (string.IsNullOrEmpty(statusFilter))
@@ -125,9 +125,6 @@
     }
 </div>
 
-<!-- ========================================== -->
-<!-- المودالات مفصولة خارج الـ loop -->
-<!-- ========================================== -->
 @if (Model != null)
 {
     @foreach (var sub in Model.Where(s => s.IsGraded))

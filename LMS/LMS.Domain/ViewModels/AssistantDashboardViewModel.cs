@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LMS.PL.ViewModels
+namespace LMS.Domain.ViewModels
 {
     public class AssistantDashboardViewModel
     {

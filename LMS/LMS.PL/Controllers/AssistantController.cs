@@ -1,164 +1,12 @@
-﻿//using LMS.Domain.Models;
-//using LMS.PL.ViewModels;
-//using Microsoft.AspNetCore.Identity;
-//using Microsoft.AspNetCore.Mvc;
-//using System.IO;
-//using System.Threading.Tasks;
-
-//namespace LMS.PL.Controllers
-//{
-//    public class AssistantController : Controller
-//    {
-//        private readonly UserManager<ApplicationUser> _userManager;
-//        private readonly SignInManager<ApplicationUser> _signInManager;
-//        private readonly IWebHostEnvironment _environment;
-
-//        public AssistantController(
-//            UserManager<ApplicationUser> userManager,
-//            SignInManager<ApplicationUser> signInManager,
-//            IWebHostEnvironment environment)
-//        {
-//            _userManager = userManager;
-//            _signInManager = signInManager;
-//            _environment = environment;
-//        }
-
-
-//        // 1. عرض الإعدادات
-//        [HttpGet]
-//        public async Task<IActionResult> Settings()
-//        {
-//            var user = await _userManager.GetUserAsync(User);
-
-//            var model = new AssistantSettingsViewModel
-//            {
-//                FirstName = user?.FirstName ?? "Sarah",
-//                LastName = user?.LastName ?? "Adams",
-//                Email = user?.Email ?? "sarah.adams@lms-platform.com",
-//                AvatarUrl = user?.AvatarUrl
-//            };
-
-//            return View(model);
-//        }
-
-//        // 2. تعديل الملف الشخصي
-//        [HttpPost]
-//        [ValidateAntiForgeryToken]
-//        public async Task<IActionResult> UpdateProfile(AssistantSettingsViewModel model)
-//        {
-//            if (!ModelState.IsValid)
-//            {
-//                return View("Settings", model);
-//            }
-
-//            var user = await _userManager.GetUserAsync(User);
-//            if (user == null)
-//            {
-//                TempData["ErrorMessage"] = "You must be logged in.";
-//                return RedirectToAction(nameof(Settings));
-//            }
-
-//            user.FirstName = model.FirstName;
-//            user.LastName = model.LastName;
-
-//            var result = await _userManager.UpdateAsync(user);
-//            if (result.Succeeded)
-//            {
-//                TempData["SuccessMessage"] = "Profile updated successfully!";
-//            }
-//            else
-//            {
-//                TempData["ErrorMessage"] = "Failed to update profile.";
-//            }
-
-//            return RedirectToAction(nameof(Settings));
-//        }
-
-//        // 3. تغيير كلمة المرور
-//        [HttpPost]
-//        [ValidateAntiForgeryToken]
-//        public async Task<IActionResult> UpdatePassword(AssistantSettingsViewModel model)
-//        {
-//            if (string.IsNullOrEmpty(model.CurrentPassword) ||
-//                string.IsNullOrEmpty(model.NewPassword))
-//            {
-//                TempData["ErrorMessage"] = "All password fields are required.";
-//                return RedirectToAction(nameof(Settings));
-//            }
-
-//            var user = await _userManager.GetUserAsync(User);
-//            if (user == null)
-//            {
-//                TempData["ErrorMessage"] = "You must be logged in.";
-//                return RedirectToAction(nameof(Settings));
-//            }
-
-//            var result = await _userManager.ChangePasswordAsync(
-//                user,
-//                model.CurrentPassword,
-//                model.NewPassword);
-
-//            if (result.Succeeded)
-//            {
-//                await _signInManager.RefreshSignInAsync(user);
-//                TempData["SuccessMessage"] = "Password updated successfully!";
-//            }
-//            else
-//            {
-//                TempData["ErrorMessage"] = "Failed to update password.";
-//            }
-
-//            return RedirectToAction(nameof(Settings));
-//        }
-
-//        // 4. تحديث الصورة
-//        [HttpPost]
-//        [ValidateAntiForgeryToken]
-//        public async Task<IActionResult> UpdateAvatar(IFormFile avatarFile)
-//        {
-//            var user = await _userManager.GetUserAsync(User);
-//            if (user == null)
-//            {
-//                TempData["ErrorMessage"] = "You must be logged in.";
-//                return RedirectToAction(nameof(Settings));
-//            }
-
-//            if (avatarFile != null && avatarFile.Length > 0)
-//            {
-//                var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads", "avatars");
-//                if (!Directory.Exists(uploadsFolder))
-//                {
-//                    Directory.CreateDirectory(uploadsFolder);
-//                }
-
-//                var uniqueFileName = Guid.NewGuid().ToString() + "_" + avatarFile.FileName;
-//                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-//                using (var fileStream = new FileStream(filePath, FileMode.Create))
-//                {
-//                    await avatarFile.CopyToAsync(fileStream);
-//                }
-
-//                user.AvatarUrl = "/uploads/avatars/" + uniqueFileName;
-//                await _userManager.UpdateAsync(user);
-
-//                TempData["SuccessMessage"] = "Avatar updated successfully!";
-//            }
-
-//            return RedirectToAction(nameof(Settings));
-//        }
-//    }
-//}
-
-using LMS.BLL.Services.Interfaces;
+﻿using LMS.BLL.Services.Interfaces;
 using LMS.Domain.Models;
-using LMS.PL.ViewModels;
+using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LMS.PL.Helpers;
 
 namespace LMS.PL.Controllers
 {
@@ -167,19 +15,19 @@ namespace LMS.PL.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IWebHostEnvironment _environment;
+        private readonly ICloudinaryService _cloudinaryService;
         private readonly ISubmissionService _submissionService;
 
         public AssistantController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IWebHostEnvironment environment,
-            ISubmissionService submissionService)
+       UserManager<ApplicationUser> userManager,
+       SignInManager<ApplicationUser> signInManager,
+       ISubmissionService submissionService,
+       ICloudinaryService cloudinaryService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _environment = environment;
             _submissionService = submissionService;
+            _cloudinaryService = cloudinaryService;
         }
 
         // ── Dashboard Action ──────────────────────────────────────
@@ -319,44 +167,49 @@ namespace LMS.PL.Controllers
 
             return RedirectToAction(nameof(Settings));
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAvatar(IFormFile avatarFile)
         {
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 TempData["ErrorMessage"] = "You must be logged in.";
                 return RedirectToAction(nameof(Settings));
             }
 
-            if (avatarFile != null && avatarFile.Length > 0)
+            if (avatarFile == null || avatarFile.Length == 0)
             {
-                var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads", "avatars");
-                if (!Directory.Exists(uploadsFolder))
+                TempData["ErrorMessage"] = "Please select an image.";
+                return RedirectToAction(nameof(Settings));
+            }
+
+            try
+            {
+                string imageUrl = await _cloudinaryService.UploadImageAsync(avatarFile);
+
+                user.AvatarUrl = imageUrl;
+
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded)
                 {
-                    Directory.CreateDirectory(uploadsFolder);
+                    TempData["SuccessMessage"] = "Avatar updated successfully!";
                 }
-
-                var uniqueFileName = Guid.NewGuid().ToString() + "_" + avatarFile.FileName;
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                else
                 {
-                    await avatarFile.CopyToAsync(fileStream);
+                    TempData["ErrorMessage"] = "Failed to save avatar.";
                 }
-
-                user.AvatarUrl = "/uploads/avatars/" + uniqueFileName;
-                await _userManager.UpdateAsync(user);
-
-                TempData["SuccessMessage"] = "Avatar updated successfully!";
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Failed to upload image.";
             }
 
             return RedirectToAction(nameof(Settings));
-        }        // ============================================
+        }
         // GRADE SUBMISSION ACTIONS
-        // ============================================
 
         [HttpGet]
         public async Task<IActionResult> GradeSubmission(int id)
@@ -384,11 +237,11 @@ namespace LMS.PL.Controllers
                 StudentInitial = !string.IsNullOrEmpty(submission.Student?.FirstName)
                     ? submission.Student.FirstName.Substring(0, 1).ToUpper()
                     : "U",
-                StudentAvatarColor = GetAvatarColor(submission.Student?.FirstName),
+                StudentAvatarColor = FormattingHelpers.GetAvatarColor(submission.Student?.FirstName),
                 CourseTitle = submission.Assignment?.Title ?? "Untitled Course",
                 AssignmentTitle = submission.Assignment?.Title ?? "Untitled Assignment",
                 SubmittedAt = submission.SubmittedAt,
-                SubmittedTimeAgo = GetTimeAgo(submission.SubmittedAt),
+                SubmittedTimeAgo = FormattingHelpers.GetTimeAgo(submission.SubmittedAt),
                 FileName = submission.SubmissionFiles?.FirstOrDefault()?.FileName,
                 FileUrl = submission.SubmissionFiles?.FirstOrDefault()?.FileUrl,
                 FileType = submission.SubmissionFiles?.FirstOrDefault()?.FileType,
@@ -434,40 +287,5 @@ namespace LMS.PL.Controllers
             return RedirectToAction(nameof(Submissions));
         }
 
-        // ============================================
-        // HELPER METHODS
-        // ============================================
-
-        private string GetAvatarColor(string? firstName)
-        {
-            if (string.IsNullOrEmpty(firstName)) return "var(--accent-color)";
-
-            return firstName.ToUpper()[0] switch
-            {
-                'M' => "var(--accent-color)",
-                'J' => "#0dcaf0",
-                'S' => "#198754",
-                'D' => "#ffc107",
-                'A' => "#dc3545",
-                'E' => "#6f42c1",
-                _ => "var(--accent-color)"
-            };
-        }
-
-        private string GetTimeAgo(DateTime dateTime)
-        {
-            var timeSpan = DateTime.Now - dateTime;
-
-            if (timeSpan.TotalMinutes < 1)
-                return "Just now";
-            if (timeSpan.TotalMinutes < 60)
-                return $"Submitted {(int)timeSpan.TotalMinutes} minutes ago";
-            if (timeSpan.TotalHours < 24)
-                return $"Submitted {(int)timeSpan.TotalHours} hours ago";
-            if (timeSpan.TotalDays < 30)
-                return $"Submitted {(int)timeSpan.TotalDays} days ago";
-
-            return $"Submitted on {dateTime:MMM dd, yyyy}";
-        }
     }
 }
