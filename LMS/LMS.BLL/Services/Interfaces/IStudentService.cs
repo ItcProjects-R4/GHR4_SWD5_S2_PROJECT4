@@ -1,5 +1,5 @@
-using LMS.BLL.ViewModels.Student.CourseDetails;
-using LMS.BLL.ViewModels.Student.Dashboard;
+using LMS.Domain.ViewModels.Student.CourseDetails;
+using LMS.Domain.ViewModels.Student.Dashboard;
 using LMS.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using LMS.BLL.DTOS;

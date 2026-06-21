@@ -1,5 +1,5 @@
 
-namespace LMS.BLL.ViewModels.Instructor.CourseDetails
+namespace LMS.Domain.ViewModels.Instructor.CourseDetails
 {
     public class InstructorAssignmentDetailsViewModel
     {

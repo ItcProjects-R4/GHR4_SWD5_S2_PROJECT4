@@ -291,7 +291,7 @@
             });
 
             $.ajax({
-                url: '/Student/SubmitAssignment',
+                url: '@Url.Action("SubmitAssignment", "Student")',
                 type: 'POST',
                 data: formData,
                 processData: false,
@@ -323,7 +323,7 @@
                     
                     setTimeout(() => {
                         $.ajax({
-                            url: '/Student/AssignmentDetails/' + @Model.Id,
+                            url: '@Url.Action("AssignmentDetails", "Student")/' + @Model.Id,
                             type: 'GET',
                             headers: { 'X-Requested-With': 'XMLHttpRequest' },
                             success: function (html) {

@@ -1,5 +1,5 @@
 
-namespace LMS.BLL.ViewModels.Student.CourseDetails
+namespace LMS.Domain.ViewModels.Student.CourseDetails
 {
     public class ContentViewModel
     {

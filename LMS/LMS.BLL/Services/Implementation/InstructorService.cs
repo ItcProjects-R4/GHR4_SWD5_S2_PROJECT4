@@ -1,7 +1,7 @@
 using LMS.BLL.Services.Interfaces;
-using LMS.BLL.ViewModels.Instructor.Enrollments;
-using LMS.BLL.ViewModels.Instructor.CourseDetails;
-using LMS.BLL.ViewModels.Student.CourseDetails;
+using LMS.Domain.ViewModels.Instructor.Enrollments;
+using LMS.Domain.ViewModels.Instructor.CourseDetails;
+using LMS.Domain.ViewModels.Student.CourseDetails;
 using LMS.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using LMS.Domain.Enums;

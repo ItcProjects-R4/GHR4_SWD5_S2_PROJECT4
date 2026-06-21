@@ -1,4 +1,5 @@
-namespace LMS.BLL.ViewModels.Student.Dashboard
+
+namespace LMS.Domain.ViewModels.Student.Dashboard
 {
     public class BrowseCourseViewModel
     {

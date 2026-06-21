@@ -1,6 +1,6 @@
-using LMS.BLL.ViewModels.Student.CourseDetails;
+using LMS.Domain.ViewModels.Student.CourseDetails;
 
-namespace LMS.BLL.ViewModels.Instructor.CourseDetails
+namespace LMS.Domain.ViewModels.Instructor.CourseDetails
 {
     public class InstructorCourseDetailsPageViewModel
     {

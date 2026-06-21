@@ -36,7 +36,7 @@
                 const search = $('#searchInput').val();
 
                 $.ajax({
-                    url: '/Instructor/Enrollments',
+                    url: '@Url.Action("Enrollments", "Instructor")',
                     type: 'GET',
                     data: { search: search },
                     success: function (data) {

@@ -1,6 +1,6 @@
-using LMS.BLL.ViewModels.Instructor.Enrollments;
-using LMS.BLL.ViewModels.Instructor.CourseDetails;
-using LMS.BLL.ViewModels.Student.CourseDetails;
+using LMS.Domain.ViewModels.Instructor.Enrollments;
+using LMS.Domain.ViewModels.Instructor.CourseDetails;
+using LMS.Domain.ViewModels.Student.CourseDetails;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

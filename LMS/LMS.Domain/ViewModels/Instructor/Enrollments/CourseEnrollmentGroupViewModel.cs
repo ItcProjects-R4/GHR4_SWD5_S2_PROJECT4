@@ -1,5 +1,5 @@
-﻿
-namespace LMS.BLL.ViewModels.Instructor.Enrollments
+
+namespace LMS.Domain.ViewModels.Instructor.Enrollments
 {
     public class CourseEnrollmentGroupViewModel
     {
