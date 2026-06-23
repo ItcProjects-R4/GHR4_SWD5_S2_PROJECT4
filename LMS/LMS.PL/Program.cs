@@ -31,7 +31,7 @@ builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IReportingService, ReportingService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
-
+builder.Services.AddScoped<ICourseService, CourseService>();
 
 
 // Add services to the container.
@@ -70,6 +70,8 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddBLLServices();
+
+
 
 var app = builder.Build();
 
@@ -112,3 +114,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+
+

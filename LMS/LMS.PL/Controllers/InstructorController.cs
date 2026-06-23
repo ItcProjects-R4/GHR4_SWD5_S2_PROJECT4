@@ -176,6 +176,55 @@ namespace LMS.PL.Controllers
                 return PartialView("_AssignmentDetails", assignment);
 
             return View(assignment);
+        [Authorize(Roles = "Instructor")]
+        public async Task<IActionResult> Settings()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound();
+
+            var viewModel = new InstructorSettingsViewModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email ?? string.Empty,
+                PhoneNumber = user.PhoneNumber ?? string.Empty
+            };
+
+            return View(viewModel);
+        }
+
+        // Istructor profile settings
+        [HttpPost]
+        [Authorize(Roles = "Instructor")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Settings(InstructorSettingsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound();
+
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
+            user.PhoneNumber = model.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Profile settings updated successfully.";
+                return RedirectToAction(nameof(Settings));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
         }
     }
 }

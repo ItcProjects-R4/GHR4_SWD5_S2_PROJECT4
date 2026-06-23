@@ -1,0 +1,89 @@
+﻿@model LMS.Domain.Models.Course
+@{
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <div class="d-flex align-items-center mb-5">
+        <a asp-controller="Course" asp-action="Browse" class="btn btn-light rounded-circle me-3 d-flex align-items-center justify-content-center p-0" style="width: 32px; height: 32px;"><i class="bi bi-arrow-left"></i></a>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Course" asp-action="Browse" class="text-decoration-none">Courses</a></li>
+                <li class="breadcrumb-item active">@Model.Title</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-lg-8">
+            <div class="mb-4">
+                <h1 class="display-5 fw-bold mb-3">@Model.Title</h1>
+                <p class="lead text-secondary">@Model.Description</p>
+            </div>
+
+            <div class="player-wrapper mb-5 rounded-4 overflow-hidden position-relative">
+                <img src="@(string.IsNullOrEmpty(Model.ThumbnailUrl) ? "~/images/course_web_dev.png" : Model.ThumbnailUrl)" class="img-fluid w-100" alt="Thumbnail" style="min-height:400px; object-fit:cover;">
+            </div>
+
+            <!-- Tab Navigation -->
+            <ul class="nav nav-tabs mb-4" id="courseTab" role="tablist">
+                <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#overview" type="button">Overview</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#curriculum" type="button">Curriculum</button></li>
+            </ul>
+
+            <div class="tab-content pb-5">
+                <div class="tab-pane fade show active" id="overview">
+                    <h4 class="fw-bold mb-3">Course Description</h4>
+                    <p class="text-secondary" style="line-height: 1.8;">@Model.Description</p>
+                </div>
+
+                <div class="tab-pane fade" id="curriculum">
+                    <div class="accordion custom-accordion" id="curriculumAccordion">
+                        @if (Model.Modules != null && Model.Modules.Any())
+                        {
+                            var moduleIndex = 1;
+                            @foreach (var module in Model.Modules.OrderBy(m => m.OrderIndex))
+                            {
+                                <div class="accordion-item mb-3 border-0 shadow-sm rounded-4 overflow-hidden">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#sec-@module.Id">
+                                            <div class="d-flex justify-content-between w-100 me-3 align-items-center">
+                                                <span>Section @moduleIndex: @module.Title</span>
+                                                <span class="small fw-normal text-muted">@module.Contents.Count() Contents</span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="sec-@module.Id" class="accordion-collapse collapse">
+                                        <div class="accordion-body p-0">
+                                            @foreach (var content in module.Contents.OrderBy(c => c.OrderIndex))
+                                            {
+                                                <div class="curriculum-item d-flex justify-content-between align-items-center p-3 border-bottom">
+                                                    <div class="d-flex align-items-center gap-3">
+                                                        <i class="bi bi-play-circle text-accent fs-5"></i>
+                                                        <span class="fw-medium">@content.Title</span>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                moduleIndex++;
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card p-4 shadow border-0 rounded-4 sticky-top" style="top: 100px;">
+                <div class="text-center mb-4">
+                    <div class="h1 fw-bold text-primary">@(Model.Price == 0 ? "Free" : $"${Model.Price:F2}")</div>
+                </div>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg w-100 mb-3 py-3 rounded-3 fw-bold">Enroll Now</a>
+                <p class="text-center text-muted small mb-0">30-Day Money-Back Guarantee</p>
+            </div>
+        </div>
+    </div>
+</div>
