@@ -17,8 +17,6 @@ namespace LMS.PL.Controllers
         private readonly IInstructorService _instructorService;
         private readonly IReportingService _reportingService;
 
-        public InstructorController(IStudentService studentService, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IInstructorService instructorService)
-
         public InstructorController(IStudentService studentService,
                                     UserManager<ApplicationUser> userManager,
                                     RoleManager<IdentityRole> roleManager,
@@ -27,7 +25,7 @@ namespace LMS.PL.Controllers
             _studentService = studentService;
             _userManager = userManager;
             _roleManager = roleManager;
-            _instructorService = instructorService;
+            _instructorService = _instructorService;
             _reportingService = reportingService;
         }
 
@@ -235,7 +233,7 @@ namespace LMS.PL.Controllers
        
             return View(model);
             }
-        }
+        
 
         [HttpGet]
         public async Task<IActionResult> Payments()

@@ -1,13 +1,13 @@
 using LMS.BLL.Services.Interfaces;
 using LMS.Domain.ViewModels.Student.CourseDetails;
 using LMS.Domain.ViewModels.Student.Dashboard;
-using LMS.BLL.DTOS;
 using LMS.DAL.Data;
 using LMS.Domain.Enums;
 using LMS.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using LMS.Domain.ViewModels;
 
 namespace LMS.BLL.Services.Implementation
 {
@@ -141,24 +141,24 @@ namespace LMS.BLL.Services.Implementation
             return browseCourses;
         }
 
-        public async Task<CheckoutResponse> EnrollCourseAsync(int courseId)
+        public async Task<CheckOutResponseViewModel> EnrollCourseAsync(int courseId)
         {
             if (courseId <= 0)
-                return new CheckoutResponse { Success = false, ErrorMessage = "Invalid course selection." };
+                return new CheckOutResponseViewModel { Success = false, ErrorMessage = "Invalid course selection." };
 
             var studentId = currentUserService.UserId;
 
             var courseExists = await context.Courses.AnyAsync(c => c.Id == courseId);
             if (!courseExists)
-                return new CheckoutResponse { Success = false, ErrorMessage = "Course not found." };
+                return new CheckOutResponseViewModel { Success = false, ErrorMessage = "Course not found." };
 
             var isEnrolled = await context.Enrollments.AnyAsync(e => e.StudentId == studentId && e.CourseId == courseId);
             if (isEnrolled)
-                return new CheckoutResponse { Success = false, ErrorMessage = "You are already enrolled in this course." };
+                return new CheckOutResponseViewModel { Success = false, ErrorMessage = "You are already enrolled in this course." };
 
             var user = await userManager.FindByIdAsync(studentId);
             if (user == null)
-                return new CheckoutResponse { Success = false, ErrorMessage = "User not found." };
+                return new CheckOutResponseViewModel { Success = false, ErrorMessage = "User not found." };
 
             var email = user.Email;
             var name = $"{user.FirstName} {user.LastName}".Trim();
