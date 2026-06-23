@@ -30,7 +30,7 @@ builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IReportingService, ReportingService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
-
+builder.Services.AddScoped<ICourseService, CourseService>();
 
 
 // Add services to the container.
@@ -68,6 +68,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -99,3 +101,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+
+
