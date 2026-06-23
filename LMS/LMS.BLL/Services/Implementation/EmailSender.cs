@@ -26,9 +26,9 @@ namespace LMS.BLL.Services.Implementation
             using var smtp = new SmtpClient();
 
             await smtp.ConnectAsync(
-                _config["EmailSettings:Host"],
-                int.Parse(_config["EmailSettings:Port"]),
-                SecureSocketOptions.StartTls
+                    "smtp.gmail.com",
+                      587,
+                      SecureSocketOptions.StartTls
             );
 
             await smtp.AuthenticateAsync(

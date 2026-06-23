@@ -2,6 +2,8 @@ using LMS.BLL.Services.Interfaces;
 using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
 
 namespace LMS.PL.Controllers
 {
@@ -9,10 +11,14 @@ namespace LMS.PL.Controllers
     {
 
         private readonly ICourseService _courseService;
+        private readonly IEmailSender _emailSender;
 
-        public HomeController(ICourseService courseService)
+        public HomeController(
+            ICourseService courseService,
+            IEmailSender emailSender)
         {
             _courseService = courseService;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -36,18 +42,29 @@ namespace LMS.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Contact(ContactFormViewModel model)
+        public async Task<IActionResult> Contact(ContactFormViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            // Simulate message delivery
+            await _emailSender.SendEmailAsync(
+                "lmsify.noreply@gmail.com",
+                model.Subject,
+                $@"
+                <h3>New Contact Message</h3>
+                <p><strong>Name:</strong> {model.FirstName} {model.LastName}</p>
+                <p><strong>Email:</strong> {model.Email}</p>
+                <p><strong>Message:</strong> {model.Message}</p>
+                 "
+                 );
+
             TempData["SuccessMessage"] = "Thank you! Your message has been sent successfully.";
+
             return RedirectToAction(nameof(Contact));
         }
-       
+
 
         public IActionResult Privacy()
         {
