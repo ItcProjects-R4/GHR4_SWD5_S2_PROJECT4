@@ -14,7 +14,6 @@ namespace LMS.PL.Controllers
             _service = service;
         }
 
-
         [HttpGet]
         public IActionResult Register()
         {
@@ -147,6 +146,12 @@ namespace LMS.PL.Controllers
         }
         [HttpGet]
         public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
         {
             return View();
         }

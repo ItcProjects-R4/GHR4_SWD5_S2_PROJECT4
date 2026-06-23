@@ -24,6 +24,17 @@ namespace LMS.PL.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Instructor"))
+                {
+                    return RedirectToAction("Dashboard", "Instructor");
+                }
+                else if (User.IsInRole("Assistant"))
+                {
+                    return RedirectToAction("Dashboard", "Assistant");
+                }
+            }
             var featured = await _courseService.GetFeaturedCoursesAsync(3);
             return View(featured);
         }
@@ -82,13 +93,7 @@ namespace LMS.PL.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [HttpGet]
-        public IActionResult TestLayout()
-        {
-           
-            return View();
-        }
-        //subscribing to newsletter
+      
         [HttpGet]
         public IActionResult Subscribe()
         {
