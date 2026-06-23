@@ -2,14 +2,15 @@
 using AutoMapper;
 using CloudinaryDotNet;
 using dotenv.net;
+using LMS.BLL.Extensions;
 using LMS.BLL.Services.Implementation;
 using LMS.BLL.Services.Interfaces;
-using LMS.BLL.Extensions;
 using LMS.DAL.Data;
 using LMS.DAL.Repositories.Implementation;
 using LMS.DAL.Repositories.Interfaces;
 using LMS.DAL.Seeding;
 using LMS.Domain.Models;
+using LMS.PL.Helpers;
 using LMS.PL.Mapping;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -70,6 +71,9 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddBLLServices();
+
+//adding custom claims
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsPrincipalFactory>();
 
 
 
