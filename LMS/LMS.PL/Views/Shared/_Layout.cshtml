@@ -1,4 +1,4 @@
-﻿@{
+@{
     var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
 }
@@ -18,6 +18,9 @@
    
     <link rel="stylesheet" href="~/LMS.PL.styles.css" asp-append-version="true" />
 
+
+
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
@@ -28,16 +31,20 @@
                     <i class="bi bi-mortarboard-fill" style="color: var(--accent-color); font-size: 1.3rem;"></i>
                     <span style="font-weight:700; font-size:1.05rem; color:var(--text-primary); letter-spacing:-0.01em;">LMS Platform</span>
                 </a>
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+                <button class="navbar-toggler border-0" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="collapse navbar-collapse" id="navbarNav">
+
                     <ul class="navbar-nav me-auto ms-lg-5 gap-lg-1">
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="Index" class="nav-link @(currentController == "Home" && currentAction == "Index" ? "active" : "")">Home</a>
                             </li>
                         <li class="nav-item">
-                            <a asp-controller="Home" asp-action="BrowseCourses" class="nav-link @(currentController == "Home" && currentAction == "BrowseCourses" ? "active" : "")">Browse Courses</a>
+                            <a asp-controller="Course" asp-action="Browse" class="nav-link @(currentController == "Course" && currentAction == "Browse" ? "active" : "")">Browse Courses</a>
                             </li>
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="About" class="nav-link @(currentController == "Home" && currentAction == "About" ? "active" : "")">About</a>
@@ -46,6 +53,7 @@
                             <a asp-controller="Home" asp-action="Contact" class="nav-link @(currentController == "Home" && currentAction == "Contact" ? "active" : "")">Contact</a>
                             </li>
                     </ul>
+
                     <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -81,7 +89,9 @@
                             <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Create account</a>
                         }
                     </div>
+
                 </div>
+
             </div>
         </nav>
        

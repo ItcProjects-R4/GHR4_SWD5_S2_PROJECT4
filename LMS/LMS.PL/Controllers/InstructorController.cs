@@ -5,20 +5,19 @@ using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LMS.PL.Controllers
 {
-    //[Authorize(Roles = "Instructor")]
-    [AllowAnonymous]
+    [Authorize(Roles = "Instructor")]
     public class InstructorController : Controller
     {
         private readonly IStudentService _studentService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IInstructorService _instructorService;
         private readonly IReportingService _reportingService;
 
+        public InstructorController(IStudentService studentService, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IInstructorService instructorService)
 
         public InstructorController(IStudentService studentService,
                                     UserManager<ApplicationUser> userManager,
@@ -28,6 +27,7 @@ namespace LMS.PL.Controllers
             _studentService = studentService;
             _userManager = userManager;
             _roleManager = roleManager;
+            _instructorService = instructorService;
             _reportingService = reportingService;
         }
 
@@ -132,6 +132,109 @@ namespace LMS.PL.Controllers
             }
 
             return RedirectToAction(nameof(Users));
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Enrollments(string search)
+        {
+            var enrollments = await _instructorService.GetEnrollmentsAsync(search);
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return PartialView("_EnrollmentList", enrollments);
+
+            return View(enrollments);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CourseDetails(int id)
+        {
+            if (id <= 0)
+                return RedirectToAction("NotFound", "Home");
+
+            var page = await _instructorService.GetCourseDetailsPageAsync(id);
+            return View(page);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ContentDetails(int id)
+        {
+            if (id <= 0)
+                return BadRequest("Invalid content selection.");
+
+            var contentDetails = await _instructorService.GetContentAsync(id);
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return PartialView("_Content", contentDetails);
+
+            return View(contentDetails);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AssignmentDetails(int id)
+        {
+            if (id <= 0)
+                return BadRequest("Invalid assignment selection.");
+
+            var assignment = await _instructorService.GetAssignmentDetailsAsync(id);
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return PartialView("_AssignmentDetails", assignment);
+
+            return View(assignment);
+
+        }
+            
+        [Authorize(Roles = "Instructor")]
+        public async Task<IActionResult> Settings()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound();
+           
+            var viewModel = new InstructorSettingsViewModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email ?? string.Empty,
+                PhoneNumber = user.PhoneNumber ?? string.Empty
+            };
+
+                return View(viewModel);
+        }
+
+        // Istructor profile settings
+        [HttpPost]
+        [Authorize(Roles = "Instructor")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Settings(InstructorSettingsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+       
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound();
+       
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
+            user.PhoneNumber = model.PhoneNumber;
+       
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Profile settings updated successfully.";
+                return RedirectToAction(nameof(Settings));
+            }
+       
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+       
+            return View(model);
+            }
         }
 
         [HttpGet]
