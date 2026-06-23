@@ -13,6 +13,7 @@ namespace LMS.Domain.Models
         public int CourseId { get; set; }
         public DateTime EnrolledAt { get; set; }
         public EnrollmentStatus Status { get; set; }
+        public int CompletedLessonsCount { get; set; }
 
         // Navigation Properties
         // Navigation Properties

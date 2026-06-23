@@ -1,0 +1,148 @@
+@model InstructorAssignmentDetailsViewModel
+
+<div class="watch-assignment-header d-flex flex-wrap align-items-center justify-content-between pb-3 mb-4 border-bottom g-3">
+    <div class="d-flex align-items-center gap-3">
+        <div class="assignment-icon-badge rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: #fffbeb; border: 1px solid #ffe58f;">
+            <i class="bi bi-clipboard2-check-fill fs-4 text-warning"></i>
+        </div>
+        <div>
+            <h3 class="fw-bold mb-1 text-dark" style="font-size: 1.25rem;">@Model.Title</h3>
+            <span class="text-muted" style="font-size: 0.75rem;">
+                <i class="bi bi-calendar-event me-1"></i>Due Date: @Model.DueDate.ToString("MMMM dd, yyyy @ h:mm tt")
+            </span>
+        </div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-2" style="font-size: 0.8rem; border: 1px solid rgba(0,0,0,0.08);">
+            Max Score: @Model.MaxScore pts
+        </span>
+        <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2" style="font-size: 0.8rem; border: 1px solid #c7d2fe;">
+            Total Submissions: @Model.Submissions.Count
+        </span>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-12">
+        @if (!string.IsNullOrEmpty(Model.FileUrl))
+        {
+            <div class="article-link-card p-3.5 rounded-4 d-flex align-items-center justify-content-between gap-3 flex-wrap" style="background: #fffbeb; border: 1px solid #fde68a;">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="article-icon-wrap bg-white rounded-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; border: 1px solid #fcd34d; flex-shrink: 0;">
+                        <i class="bi bi-file-earmark-arrow-down fs-3 text-warning"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark" style="font-size:0.95rem;">Assignment Instructions Materials</div>
+                        <div class="text-muted" style="font-size: 0.8rem;">Instruction file uploaded for students.</div>
+                    </div>
+                </div>
+                <a href="@Model.FileUrl" target="_blank" download class="btn btn-warning rounded-pill px-4 fw-semibold text-dark">
+                    <i class="bi bi-download me-1"></i>Download PDF
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+    <div class="card-header bg-light py-3 border-bottom d-flex align-items-center justify-content-between">
+        <h5 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-people-fill text-primary me-2"></i>Student Submissions
+        </h5>
+        <span class="badge bg-secondary-subtle text-secondary rounded-pill px-2.5 py-1" style="font-size:0.75rem;">
+            @Model.Submissions.Count(s => s.Grade.HasValue) / @Model.Submissions.Count Graded
+        </span>
+    </div>
+    
+    <div class="card-body p-0">
+        @if (!Model.Submissions.Any())
+        {
+            <div class="text-center py-5 my-3">
+                <i class="bi bi-inbox display-4 text-muted d-block mb-3"></i>
+                <h6 class="fw-semibold text-muted">No student has submitted this assignment yet.</h6>
+                <p class="text-muted small mb-0">Submissions will automatically appear here once uploaded by students.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                    <thead class="table-light text-muted" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        <tr>
+                            <th scope="col" class="ps-4">Student</th>
+                            <th scope="col">Date Submitted</th>
+                            <th scope="col">Status & Grade</th>
+                            <th scope="col">Files</th>
+                            <th scope="col" class="pe-4 text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var submission in Model.Submissions)
+                        {
+                            bool isGraded = submission.Grade.HasValue;
+                            string statusBadgeClass = isGraded ? "bg-success-subtle text-success border-success-subtle" : "bg-warning-subtle text-warning-emphasis border-warning-subtle";
+                            string statusText = isGraded ? "Graded" : "Pending Grade";
+
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        @if (!string.IsNullOrEmpty(submission.StudentAvatarUrl))
+                                        {
+                                            <img src="@submission.StudentAvatarUrl" alt="Avatar" class="rounded-circle" style="width: 38px; height: 38px; object-fit: cover; border: 1.5px solid #e2e8f0;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center bg-light text-dark fw-bold" style="width: 38px; height: 38px; font-size: 0.85rem; border: 1.5px solid #e2e8f0;">
+                                                @(string.IsNullOrEmpty(submission.StudentFullName) ? "S" : submission.StudentFullName.Substring(0, 1).ToUpper())
+                                            </div>
+                                        }
+                                        <div>
+                                            <span class="fw-semibold text-dark d-block">@submission.StudentFullName</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-dark">@submission.SubmittedAt.ToString("MMM dd, yyyy")</span>
+                                    <span class="text-muted d-block" style="font-size: 0.75rem;">@submission.SubmittedAt.ToString("h:mm tt")</span>
+                                </td>
+                                <td>
+                                    <span class="badge @statusBadgeClass border px-2.5 py-1 rounded-pill mb-1">@statusText</span>
+                                    @if (isGraded)
+                                    {
+                                        <div class="fw-bold text-success" style="font-size: 0.85rem;">
+                                            @submission.Grade / @Model.MaxScore pts
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    @if (submission.SubmissionFiles.Any())
+                                    {
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach (var file in submission.SubmissionFiles)
+                                            {
+                                                var displayName = !string.IsNullOrEmpty(file.FileName) ? file.FileName : System.IO.Path.GetFileName(file.FileUrl);
+                                                <a href="@file.FileUrl" target="_blank" download class="btn btn-xs btn-outline-secondary rounded-pill px-2.5 py-1 text-decoration-none d-inline-flex align-items-center gap-1.5 small file-download-link" title="@displayName" style="font-size: 0.75rem; transition: all 0.2s;">
+                                                    <i class="bi bi-file-earmark-arrow-down-fill text-secondary"></i>
+                                                    <span class="text-truncate" style="max-width: 150px;">@displayName</span>
+                                                </a>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">No files</span>
+                                    }
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold">
+                                        <i class="bi bi-check2-square me-1"></i>Grade
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
