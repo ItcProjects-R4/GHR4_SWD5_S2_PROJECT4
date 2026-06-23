@@ -1,0 +1,164 @@
+@model StudentDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_DashboardLayout";
+}
+<main class="main-content py-2">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-5 animate-fade-in">
+        <div>
+            <h1 class="page-title mb-1">Welcome back, @Model.FirstName! 👋</h1>
+            <p class="text-muted mb-0">Ready to continue your learning journey?</p>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5 animate-fade-in">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-white d-flex flex-row align-items-center gap-3">
+                <div class="d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; color: #64748b;">
+                    <i class="bi bi-book" style="font-size: 1.5rem;"></i>
+                </div>
+                <div>
+                    <div class="mb-1 fw-medium" style="color: #64748b; font-size: 0.95rem;">Enrolled</div>
+                    <div class="fw-bold lh-1" style="color: #1e293b; font-size: 1.75rem;">@Model.EnrolledCoursesCount</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-white d-flex flex-row align-items-center gap-3">
+                <div class="d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: #eff6ff; color: #3b82f6; border-radius: 12px;">
+                    <i class="bi bi-check-circle" style="font-size: 1.5rem;"></i>
+                </div>
+                <div>
+                    <div class="mb-1 fw-medium" style="color: #64748b; font-size: 0.95rem;">Active</div>
+                    <div class="fw-bold lh-1" style="color: #1e293b; font-size: 1.75rem;">@Model.ActiveCoursesCount</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-white d-flex flex-row align-items-center gap-3">
+                <div class="d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: #fffbeb; color: #d97706; border-radius: 12px;">
+                    <i class="bi bi-clock-history" style="font-size: 1.5rem;"></i>
+                </div>
+                <div>
+                    <div class="mb-1 fw-medium" style="color: #64748b; font-size: 0.95rem;">Completed</div>
+                    <div class="fw-bold lh-1" style="color: #1e293b; font-size: 1.75rem;">@Model.CompletedCoursesCount</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-5 animate-fade-in">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold mb-0">Continue Learning</h3>
+            <a asp-action="Courses" class="text-primary text-decoration-none fw-semibold">
+                View All
+            </a>
+        </div>
+
+        @if (Model.ContinueLearningCourses == null || !Model.ContinueLearningCourses.Any())
+        {
+            <div class="card border-0 bg-light rounded-4 p-5 text-center">
+                <i class="bi bi-cup-hot text-muted display-4 mb-3 d-block"></i>
+                <h5 class="fw-semibold">No active courses right now.</h5>
+                <p class="text-muted">Explore the catalog to find your next adventure!</p>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+                @foreach (var course in Model.ContinueLearningCourses)
+                {
+                    <div class="col-sm-6 col-md-6 col-xl-4">
+                        <div class="course-card">
+                            <img src="@course.ThumbnailUrl"
+                                 class="course-card-img"
+                                 alt="@course.CourseTitle"
+                                 onerror="this.style.background='#1a1a2e';this.removeAttribute('src')" />
+
+                            <div class="course-card-body">
+                                <div class="course-title-row">
+                                    <h4 class="course-title">@course.CourseTitle</h4>
+                                    <span class="badge-active">Active</span>
+                                </div>
+
+                                <div class="course-progress">
+                                    @{
+                                        var progressColor = course.ProgressPercentage switch
+                                        {
+                                            100 => "bg-success",
+                                            >= 75 => "bg-info",
+                                            >= 50 => "bg-warning",
+                                            >= 25 => "bg-primary",
+                                            _ => "bg-danger"
+                                        };
+                                    }
+                                    <div class="progress">
+                                        <div class="progress-bar @progressColor"
+                                             role="progressbar"
+                                             style="width: @course.ProgressPercentage%"
+                                             aria-valuenow="@course.ProgressPercentage"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="course-meta">
+                                    <span>@course.ProgressPercentage% Complete</span>
+                                    <span>@course.CompletedLessonsCount/@course.TotalLessonsCount Contents</span>
+                                </div>
+
+                                <a asp-action="CourseDetails"
+                                       asp-route-id="@course.CourseId"
+                                       class="btn-continue btn-continue-active">
+                                    Continue Learning
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="animate-fade-in">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold mb-0">Recently Added Courses</h3>
+            <a asp-action="BrowseCourses" class="text-primary text-decoration-none fw-semibold">
+                View All
+            </a>
+        </div>
+
+        @if (Model.RecentlyAddedCourses == null || !Model.RecentlyAddedCourses.Any())
+        {
+            <p class="text-muted">No new courses available at the moment.</p>
+        }
+        else
+        {
+            <div class="row g-4">
+                @foreach (var course in Model.RecentlyAddedCourses)
+                {
+                    <div class="col-sm-6 col-md-6 col-xl-4">
+                        <div class="course-card border-0 shadow-sm" style="transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                            <img src="@course.ThumbnailUrl"
+                                 class="course-card-img"
+                                 alt="@course.CourseTitle"
+                                 onerror="this.style.background='#1a1a2e';this.removeAttribute('src')" />
+
+                            <div class="course-card-body d-flex flex-column justify-content-between" style="min-height: 140px;">
+                                <h4 class="course-title mb-2" style="font-size: 1.1rem;">@course.CourseTitle</h4>
+                                
+                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                    <span class="fw-bold fs-5 text-primary">@course.Price.ToString("C")</span>
+                                    <a asp-action="CourseDetails" asp-controller="Student" asp-route-id="@course.CourseId" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                        Enroll
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</main>

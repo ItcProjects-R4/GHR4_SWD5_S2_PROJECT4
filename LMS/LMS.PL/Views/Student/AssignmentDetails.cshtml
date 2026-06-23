@@ -1,0 +1,16 @@
+@model AssignmentViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<main class="main-content container py-4 animate-fade-in">
+    <div class="mb-4">
+        <a href="javascript:history.back()" class="btn btn-sm btn-outline-secondary rounded-pill">
+            <i class="bi bi-arrow-left me-1"></i>Back
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden p-4 bg-white">
+        <partial name="_AssignmentDetails" model="Model" />
+    </div>
+</main>

@@ -4,6 +4,7 @@ using CloudinaryDotNet;
 using dotenv.net;
 using LMS.BLL.Services.Implementation;
 using LMS.BLL.Services.Interfaces;
+using LMS.BLL.Extensions;
 using LMS.DAL.Data;
 using LMS.DAL.Repositories.Implementation;
 using LMS.DAL.Repositories.Interfaces;
@@ -30,7 +31,7 @@ builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IReportingService, ReportingService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
-
+builder.Services.AddScoped<ICourseService, CourseService>();
 
 
 // Add services to the container.
@@ -67,8 +68,22 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 // add emailsender
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddBLLServices();
+
+
 
 var app = builder.Build();
+
+try
+{
+    await DbInitializer.SeedAsync(app.Services);
+}
+catch (Exception ex)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred while seeding the database.");
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -99,3 +114,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+
+

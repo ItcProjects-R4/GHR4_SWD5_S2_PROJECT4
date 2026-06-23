@@ -132,7 +132,7 @@ namespace LMS.DAL.Migrations
                     b.HasIndex("ModuleId")
                         .IsUnique();
 
-                    b.ToTable("Assignment");
+                    b.ToTable("Assignments");
                 });
 
             modelBuilder.Entity("LMS.Domain.Models.Content", b =>
@@ -209,6 +209,9 @@ namespace LMS.DAL.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("TotalLessonCount")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("InstructorId");
@@ -223,6 +226,9 @@ namespace LMS.DAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CompletedLessonsCount")
+                        .HasColumnType("int");
 
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
@@ -426,7 +432,7 @@ namespace LMS.DAL.Migrations
                     b.HasIndex("StudentId", "AssignmentId")
                         .IsUnique();
 
-                    b.ToTable("Submission");
+                    b.ToTable("Submissions");
                 });
 
             modelBuilder.Entity("LMS.Domain.Models.SubmissionFile", b =>
@@ -460,7 +466,7 @@ namespace LMS.DAL.Migrations
 
                     b.HasIndex("SubmissionId");
 
-                    b.ToTable("SubmissionFile");
+                    b.ToTable("SubmissionFiles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

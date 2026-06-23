@@ -1,0 +1,88 @@
+@model List<EnrolledCoursesViewModel>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="empty-state animate-fade-in w-100">
+        <i class="bi bi-journal-x display-1 text-muted mb-3 d-block"></i>
+        <h3 class="fw-semibold">No courses found</h3>
+        <p class="text-muted">You haven't enrolled in any courses yet.</p>
+        <a asp-action="Dashboard" class="btn btn-primary rounded-pill px-4">Browse Courses</a>
+    </div>
+}
+else
+{
+    <div class="row g-4 animate-fade-in">
+        @foreach (var course in Model)
+        {
+            <div class="col-sm-6 col-md-6 col-xl-4">
+                <div class="course-card">
+
+                    <img src="@course.ThumbnailUrl"
+                         class="course-card-img"
+                         alt="@course.CourseTitle"
+                         onerror="this.style.background='#1a1a2e';this.removeAttribute('src')" />
+
+                    <div class="course-card-body">
+
+                        <div class="course-title-row">
+                            <h4 class="course-title">@course.CourseTitle</h4>
+                            @if (course.EnrollmentStatus == "Completed")
+                            {
+                                <span class="badge-completed">Completed</span>
+                            }
+                            else
+                            {
+                                <span class="badge-active">Active</span>
+                            }
+                        </div>
+
+                        <div class="course-progress">
+                            @{
+                                var progressColor = course.ProgressPercentage switch
+                                {
+                                    100 => "bg-success",
+                                    >= 75 => "bg-info",
+                                    >= 50 => "bg-warning",
+                                    >= 25 => "bg-primary",
+                                    _ => "bg-danger"
+                                };
+                            }
+                            <div class="progress">
+                                <div class="progress-bar @progressColor"
+                                     role="progressbar"
+                                     style="width: @course.ProgressPercentage%"
+                                     aria-valuenow="@course.ProgressPercentage"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-meta">
+                            <span>@course.ProgressPercentage% Complete</span>
+                            <span>@course.CompletedLessonsCount/@course.TotalLessonsCount Contents</span>
+                        </div>
+
+                        @if (course.EnrollmentStatus == "Completed")
+                        {
+                            <a asp-action="CourseDetails"
+                                   asp-route-id="@course.CourseId"
+                                   class="btn-continue btn-continue-done">
+                                <i class="bi bi-check-circle-fill"></i> Revisit Course
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="CourseDetails"
+                                   asp-route-id="@course.CourseId"
+                                   class="btn-continue btn-continue-active">
+                                Continue Learning
+                            </a>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
