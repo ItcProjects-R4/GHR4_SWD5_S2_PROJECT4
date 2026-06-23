@@ -11,10 +11,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LMS.BLL.Services.Implementation
 {
-    public class
-       StudentService(IApplicationDbContext context, ICurrentUserService currentUserService,
-       UserManager<ApplicationUser> userManager, ICloudinaryService cloudinaryService,
-       ICheckoutService checkoutService)
+    public class StudentService(
+        IApplicationDbContext context,
+        ICurrentUserService currentUserService,
+       UserManager<ApplicationUser> userManager, 
+       ICloudinaryService cloudinaryService,
+       ICheckoutService checkoutService
+       )
        : IStudentService
     {
         public async Task<IEnumerable<ApplicationUser>> GetFilteredUsersAsync(string searchString, string roleFilter)
@@ -517,5 +520,6 @@ namespace LMS.BLL.Services.Implementation
                 .SelectMany(m => m.Contents)
                 .FirstOrDefault()?.Id;
         }
+
     }
 }
