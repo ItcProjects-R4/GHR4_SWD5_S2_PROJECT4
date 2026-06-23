@@ -45,24 +45,29 @@ namespace LMS.PL.Controllers
         public async Task<IActionResult> Contact(ContactFormViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
+
+            var subject = $"Contact Message: {model.Subject}";
+
+            var body = $@"
+                 <h3>New Contact Message</h3>
+                 <p><strong>Name:</strong> {model.FirstName} {model.LastName}</p>
+                 <p><strong>Email:</strong> {model.Email}</p>
+                 <p><strong>Subject:</strong> {model.Subject}</p>
+                 <p><strong>Message:</strong> {model.Message}</p>
+                 <hr/>
+                 <p><strong>Reply to:</strong> {model.Email}</p>
+            ";
 
             await _emailSender.SendEmailAsync(
-                "lmsify.noreply@gmail.com",
-                model.Subject,
-                $@"
-                <h3>New Contact Message</h3>
-                <p><strong>Name:</strong> {model.FirstName} {model.LastName}</p>
-                <p><strong>Email:</strong> {model.Email}</p>
-                <p><strong>Message:</strong> {model.Message}</p>
-                 "
-                 );
+                "amirahendawy297@gmail.com",
+                subject,
+                body
+            );
 
-            TempData["SuccessMessage"] = "Thank you! Your message has been sent successfully.";
+            TempData["SuccessMessage"] = "Your message has been sent successfully.";
 
-            return RedirectToAction(nameof(Contact));
+            return RedirectToAction("Contact");
         }
 
 
