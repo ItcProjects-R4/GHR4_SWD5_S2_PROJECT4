@@ -4,7 +4,7 @@
     Layout = "_DashboardLayout";
 }
 
-<div class="instructor-course-details-page">
+<div class="w-100">
 <div class="container py-4">
     <div class="premium-hero mb-4">
     <div class="hero-glow"></div>
@@ -33,7 +33,7 @@
             <div class="hero-stats d-flex flex-wrap gap-4 mt-auto">
                 <div class="hero-stat">
                     <div class="hero-stat-value">@Model.TotalContents</div>
-                    <div class="hero-stat-label">Total Lessons</div>
+                    <div class="hero-stat-label">Total Contents</div>
                 </div>
                 <div class="hero-stat">
                     <div class="hero-stat-value">@Model.TotalModules</div>
@@ -91,7 +91,7 @@
                         <i class="bi bi-collection-play-fill text-primary me-2"></i>Course Curriculum
                     </h5>
                     <span class="badge bg-secondary-subtle text-secondary rounded-pill px-2.5 py-1" style="font-size:0.75rem;">
-                        @Model.TotalContents Lessons
+                        @Model.TotalContents Contents
                     </span>
                 </div>
                 <div class="card-body p-0 scrollable-curriculum" style="max-height: 720px; overflow-y: auto;">
@@ -124,7 +124,7 @@
                                                 <div class="flex-grow-1 text-truncate">
                                                     <span class="d-block text-truncate">@module.Title</span>
                                                     <span class="text-muted d-block fw-normal" style="font-size:0.75rem; margin-top: 2px;">
-                                                        @totalLessonsInModule Lesson@(totalLessonsInModule != 1 ? "s" : "")@(module.Assignment != null ? " · 1 Assignment" : "")
+                                                        @totalLessonsInModule Content@(totalLessonsInModule != 1 ? "s" : "")@(module.Assignment != null ? " · 1 Assignment" : "")
                                                     </span>
                                                 </div>
                                             </div>
@@ -139,7 +139,7 @@
                                             @if (!module.Contents.Any())
                                             {
                                                 <div class="text-muted text-center py-3" style="font-size:0.8rem;">
-                                                    <i class="bi bi-inbox me-2"></i>No lessons added yet.
+                                                    <i class="bi bi-inbox me-2"></i>No content added yet.
                                                 </div>
                                             }
                                             else
@@ -200,11 +200,11 @@
                     }
                     else
                     {
-                        <div class="text-center py-5 my-5" id="lessonPlaceholder">
+                        <div class="text-center py-5 my-5" id="contentPlaceholder">
                             <div id="placeholderText">
                                 <i class="bi bi-mortarboard display-1 text-primary-gradient mb-3 d-block opacity-50"></i>
-                                <h4 class="fw-bold text-dark">Select a lesson or assignment to preview</h4>
-                                <p class="text-muted" style="max-width: 400px; margin: 0 auto;">Choose any item from the curriculum sidebar on the left to review content or grade student submissions.</p>
+                                <h4 class="fw-bold text-dark">Select content or assignment to preview</h4>
+                                <p class="text-muted" style="max-width: 400px; margin: 0 auto;">Choose any content from the curriculum sidebar on the left to review content or grade student submissions.</p>
                             </div>
                         </div>
                     }
@@ -241,7 +241,7 @@
                 },
                 error: function () {
                     $('#lessonContentContainer').html(
-                        '<div class="text-center py-5 text-danger"><i class="bi bi-exclamation-triangle display-6 d-block mb-3"></i><p class="fw-semibold mb-0">Could not load this lesson. Please try again.</p></div>'
+                        '<div class="text-center py-5 text-danger"><i class="bi bi-exclamation-triangle display-6 d-block mb-3"></i><p class="fw-semibold mb-0">Could not load this content. Please try again.</p></div>'
                     );
                 }
             });

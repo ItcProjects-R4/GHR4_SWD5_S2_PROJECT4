@@ -1,4 +1,4 @@
-﻿using LMS.BLL.Services.Interfaces;
+using LMS.BLL.Services.Interfaces;
 using LMS.Domain.ViewModels;
 using LMS.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -141,7 +141,7 @@ namespace LMS.PL.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CourseDetails(int id)
+        public async Task<IActionResult> WatchCourse(int id)
         {
             if (id <= 0)
                 return RedirectToAction("NotFound", "Home");
