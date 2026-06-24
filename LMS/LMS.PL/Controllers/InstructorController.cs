@@ -176,6 +176,8 @@ namespace LMS.PL.Controllers
                 return PartialView("_AssignmentDetails", assignment);
 
             return View(assignment);
+        }
+
         [Authorize(Roles = "Instructor")]
         public async Task<IActionResult> Settings()
         {
