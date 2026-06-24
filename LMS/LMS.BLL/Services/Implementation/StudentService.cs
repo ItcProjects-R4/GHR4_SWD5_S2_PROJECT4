@@ -1,13 +1,13 @@
 using LMS.BLL.Services.Interfaces;
 using LMS.Domain.ViewModels.Student.CourseDetails;
 using LMS.Domain.ViewModels.Student.Dashboard;
-using LMS.BLL.DTOS;
 using LMS.DAL.Data;
 using LMS.Domain.Enums;
 using LMS.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using LMS.Domain.ViewModels;
 
 namespace LMS.BLL.Services.Implementation
 {
