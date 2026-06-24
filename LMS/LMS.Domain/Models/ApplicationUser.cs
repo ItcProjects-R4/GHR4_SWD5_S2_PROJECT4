@@ -15,6 +15,9 @@ namespace LMS.Domain.Models
         public required string LastName { get; set; }
         public string? AvatarUrl { get; set; }
 
+        public string? Biography { get; set; }
+
+
         //waiting for other models to be created to add these navigation properties
         public List<Course> Courses { get; set; }
         //public List<Notification> Notifications { get; set; }
