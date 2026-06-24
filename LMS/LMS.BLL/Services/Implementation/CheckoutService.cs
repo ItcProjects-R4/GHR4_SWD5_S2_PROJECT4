@@ -1,4 +1,4 @@
-using LMS.BLL.DTOS;
+using LMS.Domain.ViewModels;
 using LMS.BLL.Services.Interfaces;
 using LMS.DAL.Repositories.Interfaces;
 using LMS.Domain.Enums;

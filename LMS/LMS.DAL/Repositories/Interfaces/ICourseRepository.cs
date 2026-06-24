@@ -1,4 +1,4 @@
-﻿using LMS.Domain.Models;
+﻿using LMS.Domain.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +7,6 @@ namespace LMS.DAL.Repositories.Interfaces
 {
     public interface ICourseRepository
     {
-        Task<Course> GetCourseByIdAsync(int courseId);
+        Task<CourseViewModel> GetCourseByIdAsync(int courseId);
     }
 }

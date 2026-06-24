@@ -1,6 +1,7 @@
 ﻿using LMS.DAL.Data;
 using LMS.DAL.Repositories.Interfaces;
 using LMS.Domain.Models;
+using LMS.Domain.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,13 +15,20 @@ namespace LMS.DAL.Repositories.Implementation
         {
             _context = context;
         }
-        public async Task<Course> GetCourseByIdAsync(int courseId)
+        public async Task<CourseViewModel> GetCourseByIdAsync(int courseId)
         {
             var course = await _context.Courses.FindAsync(courseId);
             if (courseId == 0) {
                 return null;
             }
-            return course;
+            var courseViewModel = new CourseViewModel
+            {
+                Id = course.Id,
+                Title = course.Title,
+                Price = course.Price,
+                Description = course.Description
+            };
+            return courseViewModel;
         }
     }
 }

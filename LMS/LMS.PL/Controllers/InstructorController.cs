@@ -1,6 +1,7 @@
-﻿using LMS.BLL.Services.Interfaces;
-using LMS.Domain.ViewModels;
+﻿using LMS.BLL.Services.Implementation;
+using LMS.BLL.Services.Interfaces;
 using LMS.Domain.Models;
+using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +14,20 @@ namespace LMS.PL.Controllers
         private readonly IStudentService _studentService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IReportingService _reportingService;
         private readonly IInstructorService _instructorService;
 
-        public InstructorController(IStudentService studentService, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IInstructorService instructorService)
+
+        public InstructorController(IStudentService studentService,
+        UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager, 
+        IReportingService reportingService
+        IInstructorService instructorService)
         {
             _studentService = studentService;
             _userManager = userManager;
             _roleManager = roleManager;
+            _reportingService = reportingService;
             _instructorService = instructorService;
         }
 
@@ -126,6 +134,13 @@ namespace LMS.PL.Controllers
             return RedirectToAction(nameof(Users));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Payments()
+        {
+            var reports = await _reportingService.GetFinancialReportsAsync();
+            return View("Payments", reports);
+        }
+    }
 
         [HttpGet]
         public async Task<IActionResult> Enrollments(string search)
