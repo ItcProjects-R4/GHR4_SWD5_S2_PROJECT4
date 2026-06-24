@@ -2,6 +2,8 @@ using LMS.BLL.Services.Interfaces;
 using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
 
 namespace LMS.PL.Controllers
 {
@@ -9,15 +11,30 @@ namespace LMS.PL.Controllers
     {
 
         private readonly ICourseService _courseService;
+        private readonly IEmailSender _emailSender;
 
-        public HomeController(ICourseService courseService)
+        public HomeController(
+            ICourseService courseService,
+            IEmailSender emailSender)
         {
             _courseService = courseService;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Instructor"))
+                {
+                    return RedirectToAction("Dashboard", "Instructor");
+                }
+                else if (User.IsInRole("Assistant"))
+                {
+                    return RedirectToAction("Dashboard", "Assistant");
+                }
+            }
             var featured = await _courseService.GetFeaturedCoursesAsync(3);
             return View(featured);
         }
@@ -36,18 +53,34 @@ namespace LMS.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Contact(ContactFormViewModel model)
+        public async Task<IActionResult> Contact(ContactFormViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
-            // Simulate message delivery
-            TempData["SuccessMessage"] = "Thank you! Your message has been sent successfully.";
-            return RedirectToAction(nameof(Contact));
+            var subject = $"Contact Message: {model.Subject}";
+
+            var body = $@"
+                 <h3>New Contact Message</h3>
+                 <p><strong>Name:</strong> {model.FirstName} {model.LastName}</p>
+                 <p><strong>Email:</strong> {model.Email}</p>
+                 <p><strong>Subject:</strong> {model.Subject}</p>
+                 <p><strong>Message:</strong> {model.Message}</p>
+                 <hr/>
+                 <p><strong>Reply to:</strong> {model.Email}</p>
+            ";
+
+            await _emailSender.SendEmailAsync(
+                "amira@gmail.com",
+                subject,
+                body
+            );
+
+            TempData["SuccessMessage"] = "Your message has been sent successfully.";
+
+            return RedirectToAction("Contact");
         }
-       
+
 
         public IActionResult Privacy()
         {
@@ -60,13 +93,7 @@ namespace LMS.PL.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [HttpGet]
-        public IActionResult TestLayout()
-        {
-           
-            return View();
-        }
-        //subscribing to newsletter
+      
         [HttpGet]
         public IActionResult Subscribe()
         {

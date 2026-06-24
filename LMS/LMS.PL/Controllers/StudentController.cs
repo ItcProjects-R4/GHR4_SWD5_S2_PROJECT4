@@ -1,12 +1,19 @@
+using LMS.BLL.Services.Implementation;
 using LMS.BLL.Services.Interfaces;
+using LMS.Domain.Models;
+using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.PL.Controllers
 {
     [Authorize(Roles = "Student")]
-    public class
-    StudentController(IStudentService studentService)
+    public class StudentController(IStudentService studentService,
+        IAccountService accountService, 
+        SignInManager<ApplicationUser> signInManager,
+         UserManager<ApplicationUser> userManager
+        )
     : Controller
     {
         [HttpGet]
@@ -155,5 +162,111 @@ namespace LMS.PL.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Settings()
+        {
+            var userId = userManager.GetUserId(User);
+            var profileData = await accountService.GetProfileSettingsAsync(userId);
+
+            return View(profileData);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                // If validation fails, reload settings data to re-render the view
+                var userId = userManager.GetUserId(User);
+                var profileData = await accountService.GetProfileSettingsAsync(userId);
+                return View("Settings", profileData);
+            }
+
+            var currentUserId = userManager.GetUserId(User);
+            var result = await accountService.UpdateProfileAsync(currentUserId, model);
+
+            if (result.Succeeded)
+            {
+                //refresh the cookie claims immediately so the navbar updates
+                var user = await userManager.FindByIdAsync(currentUserId);
+                await signInManager.RefreshSignInAsync(user);
+
+                TempData["SuccessMessage"] = "Profile updated successfully!";
+                return RedirectToAction(nameof(Settings));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            var reloadData = await accountService.GetProfileSettingsAsync(currentUserId);
+            return View("Settings", reloadData);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var userId = userManager.GetUserId(User);
+                var profileData = await accountService.GetProfileSettingsAsync(userId);
+                return View("Settings", profileData);
+            }
+
+            var currentUserId = userManager.GetUserId(User);
+            var result = await accountService.UpdatePasswordAsync(currentUserId, model);
+
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Password updated successfully!";
+                return RedirectToAction(nameof(Settings));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            var reloadData = await accountService.GetProfileSettingsAsync(currentUserId);
+            return View("Settings", reloadData);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateAvatar(IFormFile avatarFile)
+        {
+            if (avatarFile == null || avatarFile.Length == 0)
+            {
+                TempData["ErrorMessage"] = "Please select a valid image file.";
+                return RedirectToAction(nameof(Settings));
+            }
+
+            var currentUserId = userManager.GetUserId(User);
+            try
+            {
+                //upload to Cloudinary and update db
+                await accountService.UpdateAvatarAsync(currentUserId, avatarFile);
+
+                //refresh claims so the navbar profile picture updates immediately
+                var user = await userManager.FindByIdAsync(currentUserId);
+                await signInManager.RefreshSignInAsync(user);
+
+                TempData["SuccessMessage"] = "Avatar updated successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Failed to upload avatar: " + ex.Message;
+            }
+
+            return RedirectToAction(nameof(Settings));
+        }
+
+
+
     }
 }

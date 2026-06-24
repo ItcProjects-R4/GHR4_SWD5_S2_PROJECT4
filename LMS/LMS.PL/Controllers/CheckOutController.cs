@@ -1,19 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LMS.BLL.Services.Interfaces;
+using LMS.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
-using LMS.BLL.Services.Interfaces;
 
 namespace LMS.PL.Controllers
 {
     public class CheckoutController : Controller
     {
         private readonly ICheckoutService _checkoutService;
+        private readonly ICourseRepository _courseRepository;
 
-        public CheckoutController(ICheckoutService checkoutService)
+        public CheckoutController(ICheckoutService checkoutService, ICourseRepository courseRepository)
         {
             _checkoutService = checkoutService;
+            _courseRepository = courseRepository;
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Checkout(int courseId)
+        {
+            // Assuming you have access to a course repository to get the course details
+            var course = await _courseRepository.GetCourseByIdAsync(courseId);
+
+            if (course == null) return NotFound();
+
+            return View(course);
         }
 
         [Authorize]

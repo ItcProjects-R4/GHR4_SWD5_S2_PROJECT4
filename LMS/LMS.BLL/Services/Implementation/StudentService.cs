@@ -1,20 +1,23 @@
 using LMS.BLL.Services.Interfaces;
 using LMS.Domain.ViewModels.Student.CourseDetails;
 using LMS.Domain.ViewModels.Student.Dashboard;
-using LMS.BLL.DTOS;
 using LMS.DAL.Data;
 using LMS.Domain.Enums;
 using LMS.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using LMS.Domain.ViewModels;
 
 namespace LMS.BLL.Services.Implementation
 {
-    public class
-       StudentService(IApplicationDbContext context, ICurrentUserService currentUserService,
-       UserManager<ApplicationUser> userManager, ICloudinaryService cloudinaryService,
-       ICheckoutService checkoutService)
+    public class StudentService(
+        IApplicationDbContext context,
+        ICurrentUserService currentUserService,
+       UserManager<ApplicationUser> userManager, 
+       ICloudinaryService cloudinaryService,
+       ICheckoutService checkoutService
+       )
        : IStudentService
     {
         public async Task<IEnumerable<ApplicationUser>> GetFilteredUsersAsync(string searchString, string roleFilter)
@@ -517,5 +520,6 @@ namespace LMS.BLL.Services.Implementation
                 .SelectMany(m => m.Contents)
                 .FirstOrDefault()?.Id;
         }
+
     }
 }

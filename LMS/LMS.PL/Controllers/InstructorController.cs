@@ -1,11 +1,12 @@
 using LMS.BLL.Services.Interfaces;
 using LMS.Domain.ViewModels;
+﻿using LMS.BLL.Services.Implementation;
+using LMS.BLL.Services.Interfaces;
 using LMS.Domain.Models;
+using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LMS.PL.Controllers
 {
@@ -15,13 +16,20 @@ namespace LMS.PL.Controllers
         private readonly IStudentService _studentService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IReportingService _reportingService;
         private readonly IInstructorService _instructorService;
 
-        public InstructorController(IStudentService studentService, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IInstructorService instructorService)
+
+        public InstructorController(IStudentService studentService,
+        UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager, 
+        IReportingService reportingService,
+        IInstructorService instructorService)
         {
             _studentService = studentService;
             _userManager = userManager;
             _roleManager = roleManager;
+            _reportingService = reportingService;
             _instructorService = instructorService;
         }
 
@@ -128,6 +136,13 @@ namespace LMS.PL.Controllers
             return RedirectToAction(nameof(Users));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Payments()
+        {
+            var reports = await _reportingService.GetFinancialReportsAsync();
+            return View("Payments", reports);
+        }
+    
 
         [HttpGet]
         public async Task<IActionResult> Enrollments(string search)
@@ -183,7 +198,7 @@ namespace LMS.PL.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
-
+           
             var viewModel = new InstructorSettingsViewModel
             {
                 FirstName = user.FirstName,
@@ -192,7 +207,7 @@ namespace LMS.PL.Controllers
                 PhoneNumber = user.PhoneNumber ?? string.Empty
             };
 
-            return View(viewModel);
+                return View(viewModel);
         }
 
         // Istructor profile settings
@@ -205,28 +220,28 @@ namespace LMS.PL.Controllers
             {
                 return View(model);
             }
-
+       
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
-
+       
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
             user.PhoneNumber = model.PhoneNumber;
-
+       
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
                 TempData["SuccessMessage"] = "Profile settings updated successfully.";
                 return RedirectToAction(nameof(Settings));
             }
-
+       
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
-
+       
             return View(model);
+            }
         }
-    }
 }
