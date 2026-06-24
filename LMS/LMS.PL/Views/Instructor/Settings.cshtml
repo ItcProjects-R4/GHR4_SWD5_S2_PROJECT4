@@ -1,0 +1,66 @@
+﻿@model LMS.Domain.ViewModels.InstructorSettingsViewModel
+@{
+    Layout = "_DashboardLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 fw-bold mb-0">Settings</h1>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 12px;">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card p-4 text-center border-0 shadow-sm">
+            <div class="avatar-lg mx-auto mb-3">AK</div>
+            <h3 class="h5 fw-bold mb-1">@Model.FirstName @Model.LastName</h3>
+            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 mb-4">Instructor</span>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card p-4 mb-4 border-0 shadow-sm">
+            <h4 class="h6 fw-bold mb-4">Personal Information</h4>
+            <form asp-controller="Instructor" asp-action="Settings" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="FirstName" class="form-label small fw-bold">First Name</label>
+                        <input asp-for="FirstName" class="form-control">
+                        <span asp-validation-for="FirstName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="LastName" class="form-label small fw-bold">Last Name</label>
+                        <input asp-for="LastName" class="form-control">
+                        <span asp-validation-for="LastName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label small fw-bold">Email Address</label>
+                        <input asp-for="Email" class="form-control" type="email">
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="PhoneNumber" class="form-label small fw-bold">Phone Number</label>
+                        <input asp-for="PhoneNumber" class="form-control">
+                        <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                    </div>
+                    @* <!-- ADD THIS BIOGRAPHY TEXTAREA FOR INSTRUCTORS -->
+                    <div class="col-12 mt-3">
+                        <label class="form-label">Biography</label>
+                        <textarea name="ProfileInfo.Biography" class="form-control" rows="4" placeholder="Share a brief bio about your expertise and teaching style...">@Model.Biography</textarea>
+                        <span asp-validation-for="ProfileInfo.Biography" class="text-danger small"></span>
+                    </div> *@
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

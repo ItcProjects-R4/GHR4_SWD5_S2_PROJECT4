@@ -1,4 +1,4 @@
-﻿using LMS.BLL.DTOS;
+﻿using LMS.Domain.ViewModels;
 using LMS.Domain.Models;
 using System;
 using System.Collections.Generic;

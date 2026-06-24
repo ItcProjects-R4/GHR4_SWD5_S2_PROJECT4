@@ -1,4 +1,4 @@
-﻿namespace LMS.BLL.DTOS
+﻿namespace LMS.Domain.ViewModels
 {
     public class CheckoutResponse
     {
