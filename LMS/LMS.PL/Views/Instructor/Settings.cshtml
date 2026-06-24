@@ -50,6 +50,12 @@
                         <input asp-for="PhoneNumber" class="form-control">
                         <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                     </div>
+                    @* <!-- ADD THIS BIOGRAPHY TEXTAREA FOR INSTRUCTORS -->
+                    <div class="col-12 mt-3">
+                        <label class="form-label">Biography</label>
+                        <textarea name="ProfileInfo.Biography" class="form-control" rows="4" placeholder="Share a brief bio about your expertise and teaching style...">@Model.Biography</textarea>
+                        <span asp-validation-for="ProfileInfo.Biography" class="text-danger small"></span>
+                    </div> *@
                 </div>
                 <div class="mt-4">
                     <button type="submit" class="btn btn-primary px-4">Save Changes</button>

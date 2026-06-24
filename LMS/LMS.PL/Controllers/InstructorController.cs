@@ -14,19 +14,20 @@ namespace LMS.PL.Controllers
         private readonly IStudentService _studentService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IInstructorService _instructorService;
         private readonly IReportingService _reportingService;
+        private readonly IInstructorService _instructorService;
 
         public InstructorController(IStudentService studentService,
-                                    UserManager<ApplicationUser> userManager,
-                                    RoleManager<IdentityRole> roleManager,
-                                    IReportingService reportingService)
+        UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager, 
+        IReportingService reportingService,
+        IInstructorService instructorService)
         {
             _studentService = studentService;
             _userManager = userManager;
             _roleManager = roleManager;
-            _instructorService = _instructorService;
             _reportingService = reportingService;
+            _instructorService = instructorService;
         }
 
         [HttpGet]
@@ -132,6 +133,13 @@ namespace LMS.PL.Controllers
             return RedirectToAction(nameof(Users));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Payments()
+        {
+            var reports = await _reportingService.GetFinancialReportsAsync();
+            return View("Payments", reports);
+        }
+    
 
         [HttpGet]
         public async Task<IActionResult> Enrollments(string search)
@@ -233,13 +241,5 @@ namespace LMS.PL.Controllers
        
             return View(model);
             }
-        
-
-        [HttpGet]
-        public async Task<IActionResult> Payments()
-        {
-            var reports = await _reportingService.GetFinancialReportsAsync();
-            return View("Payments", reports);
         }
-    }
 }

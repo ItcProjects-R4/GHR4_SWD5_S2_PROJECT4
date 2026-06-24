@@ -11,7 +11,12 @@ namespace LMS.PL.Mapping
             CreateMap<RegisterViewModel, ApplicationUser>()
                 .ForMember(des => des.UserName, opt => opt.MapFrom(src => src.Username))
                 .ForMember(des => des.Email, opt => opt.MapFrom(src => src.Email));
-                
+
+            CreateMap<ApplicationUser, ProfileSettingsViewModel>();
+
+            CreateMap<UpdateProfileViewModel, ApplicationUser>()
+                .ForMember(dest => dest.Email, opt => opt.Ignore());
+
         }
     }
 }
