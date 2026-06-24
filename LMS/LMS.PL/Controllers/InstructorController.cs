@@ -21,7 +21,7 @@ namespace LMS.PL.Controllers
         public InstructorController(IStudentService studentService,
         UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager, 
-        IReportingService reportingService
+        IReportingService reportingService,
         IInstructorService instructorService)
         {
             _studentService = studentService;
@@ -140,7 +140,7 @@ namespace LMS.PL.Controllers
             var reports = await _reportingService.GetFinancialReportsAsync();
             return View("Payments", reports);
         }
-    }
+    
 
         [HttpGet]
         public async Task<IActionResult> Enrollments(string search)
