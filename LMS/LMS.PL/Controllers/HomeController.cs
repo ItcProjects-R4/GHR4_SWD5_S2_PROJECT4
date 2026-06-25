@@ -102,29 +102,8 @@ namespace LMS.PL.Controllers
         }
         
 
-        {
-           
-            return View();
-        }
         
-
-        {
            
-            return View();
-        }
-        
-
-        {
-           
-            return View();
-        }
-        
-
-        {
-           
-            return View();
-        }
-        
 
     }
 }
