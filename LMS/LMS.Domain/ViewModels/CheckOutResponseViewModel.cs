@@ -1,6 +1,6 @@
 ﻿namespace LMS.Domain.ViewModels
 {
-    public class CheckOutResponseViewModel
+    public class CheckoutResponseViewModel
     {
         public bool IsFree { get; set; }
         public string CourseTitle { get; set; }
