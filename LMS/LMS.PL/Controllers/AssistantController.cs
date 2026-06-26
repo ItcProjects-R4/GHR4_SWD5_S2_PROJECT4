@@ -34,7 +34,6 @@ namespace LMS.PL.Controllers
             _accountService = accountService;
         }
 
-        // ── Dashboard Action ──────────────────────────────────────
         [HttpGet]
         public async Task<IActionResult> Dashboard()
         {
@@ -66,7 +65,6 @@ namespace LMS.PL.Controllers
             return View(viewModel);
         }
 
-        // ── Submissions Action ───────────────────────────────────
         [HttpGet]
         public async Task<IActionResult> Submissions(string searchString, string statusFilter)
         {
@@ -86,9 +84,6 @@ namespace LMS.PL.Controllers
 
             return View(viewModel);
         }
-
-        // ── Settings Actions ──────────────────────────────────────
-
 
 
         [HttpGet]
@@ -195,8 +190,6 @@ namespace LMS.PL.Controllers
         }
 
 
-
-        // GRADE SUBMISSION ACTIONS
 
         [HttpGet]
         public async Task<IActionResult> GradeSubmission(int id)
