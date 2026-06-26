@@ -1,5 +1,5 @@
 ﻿using LMS.BLL.Services.Interfaces;
-using LMS.Domain.ViewModels;
+using LMS.Domain.ViewModels.Account;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.PL.Controllers

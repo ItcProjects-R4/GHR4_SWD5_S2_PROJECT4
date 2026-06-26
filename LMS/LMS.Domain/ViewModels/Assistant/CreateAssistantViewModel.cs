@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace LMS.Domain.ViewModels
+namespace LMS.Domain.ViewModels.Assistant
 {
     public class CreateAssistantViewModel
     {

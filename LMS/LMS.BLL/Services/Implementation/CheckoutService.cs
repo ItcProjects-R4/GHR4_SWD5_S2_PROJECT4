@@ -1,4 +1,3 @@
-using LMS.Domain.ViewModels;
 using LMS.BLL.Services.Interfaces;
 using LMS.DAL.Repositories.Interfaces;
 using LMS.Domain.Enums;
@@ -8,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using LMS.Domain.ViewModels.Student;
 
 namespace LMS.BLL.Services.Implementation
 {
