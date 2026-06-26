@@ -2,7 +2,7 @@
 
 @if (Model == null || !Model.Any())
 {
-    <div class="empty-state animate-fade-in w-100">
+    <div class="text-center py-5 px-3 bg-white border rounded-4 shadow-sm w-100 animate-fade-in">
         <i class="bi bi-journal-x display-1 text-muted mb-3 d-block"></i>
         <h3 class="fw-semibold">No courses found</h3>
         <p class="text-muted">You haven't enrolled in any courses yet.</p>
@@ -24,19 +24,19 @@ else
 
                     <div class="course-card-body">
 
-                        <div class="course-title-row">
+                        <div class="d-flex align-items-start justify-content-between gap-2 mb-1">
                             <h4 class="course-title">@course.CourseTitle</h4>
                             @if (course.EnrollmentStatus == "Completed")
                             {
-                                <span class="badge-completed">Completed</span>
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1.5 fw-medium rounded-pill">Completed</span>
                             }
                             else
                             {
-                                <span class="badge-active">Active</span>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1.5 fw-medium rounded-pill">Active</span>
                             }
                         </div>
 
-                        <div class="course-progress">
+                        <div class="progress mb-2" style="height: 6px;">
                             @{
                                 var progressColor = course.ProgressPercentage switch
                                 {
@@ -47,14 +47,12 @@ else
                                     _ => "bg-danger"
                                 };
                             }
-                            <div class="progress">
-                                <div class="progress-bar @progressColor"
-                                     role="progressbar"
-                                     style="width: @course.ProgressPercentage%"
-                                     aria-valuenow="@course.ProgressPercentage"
-                                     aria-valuemin="0"
-                                     aria-valuemax="100">
-                                </div>
+                            <div class="progress-bar @progressColor"
+                                 role="progressbar"
+                                 style="width: @course.ProgressPercentage%"
+                                 aria-valuenow="@course.ProgressPercentage"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
                             </div>
                         </div>
 
@@ -65,17 +63,17 @@ else
 
                         @if (course.EnrollmentStatus == "Completed")
                         {
-                            <a asp-action="CourseDetails"
+                            <a asp-action="WatchCourse"
                                    asp-route-id="@course.CourseId"
-                                   class="btn-continue btn-continue-done">
-                                <i class="bi bi-check-circle-fill"></i> Revisit Course
+                                   class="btn btn-success w-100 py-2 d-flex align-items-center justify-content-center gap-2 rounded-pill">
+                                <i class="bi bi-check-circle-fill"></i> Completed
                             </a>
                         }
                         else
                         {
-                            <a asp-action="CourseDetails"
+                            <a asp-action="WatchCourse"
                                    asp-route-id="@course.CourseId"
-                                   class="btn-continue btn-continue-active">
+                                   class="btn btn-primary w-100 py-2 rounded-pill">
                                 Continue Learning
                             </a>
                         }

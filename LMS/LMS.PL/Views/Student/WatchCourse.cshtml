@@ -4,7 +4,7 @@
     Layout = "_DashboardLayout";
 }
 
-<div class="course-details-page">
+<div class="w-100">
 <div class="container py-4">
     <div class="premium-hero mb-4">
     <div class="hero-glow"></div>
@@ -30,7 +30,7 @@
             <div class="hero-stats d-flex flex-wrap gap-4">
                 <div class="hero-stat">
                     <div class="hero-stat-value">@Model.TotalContents</div>
-                    <div class="hero-stat-label">Total Lessons</div>
+                    <div class="hero-stat-label">Total Contents</div>
                 </div>
                 @if(Model.IsEnrolled)
                 {
@@ -72,7 +72,7 @@
                     else
                     {
                         <p class="text-white-50 mt-2 mb-0" style="font-size:0.8rem;">
-                            @Model.CompletedContents of @Model.TotalContents lessons done
+                            @Model.CompletedContents of @Model.TotalContents contents done
                         </p>
                     }
                 </div>
@@ -81,7 +81,7 @@
             {
                 <div class="progress-panel" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.35);">
                     <h5 class="fw-bold text-warning mb-2"><i class="bi bi-star-fill me-2"></i>Unlock Full Access</h5>
-                    <p class="text-white-50 mb-3" style="font-size:0.85rem;">Get lifetime access to all course lessons, assignments, resources, and track your progress.</p>
+                    <p class="text-white-50 mb-3" style="font-size:0.85rem;">Get lifetime access to all course contents, assignments, resources, and track your progress.</p>
                     <form asp-action="Enroll" asp-controller="Student" method="post" class="m-0">
                         <input type="hidden" name="courseId" value="@Model.Course.CourseId" />
                         <button type="submit" class="btn btn-warning w-100 rounded-pill py-2.5 fw-bold text-dark d-flex align-items-center justify-content-center gap-2 shadow-sm" style="transition: all 0.2s;">
@@ -94,19 +94,19 @@
     </div>
 </div>
 
-<div class="course-details-layout">
+<div class="mt-1">
     <div class="row g-4">
         <div class="col-lg-4 col-md-5">
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden curriculum-sidebar-card">
                 <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between">
                     <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
-                        <span class="curriculum-header-icon">
+                        <span class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-2 flex-shrink-0" style="width: 32px; height: 32px; font-size: 0.85rem;">
                             <i class="bi bi-play-fill"></i>
                         </span>
                         Course Curriculum
                     </h5>
-                    <span class="badge curriculum-lesson-badge rounded-pill">
-                        @Model.TotalContents Lessons
+                    <span class="badge bg-light text-secondary border px-3 py-1.5 rounded-pill fw-semibold" style="font-size: 0.75rem;">
+                        @Model.TotalContents Contents
                     </span>
                 </div>
                 <div class="card-body p-0 scrollable-curriculum">
@@ -138,7 +138,7 @@
                                                 <div class="flex-grow-1 text-truncate">
                                                     <span class="d-block text-truncate">@module.Title</span>
                                                     <span class="text-muted d-block fw-normal" style="font-size:0.75rem; margin-top: 2px;">
-                                                        @totalLessonsInModule Lesson@(totalLessonsInModule != 1 ? "s" : "")@(module.Assignment != null ? " · 1 Assignment" : "")
+                                                        @totalLessonsInModule Content@(totalLessonsInModule != 1 ? "s" : "")@(module.Assignment != null ? " · 1 Assignment" : "")
                                                     </span>
                                                 </div>
                                             </div>
@@ -153,7 +153,7 @@
                                             @if (!module.Contents.Any())
                                             {
                                                 <div class="text-muted text-center py-3" style="font-size:0.8rem;">
-                                                    <i class="bi bi-inbox me-2"></i>No lessons added yet.
+                                                    <i class="bi bi-inbox me-2"></i>No content added yet.
                                                 </div>
                                             }
                                             else
@@ -257,8 +257,8 @@
                             <div class="text-center py-5 my-5" id="lessonPlaceholder">
                                 <div id="placeholderText">
                                     <i class="bi bi-mortarboard display-1 text-primary-gradient mb-3 d-block opacity-50"></i>
-                                    <h4 class="fw-bold text-dark">Select a lesson to start learning</h4>
-                                    <p class="text-muted" style="max-width: 400px; margin: 0 auto;">Choose any lesson from the curriculum sidebar on the left to start learning.</p>
+                                    <h4 class="fw-bold text-dark">Select content to start learning</h4>
+                                    <p class="text-muted" style="max-width: 400px; margin: 0 auto;">Choose any content from the curriculum sidebar on the left to start learning.</p>
                                 </div>
                             </div>
                         }
@@ -269,7 +269,7 @@
                             <div id="placeholderText">
                                 <i class="bi bi-lock-fill display-1 text-warning mb-3 d-block opacity-50"></i>
                                 <h4 class="fw-bold text-dark">Course is Preview-Only</h4>
-                                <p class="text-muted mb-4" style="max-width: 400px; margin: 0 auto;">You are not enrolled in this course yet. Enroll now to access lessons, submit assignments, and track your progress!</p>
+                                <p class="text-muted mb-4" style="max-width: 400px; margin: 0 auto;">You are not enrolled in this course yet. Enroll now to access content, submit assignments, and track your progress!</p>
                                 <form asp-action="Enroll" asp-controller="Student" method="post" class="d-inline-block m-0">
                                     <input type="hidden" name="courseId" value="@Model.Course.CourseId" />
                                     <button type="submit" class="btn btn-warning rounded-pill px-5 py-2.5 fw-bold text-dark shadow-sm">
@@ -312,7 +312,7 @@
                 },
                 error: function () {
                     $('#lessonContentContainer').html(
-                        '<div class="text-center py-5 text-danger"><i class="bi bi-exclamation-triangle display-6 d-block mb-3"></i><p class="fw-semibold mb-0">Could not load this lesson. Please try again.</p></div>'
+                        '<div class="text-center py-5 text-danger"><i class="bi bi-exclamation-triangle display-6 d-block mb-3"></i><p class="fw-semibold mb-0">Could not load this content. Please try again.</p></div>'
                     );
                 }
             });

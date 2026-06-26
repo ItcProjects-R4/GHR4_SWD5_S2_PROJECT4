@@ -39,6 +39,8 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 
 
+builder.Services.AddScoped<ISubmissionService, SubmissionService>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
