@@ -1,8 +1,12 @@
 using LMS.BLL.Services.Interfaces;
+using LMS.DAL.Data;
+using LMS.Domain.Models;
 using LMS.Domain.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace LMS.PL.Controllers
@@ -12,13 +16,19 @@ namespace LMS.PL.Controllers
 
         private readonly ICourseService _courseService;
         private readonly IEmailSender _emailSender;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
 
         public HomeController(
             ICourseService courseService,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            UserManager<ApplicationUser> userManager,
+            ApplicationDbContext context)
         {
             _courseService = courseService;
             _emailSender = emailSender;
+            _userManager = userManager;
+            _context = context;
         }
 
         [HttpGet]
@@ -40,9 +50,32 @@ namespace LMS.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult About()
+        public async Task<IActionResult> About()
         {
-            return View();
+            var instructors = await _userManager.GetUsersInRoleAsync("Instructor");
+
+            var instructor = instructors.FirstOrDefault();
+
+            var model = new AboutViewModel
+            {
+                InstructorName = instructor != null
+                    ? $"{instructor.FirstName} {instructor.LastName}"
+                    : "Instructor",
+
+                Biography = !string.IsNullOrWhiteSpace(instructor?.Biography)
+                    ? instructor.Biography
+                    : "No biography available.",
+
+                AvatarUrl = !string.IsNullOrWhiteSpace(instructor?.AvatarUrl)
+                    ? instructor.AvatarUrl
+                    : "/images/default-avatar.png",
+
+                CoursesCount = await _context.Courses.CountAsync(),
+
+                StudentsCount = (await _userManager.GetUsersInRoleAsync("Student")).Count
+            };
+
+            return View(model);
         }
 
         [HttpGet]
