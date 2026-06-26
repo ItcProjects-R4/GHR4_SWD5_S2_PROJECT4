@@ -46,8 +46,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 
 
 // Register Cloudinary
-Cloudinary cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"));
-cloudinary.Api.Secure = true;
+Cloudinary cloudinary = new Cloudinary(builder.Configuration["CLOUDINARY_URL"]); cloudinary.Api.Secure = true;
 
 builder.Services.AddSingleton(cloudinary);
 
