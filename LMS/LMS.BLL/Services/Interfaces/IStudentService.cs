@@ -13,7 +13,7 @@ namespace LMS.BLL.Services.Interfaces
         Task<StudentDashboardViewModel> GetStudentDashboardAsync();
         Task<List<EnrolledCoursesViewModel>> GetEnrolledCoursesAsync(string status, string search);
         Task<List<BrowseCourseViewModel>> GetBrowseCoursesAsync();
-        Task<CheckOutResponseViewModel> EnrollCourseAsync(int courseId);
+        Task<CheckoutResponseViewModel> EnrollCourseAsync(int courseId);
         Task<CourseDetailsPageViewModel> GetCourseDetailsPageAsync(int courseId);
         Task<ContentViewModel> GetContentAsync(int contentId);
         Task<bool> MarkContentAsCompletedAsync(int contentId, int courseId);
