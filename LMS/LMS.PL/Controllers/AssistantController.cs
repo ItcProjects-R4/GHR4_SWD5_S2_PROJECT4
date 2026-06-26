@@ -1,33 +1,37 @@
-﻿using LMS.BLL.Services.Interfaces;
+﻿using LMS.BLL.Services.Implementation;
+using LMS.BLL.Services.Interfaces;
 using LMS.Domain.Models;
 using LMS.Domain.ViewModels;
+using LMS.PL.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
-using LMS.PL.Helpers;
 
 namespace LMS.PL.Controllers
 {
-    //[Authorize(Roles = "Assistant")]
+    [Authorize(Roles = "Assistant")]
     public class AssistantController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ICloudinaryService _cloudinaryService;
         private readonly ISubmissionService _submissionService;
+        private readonly IAccountService _accountService;
 
         public AssistantController(
        UserManager<ApplicationUser> userManager,
        SignInManager<ApplicationUser> signInManager,
        ISubmissionService submissionService,
+       IAccountService accountService,
        ICloudinaryService cloudinaryService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _submissionService = submissionService;
             _cloudinaryService = cloudinaryService;
+            _accountService = accountService;
         }
 
         // ── Dashboard Action ──────────────────────────────────────
@@ -84,131 +88,114 @@ namespace LMS.PL.Controllers
         }
 
         // ── Settings Actions ──────────────────────────────────────
+
+
+
         [HttpGet]
+       
         public async Task<IActionResult> Settings()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var userId = _userManager.GetUserId(User);
+            var profileData = await _accountService.GetProfileSettingsAsync(userId);
 
-            var model = new AssistantSettingsViewModel
-            {
-                FirstName = user?.FirstName ?? "Sarah",
-                LastName = user?.LastName ?? "Adams",
-                Email = user?.Email ?? "sarah.adams@lms-platform.com",
-                AvatarUrl = user?.AvatarUrl
-            };
-
-            return View(model);
+            return View(profileData);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProfile(AssistantSettingsViewModel model)
+        public async Task<IActionResult> UpdateProfile(UpdateProfileViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View("Settings", model);
+                // If validation fails, reload settings data to re-render the view
+                var userId = _userManager.GetUserId(User);
+                var profileData = await _accountService.GetProfileSettingsAsync(userId);
+                return View("Settings", profileData);
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            var currentUserId = _userManager.GetUserId(User);
+            var result = await _accountService.UpdateProfileAsync(currentUserId, model);
+
+            if (result.Succeeded)
             {
-                TempData["ErrorMessage"] = "You must be logged in.";
+                //refresh the cookie claims immediately so the navbar updates
+                var user = await _userManager.FindByIdAsync(currentUserId);
+                await _signInManager.RefreshSignInAsync(user);
+
+                TempData["SuccessMessage"] = "Profile updated successfully!";
                 return RedirectToAction(nameof(Settings));
             }
 
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-
-            var result = await _userManager.UpdateAsync(user);
-            if (result.Succeeded)
+            foreach (var error in result.Errors)
             {
-                TempData["SuccessMessage"] = "Profile updated successfully!";
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Failed to update profile.";
+                ModelState.AddModelError(string.Empty, error.Description);
             }
 
-            return RedirectToAction(nameof(Settings));
+            var reloadData = await _accountService.GetProfileSettingsAsync(currentUserId);
+            return View("Settings", reloadData);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdatePassword(AssistantSettingsViewModel model)
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordViewModel model)
         {
-            if (string.IsNullOrEmpty(model.CurrentPassword) ||
-                string.IsNullOrEmpty(model.NewPassword))
+            if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = "All password fields are required.";
-                return RedirectToAction(nameof(Settings));
+                var userId = _userManager.GetUserId(User);
+                var profileData = await _accountService.GetProfileSettingsAsync(userId);
+                return View("Settings", profileData);
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                TempData["ErrorMessage"] = "You must be logged in.";
-                return RedirectToAction(nameof(Settings));
-            }
-
-            var result = await _userManager.ChangePasswordAsync(
-                user,
-                model.CurrentPassword,
-                model.NewPassword);
+            var currentUserId = _userManager.GetUserId(User);
+            var result = await _accountService.UpdatePasswordAsync(currentUserId, model);
 
             if (result.Succeeded)
             {
-                await _signInManager.RefreshSignInAsync(user);
                 TempData["SuccessMessage"] = "Password updated successfully!";
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Failed to update password.";
+                return RedirectToAction(nameof(Settings));
             }
 
-            return RedirectToAction(nameof(Settings));
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            var reloadData = await _accountService.GetProfileSettingsAsync(currentUserId);
+            return View("Settings", reloadData);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAvatar(IFormFile avatarFile)
         {
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                TempData["ErrorMessage"] = "You must be logged in.";
-                return RedirectToAction(nameof(Settings));
-            }
-
             if (avatarFile == null || avatarFile.Length == 0)
             {
-                TempData["ErrorMessage"] = "Please select an image.";
+                TempData["ErrorMessage"] = "Please select a valid image file.";
                 return RedirectToAction(nameof(Settings));
             }
 
+            var currentUserId = _userManager.GetUserId(User);
             try
             {
-                string imageUrl = await _cloudinaryService.UploadImageAsync(avatarFile);
+                //upload to Cloudinary and update db
+                await  _accountService.UpdateAvatarAsync(currentUserId, avatarFile);
 
-                user.AvatarUrl = imageUrl;
+                //refresh claims so the navbar profile picture updates immediately
+                var user = await _userManager.FindByIdAsync(currentUserId);
+                await _signInManager.RefreshSignInAsync(user);
 
-                var result = await _userManager.UpdateAsync(user);
-
-                if (result.Succeeded)
-                {
-                    TempData["SuccessMessage"] = "Avatar updated successfully!";
-                }
-                else
-                {
-                    TempData["ErrorMessage"] = "Failed to save avatar.";
-                }
+                TempData["SuccessMessage"] = "Avatar updated successfully!";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Failed to upload image.";
+                TempData["ErrorMessage"] = "Failed to upload avatar: " + ex.Message;
             }
 
             return RedirectToAction(nameof(Settings));
         }
+
+
+
         // GRADE SUBMISSION ACTIONS
 
         [HttpGet]
@@ -286,6 +273,5 @@ namespace LMS.PL.Controllers
             TempData["SuccessMessage"] = $"Submission graded successfully with score {grade}/100!";
             return RedirectToAction(nameof(Submissions));
         }
-
     }
 }
