@@ -19,7 +19,6 @@ namespace LMS.PL.Controllers
         private readonly IReportingService _reportingService;
         private readonly IInstructorService _instructorService;
 
-
         public InstructorController(IStudentService studentService,
         UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager, 
@@ -31,6 +30,13 @@ namespace LMS.PL.Controllers
             _roleManager = roleManager;
             _reportingService = reportingService;
             _instructorService = instructorService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Dashboard()
+        {
+            var dashboard = await _instructorService.GetInstructorDashboardAsync();
+            return View(dashboard);
         }
 
         [HttpGet]

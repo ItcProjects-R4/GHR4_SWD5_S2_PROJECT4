@@ -1,10 +1,12 @@
 using LMS.BLL.Services.Interfaces;
 using LMS.Domain.ViewModels.Instructor.Enrollments;
 using LMS.Domain.ViewModels.Instructor.CourseDetails;
+using LMS.Domain.ViewModels.Instructor.Dashboard;
 using LMS.Domain.ViewModels.Student.CourseDetails;
 using LMS.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using LMS.Domain.Enums;
+using System.Linq;
 
 namespace LMS.BLL.Services.Implementation
 {
@@ -226,6 +228,67 @@ namespace LMS.BLL.Services.Implementation
 
             assignment.Submissions = submissions;
             return assignment;
+        }
+
+        public async Task<InstructorDashboardViewModel> GetInstructorDashboardAsync()
+        {
+            var instructorId = currentUserService.UserId;
+
+            var dashboard = new InstructorDashboardViewModel();
+
+            var instructorCourses = context.Courses.Where(c => c.InstructorId == instructorId);
+            dashboard.ActiveCourses = await instructorCourses.CountAsync();
+
+            var instructorEnrollments = context.Enrollments.Where(e => e.Course.InstructorId == instructorId);
+            dashboard.TotalEnrollments = await instructorEnrollments.CountAsync();
+
+            dashboard.TotalUsers = await instructorEnrollments.Select(e => e.StudentId).Distinct().CountAsync();
+
+            dashboard.TotalRevenue = await context.Payments
+                .Where(p => p.Course.InstructorId == instructorId && p.Status == PaymentStatus.Completed)
+                .SumAsync(p => p.Amount);
+
+            var colors = new[] { "bg-primary", "bg-success", "bg-info", "bg-warning" };
+            var random = new Random();
+
+            var recentEnrollments = await context.Payments
+                .Include(p => p.Student)
+                .Include(p => p.Course)
+                .Where(p => p.Course.InstructorId == instructorId && p.Status == PaymentStatus.Completed)
+                .OrderByDescending(p => p.PaidAt)
+                .Take(5)
+                .ToListAsync();
+
+            dashboard.RecentEnrollments = recentEnrollments.Select(p => new RecentEnrollmentViewModel
+            {
+                StudentName = $"{p.Student.FirstName} {p.Student.LastName}",
+                StudentInitials = $"{p.Student.FirstName?.FirstOrDefault()}{p.Student.LastName?.FirstOrDefault()}",
+                CourseTitle = p.Course.Title,
+                Amount = p.Amount,
+                EnrolledAt = p.PaidAt,
+                AvatarBgColor = colors[random.Next(colors.Length)]
+            }).ToList();
+
+            var recentSubmissions = await context.Submissions
+                .Include(s => s.Student)
+                .Include(s => s.Assignment)
+                .ThenInclude(a => a.Module)
+                .ThenInclude(m => m.Course)
+                .Where(s => s.Assignment.Module.Course.InstructorId == instructorId)
+                .OrderByDescending(s => s.SubmittedAt)
+                .Take(5)
+                .ToListAsync();
+
+            dashboard.RecentSubmissions = recentSubmissions.Select(s => new RecentSubmissionViewModel
+            {
+                StudentName = $"{s.Student.FirstName} {s.Student.LastName}",
+                StudentInitials = $"{s.Student.FirstName?.FirstOrDefault()}{s.Student.LastName?.FirstOrDefault()}",
+                CourseAndModule = $"{s.Assignment.Module.Course.Title} • {s.Assignment.Module.Title}",
+                Status = s.Status.ToString(),
+                AvatarBgColor = colors[random.Next(colors.Length)]
+            }).ToList();
+
+            return dashboard;
         }
     }
 }
