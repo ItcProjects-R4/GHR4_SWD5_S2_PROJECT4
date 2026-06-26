@@ -1,3 +1,5 @@
+using LMS.BLL.Services.Interfaces;
+using LMS.Domain.ViewModels;
 ﻿using LMS.BLL.Services.Implementation;
 using LMS.BLL.Services.Interfaces;
 using LMS.Domain.Models;
@@ -154,7 +156,7 @@ namespace LMS.PL.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CourseDetails(int id)
+        public async Task<IActionResult> WatchCourse(int id)
         {
             if (id <= 0)
                 return RedirectToAction("NotFound", "Home");
@@ -189,9 +191,8 @@ namespace LMS.PL.Controllers
                 return PartialView("_AssignmentDetails", assignment);
 
             return View(assignment);
-
         }
-            
+
         [Authorize(Roles = "Instructor")]
         public async Task<IActionResult> Settings()
         {
