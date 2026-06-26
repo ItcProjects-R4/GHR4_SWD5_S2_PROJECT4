@@ -12,7 +12,8 @@ namespace LMS.PL.Controllers
     public class StudentController(IStudentService studentService,
         IAccountService accountService, 
         SignInManager<ApplicationUser> signInManager,
-         UserManager<ApplicationUser> userManager
+         UserManager<ApplicationUser> userManager,
+         ICheckoutService checkoutService
         )
     : Controller
     {
@@ -22,6 +23,14 @@ namespace LMS.PL.Controllers
             var studentDashboard = await studentService.GetStudentDashboardAsync();
 
             return View(studentDashboard);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PurchaseHistory()
+        {
+            var userId = userManager.GetUserId(User);
+            var payments = await checkoutService.GetStudentHistoryAsync(userId);
+            return View(payments);
         }
 
         [HttpGet]

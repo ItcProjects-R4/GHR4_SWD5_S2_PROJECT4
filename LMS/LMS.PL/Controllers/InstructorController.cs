@@ -1,4 +1,4 @@
-﻿using LMS.BLL.Services.Implementation;
+using LMS.BLL.Services.Implementation;
 using LMS.BLL.Services.Interfaces;
 using LMS.Domain.Models;
 using LMS.Domain.ViewModels;
@@ -28,6 +28,13 @@ namespace LMS.PL.Controllers
             _roleManager = roleManager;
             _reportingService = reportingService;
             _instructorService = instructorService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Dashboard()
+        {
+            var dashboard = await _instructorService.GetInstructorDashboardAsync();
+            return View(dashboard);
         }
 
         [HttpGet]

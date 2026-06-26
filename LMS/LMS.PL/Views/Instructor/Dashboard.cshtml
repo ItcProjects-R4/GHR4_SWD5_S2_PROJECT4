@@ -1,0 +1,107 @@
+@model LMS.Domain.ViewModels.Instructor.Dashboard.InstructorDashboardViewModel
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Instructor Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 animate-fade-in">
+    <h1 class="h3 fw-bold mb-0" style="color:var(--text-primary)">Overview</h1>
+</div>
+
+<!-- Stats Row -->
+<div class="row g-4 mb-5 animate-fade-in">
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon bg-accent-light text-accent"><i class="bi bi-people"></i></div>
+            <div><p class="stat-label">Total Users</p><h3 class="stat-value">@Model.TotalUsers</h3></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-currency-dollar"></i></div>
+            <div><p class="stat-label">Total Revenue</p><h3 class="stat-value">$@Model.TotalRevenue.ToString("0.##")</h3></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-book"></i></div>
+            <div><p class="stat-label">Active Courses</p><h3 class="stat-value">@Model.ActiveCourses</h3></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-clipboard-check"></i></div>
+            <div><p class="stat-label">Enrollments</p><h3 class="stat-value">@Model.TotalEnrollments</h3></div>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Content -->
+<div class="row g-4 mb-5">
+    <!-- Recent Enrollments & Payments -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="h5 fw-bold mb-0">Recent Enrollments</h3>
+                <a href="@Url.Action("Enrollments", "Instructor")" class="btn btn-link btn-sm text-decoration-none fw-bold">View All</a>
+            </div>
+            <div class="d-flex flex-column gap-2">
+                @if (Model.RecentEnrollments.Any())
+                {
+                    foreach (var enrollment in Model.RecentEnrollments)
+                    {
+                        <div class="p-3 bg-light bg-opacity-50 rounded-3 d-flex align-items-center justify-content-between transition-base hover-shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar-sm me-3 text-white @enrollment.AvatarBgColor" style="width: 38px; height: 38px;">@enrollment.StudentInitials</div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold small">@enrollment.StudentName</h6>
+                                    <div class="text-muted" style="font-size: 0.7rem;">@enrollment.CourseTitle</div>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="fw-bold small text-primary mb-1">$@enrollment.Amount.ToString("0.##")</div>
+                                <div class="text-muted" style="font-size: 0.65rem;">@enrollment.EnrolledAt.ToString("MMM dd, yyyy")</div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-muted small">No recent enrollments.</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Submissions -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="h5 fw-bold mb-0">Recent Submissions</h3>
+                <a href="@Url.Action("Submissions", "Instructor")" class="btn btn-link btn-sm text-decoration-none fw-bold">View All</a>
+            </div>
+            <div class="d-flex flex-column gap-2">
+                @if (Model.RecentSubmissions.Any())
+                {
+                    foreach (var submission in Model.RecentSubmissions)
+                    {
+                        <div class="p-3 bg-light bg-opacity-50 rounded-3 d-flex align-items-center justify-content-between transition-base hover-shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar-sm me-3 text-white @submission.AvatarBgColor" style="width: 38px; height: 38px;">@submission.StudentInitials</div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold small">@submission.StudentName</h6>
+                                    <div class="text-muted" style="font-size: 0.7rem;">@submission.CourseAndModule</div>
+                                </div>
+                            </div>
+                            <span class="badge bg-warning-subtle text-warning rounded-pill px-2 py-1 small">@submission.Status</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-muted small">No recent submissions.</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
