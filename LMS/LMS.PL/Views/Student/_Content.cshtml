@@ -1,8 +1,8 @@
 @model ContentViewModel
 
-<div class="watch-lesson-header d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom flex-wrap gap-2">
+<div class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom flex-wrap gap-2">
     <div class="d-flex align-items-center gap-3">
-        <div class="lesson-icon-badge d-flex align-items-center justify-content-center">
+        <div class="d-flex align-items-center justify-content-center bg-primary text-white rounded-3 flex-shrink-0" style="width: 42px; height: 42px; font-size: 1.1rem;">
             <i class="bi bi-play-fill"></i>
         </div>
         <div>
@@ -85,7 +85,7 @@
         <div class="content-text-card mb-4 rounded-4 overflow-hidden border shadow-sm" style="background:#fff;">
             <div class="content-text-header px-4 py-3 bg-light border-bottom d-flex align-items-center gap-2">
                 <i class="bi bi-journal-text text-primary fs-5"></i>
-                <span class="fw-bold text-dark">Lesson Notes</span>
+                <span class="fw-bold text-dark">Content Notes</span>
             </div>
             <div class="content-text-body p-4 lesson-html-content" style="font-size: 0.925rem; line-height: 1.75; color: #374151;">
                 @Html.Raw(Model.Text)
@@ -100,20 +100,20 @@
                 <form asp-action="MarkCompleted" asp-controller="Student" method="post" class="m-0 d-inline">
                     <input type="hidden" name="courseId" value="@Model.CourseId" />
                     <input type="hidden" name="contentId" value="@Model.Id" />
-                    <button type="submit" class="btn btn-outline-primary fw-medium btn-complete">
+                    <button type="submit" class="btn btn-outline-primary fw-medium rounded-2 px-3 py-2">
                         Mark as Complete
                     </button>
                 </form>
             }
             else
             {
-                <button class="btn btn-success fw-medium d-inline-flex align-items-center gap-1 btn-complete" disabled>
+                <button class="btn btn-success fw-medium d-inline-flex align-items-center gap-1 rounded-2 px-3 py-2" disabled>
                     <i class="bi bi-check-circle-fill"></i> Completed
                 </button>
             }
         </div>
         <button type="button" id="nextLessonBtn" class="btn btn-primary fw-medium d-inline-flex align-items-center gap-1">
-            Next Lesson <i class="bi bi-chevron-right"></i>
+            Next Content <i class="bi bi-chevron-right"></i>
         </button>
     </div>
 </div>

@@ -12,7 +12,8 @@ namespace LMS.PL.Controllers
     public class StudentController(IStudentService studentService,
         IAccountService accountService, 
         SignInManager<ApplicationUser> signInManager,
-         UserManager<ApplicationUser> userManager
+         UserManager<ApplicationUser> userManager,
+         ICheckoutService checkoutService
         )
     : Controller
     {
@@ -22,6 +23,14 @@ namespace LMS.PL.Controllers
             var studentDashboard = await studentService.GetStudentDashboardAsync();
 
             return View(studentDashboard);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PurchaseHistory()
+        {
+            var userId = userManager.GetUserId(User);
+            var payments = await checkoutService.GetStudentHistoryAsync(userId);
+            return View(payments);
         }
 
         [HttpGet]
@@ -59,7 +68,7 @@ namespace LMS.PL.Controllers
                     if (result.IsFree)
                     {
                         TempData["SuccessMessage"] = "Successfully enrolled in the course!";
-                        return RedirectToAction(nameof(CourseDetails), new { id = courseId });
+                        return RedirectToAction(nameof(WatchCourse), new { id = courseId });
                     }
                     else
                     {
@@ -72,7 +81,7 @@ namespace LMS.PL.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CourseDetails(int id)
+        public async Task<IActionResult> WatchCourse(int id)
         {
             if (id <= 0)
                 return RedirectToAction("NotFound", "Home");
@@ -105,7 +114,7 @@ namespace LMS.PL.Controllers
 
             await studentService.MarkContentAsCompletedAsync(contentId, courseId);
 
-            return RedirectToAction(nameof(CourseDetails), new { id = courseId });
+            return RedirectToAction(nameof(WatchCourse), new { id = courseId });
         }
 
         [HttpGet]

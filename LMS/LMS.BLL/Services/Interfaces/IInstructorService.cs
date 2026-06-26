@@ -12,5 +12,6 @@ namespace LMS.BLL.Services.Interfaces
         Task<InstructorCourseDetailsPageViewModel> GetCourseDetailsPageAsync(int courseId);
         Task<ContentViewModel> GetContentAsync(int contentId);
         Task<InstructorAssignmentDetailsViewModel> GetAssignmentDetailsAsync(int assignmentId);
+        Task<LMS.Domain.ViewModels.Instructor.Dashboard.InstructorDashboardViewModel> GetInstructorDashboardAsync();
     }
 }

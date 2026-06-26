@@ -22,7 +22,6 @@ namespace LMS.DAL.Configurations
 
 
             builder.Property(p => p.TransactionId)
-                .IsRequired()
                 .HasMaxLength(100);
 
 

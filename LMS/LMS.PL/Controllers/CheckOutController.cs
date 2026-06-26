@@ -1,4 +1,4 @@
-﻿using LMS.BLL.Services.Interfaces;
+using LMS.BLL.Services.Interfaces;
 using LMS.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,8 +36,11 @@ namespace LMS.PL.Controllers
         public async Task<IActionResult> Pay(int courseId)
         {
             var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var email = User.FindFirstValue(ClaimTypes.Email) ?? "student@test.com";
-            var name = User.Identity.Name ?? "Student";
+            var emailClaim = User.FindFirstValue(ClaimTypes.Email);
+            var email = string.IsNullOrWhiteSpace(emailClaim) ? "student@test.com" : emailClaim;
+            
+            var nameClaim = User.Identity?.Name;
+            var name = string.IsNullOrWhiteSpace(nameClaim) ? "Student" : nameClaim;
 
             var result = await _checkoutService.InitiateCheckoutAsync(courseId, studentId, email, name);
 

@@ -1,0 +1,140 @@
+﻿@model LMS.Domain.ViewModels.GradeSubmissionViewModel
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Grade Submission - LMS Platform";
+}
+
+<!-- Breadcrumb Navigation -->
+
+<nav aria-label="breadcrumb" class="mb-3 animate-fade-in">
+    <ol class="breadcrumb" style="font-size: 0.85rem;">
+        <li class="breadcrumb-item">
+            <a asp-controller="Assistant" asp-action="Dashboard" class="text-decoration-none text-muted">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Assistant" asp-action="Submissions" class="text-decoration-none text-muted">Submissions</a>
+        </li>
+        <li class="breadcrumb-item active text-primary fw-semibold" aria-current="page">
+            Grade @Model.StudentName
+        </li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4 animate-fade-in">
+    <h1 class="h3 fw-bold mb-0" style="color:var(--text-primary)">Grade Workspace</h1>
+    <a asp-controller="Assistant" asp-action="Submissions" class="btn btn-outline-secondary btn-sm px-3 rounded-pill fw-medium">
+        <i class="bi bi-arrow-left me-1"></i> Back to Submissions
+    </a>
+</div>
+
+<!-- Grade workspace panel -->
+
+<div class="row g-4 animate-fade-in" style="animation-delay: 0.1s;">
+    <div class="col-xl-8">
+        <!-- Student details and submitted file card -->
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 border-bottom pb-3 mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="user-avatar-sm d-flex align-items-center justify-content-center text-white fw-bold"
+                             style="width: 48px; height: 48px; font-size: 1.1rem; background-color: @Model.StudentAvatarColor; @(Model.StudentInitial == "DC" ? "color: #212529 !important;" : "")">
+                            @Model.StudentInitial
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">@Model.StudentName</h5>
+                            <div class="text-muted small d-flex align-items-center gap-2">
+                                <i class="bi bi-clock"></i> <span>@Model.SubmittedTimeAgo</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="badge @Model.StatusBadgeClass px-3 py-2 rounded-pill fw-semibold">@Model.StatusText</span>
+                </div>
+
+                <div class="mb-4">
+                    <div class="small fw-bold text-muted text-uppercase mb-2" style="font-size: 0.7rem; letter-spacing: 0.05em;">Assignment Details</div>
+                    <h6 class="fw-bold text-dark mb-1">@Model.AssignmentTitle</h6>
+                    <p class="text-secondary small mb-0">@Model.CourseTitle</p>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.FileName))
+                {
+                    <div>
+                        <div class="small fw-bold text-muted text-uppercase mb-3" style="font-size: 0.7rem; letter-spacing: 0.05em;">Submitted Files</div>
+                        <div class="p-3 border rounded-3 d-flex align-items-center justify-content-between bg-light flex-wrap gap-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stat-icon bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center rounded-3" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-file-earmark-zip h3 mb-0"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold small text-dark">@Model.FileName</div>
+                                    <div class="text-muted" style="font-size: 0.72rem;">
+                                        @(Model.FileSize.HasValue ? $"{Model.FileSize.Value / (1024.0 * 1024.0):F2} MB" : "Unknown size")
+                                        • @(Model.FileType ?? "File")
+                                    </div>
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.FileUrl))
+                            {
+                                <a href="@Model.FileUrl" class="btn btn-white btn-sm shadow-sm border px-3 rounded-pill fw-semibold" download>
+                                    <i class="bi bi-download me-1"></i> Download File
+                                </a>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-light border text-center py-4">
+                        <i class="bi bi-folder-x text-muted" style="font-size: 2rem;"></i>
+                        <p class="text-muted mb-0 mt-2">No files submitted</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4">
+        <!-- Grading form card -->
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+                <h5 class="fw-bold text-dark mb-0">Final Assessment</h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-controller="Assistant" asp-action="GradeSubmission" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">Score (out of 100)</label>
+                        <div class="input-group input-group-lg">
+                            <input type="number" name="grade" class="form-control border-2 text-center fw-bold text-primary"
+                                   required min="0" max="100" placeholder="0" value="@Model.Grade"
+                                   style="border-top-left-radius: 12px; border-bottom-left-radius: 12px;">
+                            <span class="input-group-text bg-light border-2 fw-bold text-muted" style="border-top-right-radius: 12px; border-bottom-right-radius: 12px;">/ 100</span>
+                        </div>
+                        @Html.ValidationMessage("grade", "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">Constructive Feedback</label>
+                        <textarea name="feedback" class="form-control border-2" rows="6" required
+                                  placeholder="Describe what the student did well and what they can improve in their code structure, logic, and styling..."
+                                  style="border-radius: 12px; font-size: 0.9rem;">@Model.Feedback</textarea>
+                        @Html.ValidationMessage("feedback", "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary py-3 fw-bold rounded-3 shadow-sm">
+                            <i class="bi bi-check2-circle me-1"></i> Submit Grade
+                        </button>
+                        <a asp-controller="Assistant" asp-action="Submissions" class="btn btn-light py-2 fw-semibold text-secondary border-0 mt-1">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
