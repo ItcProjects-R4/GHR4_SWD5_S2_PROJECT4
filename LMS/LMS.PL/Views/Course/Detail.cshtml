@@ -1,4 +1,4 @@
-﻿@model LMS.Domain.Models.Course
+@model LMS.Domain.Models.Course
 @{
     Layout = "_Layout";
 }
@@ -77,19 +77,31 @@
         </div>
 
         <div class="col-lg-4">
-            <div class="card p-4 shadow border-0 rounded-4 sticky-top" style="top: 100px;">
-                <div class="text-center mb-4">
-                    <div class="h1 fw-bold text-primary">@(Model.Price == 0 ? "Free" : $"${Model.Price:F2}")</div>
+            <div class="card p-4 shadow border-0 rounded-4 sticky-top text-white" style="top: 100px; background: linear-gradient(135deg, #1e293b, #0f172a);">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <span class="fs-3 fw-bold">@(Model.Price == 0 ? "Free" : $"${Model.Price:F2}")</span>
                 </div>
+                
+                <h5 class="fw-bold text-warning mb-2 d-flex align-items-center gap-2">
+                    <i class="bi bi-star-fill text-warning"></i> Unlock Full Access
+                </h5>
+                
+                <p class="text-white-50 mb-4" style="font-size: 0.9rem; line-height: 1.6;">
+                    Get lifetime access to all course lessons, assignments, resources, and track your progress.
+                </p>
+
                 @if (User.Identity?.IsAuthenticated == true)
                 {
-                    <a asp-controller="Checkout" asp-action="Checkout" asp-route-courseId="@Model.Id" class="btn btn-primary btn-lg w-100 mb-3 py-3 rounded-3 fw-bold">Enroll Now</a>
+                    <a asp-controller="Checkout" asp-action="Checkout" asp-route-courseId="@Model.Id" class="btn btn-warning btn-lg w-100 py-3 rounded-pill fw-bold text-dark shadow-sm d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-plus-circle-fill fs-5"></i> Enroll Now
+                    </a>
                 }
                 else
                 {
-                    <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Checkout", "Checkout", new { courseId = Model.Id })" class="btn btn-primary btn-lg w-100 mb-3 py-3 rounded-3 fw-bold">Enroll Now</a>
+                    <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Checkout", "Checkout", new { courseId = Model.Id })" class="btn btn-warning btn-lg w-100 py-3 rounded-pill fw-bold text-dark shadow-sm d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-plus-circle-fill fs-5"></i> Enroll Now
+                    </a>
                 }
-                <p class="text-center text-muted small mb-0">30-Day Money-Back Guarantee</p>
             </div>
         </div>
     </div>
