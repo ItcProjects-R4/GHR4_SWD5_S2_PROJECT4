@@ -7,5 +7,7 @@ namespace LMS.Domain.ViewModels.Student.CourseDetails
         public string Title { get; set; } = string.Empty;
         public List<ContentViewModel> Contents { get; set; } = [];
         public AssignmentViewModel? Assignment { get; set; }
+
+        public int OrderIndex { get; set; }
     }
 }

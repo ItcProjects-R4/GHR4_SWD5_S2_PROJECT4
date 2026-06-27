@@ -2,12 +2,14 @@ using LMS.BLL.Services.Interfaces;
 using LMS.DAL.Data;
 using LMS.Domain.Models;
 using LMS.Domain.ViewModels;
+using LMS.Domain.ViewModels.Home;
+using LMS.Domain.ViewModels.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using LMS.Domain.ViewModels.Home;
+using System.Diagnostics;
+using AutoMapper;
 
 
 namespace LMS.PL.Controllers
@@ -19,17 +21,20 @@ namespace LMS.PL.Controllers
         private readonly IEmailSender _emailSender;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
         public HomeController(
             ICourseService courseService,
             IEmailSender emailSender,
             UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IMapper mapper)
         {
             _courseService = courseService;
             _emailSender = emailSender;
             _userManager = userManager;
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -47,7 +52,8 @@ namespace LMS.PL.Controllers
                 }
             }
             var featured = await _courseService.GetFeaturedCoursesAsync(3);
-            return View(featured);
+            var viewModels = _mapper.Map<List<CourseViewModel>>(featured);
+            return View(viewModels);
         }
 
         [HttpGet]
@@ -55,7 +61,7 @@ namespace LMS.PL.Controllers
         {
             var instructors = await _userManager.GetUsersInRoleAsync("Instructor");
 
-            var instructor = instructors.FirstOrDefault();
+            var instructor = instructors.FirstOrDefault(i => i.Email == "kk@gmail.com") ?? instructors.FirstOrDefault();
 
             var model = new AboutViewModel
             {
