@@ -1,0 +1,378 @@
+﻿@model LMS.Domain.ViewModels.Instructor.CourseDetails.CreateCoursePageViewModel
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = Model.PageTitle;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 fw-bold mb-0" style="color:var(--text-primary)">@(Model.Step == 2 ? "Curriculum Builder" : "Create New Course")</h1>
+    @if (Model.Step == 2)
+    {
+        <a asp-action="Courses" class="btn btn-outline-secondary btn-sm px-3 rounded-pill">
+            <i class="bi bi-arrow-left me-1"></i> Back to Courses
+        </a>
+    }
+</div>
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 12px;">
+        <i class="bi bi-check-circle-fill me-2"></i> @Model.SuccessMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 12px;">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> @Model.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="step-nav px-2 border-bottom">
+        <a href="@(Model.Course != null ? Url.Action("CreateCourse", new { id = Model.Course.Id, step = 1 }) : "#")" class="step-btn @(Model.Step == 1 ? "active" : "")" style="text-decoration:none;">1 · Basic Info</a>
+        <button type="button" class="step-btn @(Model.Step == 2 ? "active" : "")" disabled="@(Model.Course == null)">2 · Curriculum</button>
+    </div>
+
+    <div class="p-4 p-md-5">
+        @if (Model.Step == 1)
+        {
+            <!-- ── Step 1: Basic Info Form ── -->
+            <form asp-action="CreateCourse" asp-route-step="1" asp-route-id="@Model.Course?.Id" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <div class="mb-4">
+                            <label asp-for="CourseDetails.Title" class="form-label fw-semibold">Course Title</label>
+                            <input asp-for="CourseDetails.Title" class="form-control" placeholder="e.g. Advanced Photography Masterclass" required />
+                            <span asp-validation-for="CourseDetails.Title" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="CourseDetails.Description" class="form-label fw-semibold">Course Description</label>
+                            <textarea asp-for="CourseDetails.Description" class="form-control" rows="8" placeholder="Provide a detailed description of the course contents..." required></textarea>
+                            <span asp-validation-for="CourseDetails.Description" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-4">
+                            <label asp-for="CourseDetails.Price" class="form-label fw-semibold">Price ($)</label>
+                            <input asp-for="CourseDetails.Price" class="form-control" type="number" step="0.01" placeholder="0.00 for free" required />
+                            <span asp-validation-for="CourseDetails.Price" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="CourseDetails.ThumbnailFile" class="form-label fw-semibold">Course Thumbnail</label>
+                            <input asp-for="CourseDetails.ThumbnailFile" class="form-control" type="file" accept="image/*" />
+                            <span asp-validation-for="CourseDetails.ThumbnailFile" class="text-danger small"></span>
+                            @if (!string.IsNullOrEmpty(Model.CourseDetails?.ExistingThumbnailUrl))
+                            {
+                                <img src="@Model.CourseDetails.ExistingThumbnailUrl" class="img-fluid rounded mt-2 border" style="max-height: 100px;">
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4 pt-4 border-top">
+                    <a asp-action="Courses" class="btn btn-light px-4 me-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-4">
+                        Next: Add Curriculum <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <!-- ── Step 2: Curriculum Builder Form ── -->
+            <div class="row g-4">
+                <!-- Left Column: Curriculum Modules & Content -->
+                <div class="col-lg-8">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">Modules & Content</h5>
+                        <button class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#moduleModal">
+                            <i class="bi bi-plus-lg me-1"></i> Add Module
+                        </button>
+                    </div>
+
+                    <div id="curriculum-builder">
+                        @if (Model.Course?.Modules != null && Model.Course.Modules.Any())
+                        {
+                            var moduleIndex = 1;
+                            @foreach (var module in Model.Course.Modules.OrderBy(m => m.OrderIndex))
+                            {
+                                <div class="module-card border rounded-4 p-4 mb-4 bg-light bg-opacity-30">
+                                    <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                                        <h6 class="fw-bold mb-0 text-primary">Module @moduleIndex: @module.Title</h6>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-outline-primary btn-sm rounded-pill px-2.5" data-bs-toggle="modal" data-bs-target="#contentModal-@module.Id">
+                                                <i class="bi bi-plus-lg"></i> Add Lesson
+                                            </button>
+                                            @if (module.Assignment == null)
+                                            {
+                                                <button class="btn btn-outline-secondary btn-sm rounded-pill px-2.5" data-bs-toggle="modal" data-bs-target="#assignmentModal-@module.Id">
+                                                    <i class="bi bi-file-earmark-plus"></i> Add Assignment
+                                                </button>
+                                            }
+                                            <form asp-action="DeleteModule" asp-route-id="@module.Id" asp-route-courseId="@Model.Course.Id" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-light btn-sm text-danger rounded-circle border" title="Delete Module" onclick="return confirm('Delete this module and all its items?')"><i class="bi bi-trash"></i></button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <!-- Contents Listing -->
+                                    <div class="list-group list-group-flush mb-3">
+                                        @if (module.Contents != null && module.Contents.Any())
+                                        {
+                                            @foreach (var content in module.Contents.OrderBy(c => c.OrderIndex))
+                                            {
+                                                <div class="list-group-item d-flex justify-content-between align-items-center bg-transparent py-2 border-bottom border-light">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        @if (!string.IsNullOrEmpty(content.VideoUrl))
+                                                        {
+                                                            <span class="badge bg-primary-subtle text-primary" style="font-size: 10px;">VIDEO</span>
+                                                        }
+                                                        else if (!string.IsNullOrEmpty(content.ArticleUrl))
+                                                        {
+                                                            <span class="badge bg-info-subtle text-info" style="font-size: 10px;">LINK</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-warning-subtle text-warning" style="font-size: 10px;">TEXT</span>
+                                                        }
+                                                        <span class="fw-semibold text-dark small">@content.Title</span>
+                                                    </div>
+                                                    <form asp-action="DeleteContent" asp-route-id="@content.Id" asp-route-courseId="@Model.Course.Id" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-link text-danger p-0" onclick="return confirm('Remove this lesson?')"><i class="bi bi-x-circle fs-5"></i></button>
+                                                    </form>
+                                                </div>
+                                            }
+                                        }
+
+                                        @if (module.Assignment != null)
+                                        {
+                                            <div class="list-group-item d-flex justify-content-between align-items-center bg-light bg-opacity-75 rounded-3 py-2 mt-2 border border-warning border-opacity-25">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="badge bg-danger bg-opacity-10 text-danger" style="font-size: 10px;">ASSIGNMENT</span>
+                                                    <span class="fw-bold text-dark small">@module.Assignment.Title</span>
+                                                    <span class="text-muted small" style="font-size: 11px;">(Max: @module.Assignment.MaxScore pts)</span>
+                                                </div>
+                                                <form asp-action="DeleteAssignment" asp-route-id="@module.Assignment.Id" asp-route-courseId="@Model.Course.Id" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-link text-danger p-0" onclick="return confirm('Remove this assignment?')"><i class="bi bi-x-circle fs-5"></i></button>
+                                                </form>
+                                            </div>
+                                        }
+
+                                        @if (!module.Contents.Any() && module.Assignment == null)
+                                        {
+                                            <div class="text-center py-3 text-secondary small">No lessons or assignments added to this module yet.</div>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- MODAL FOR ADDING LESSON CONTENT -->
+                                <div class="modal fade" id="contentModal-@module.Id" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0 shadow">
+                                            <form asp-action="AddContent" method="post" enctype="multipart/form-data">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="moduleId" value="@module.Id">
+                                                <input type="hidden" name="courseId" value="@Model.Course.Id">
+                                                <div class="modal-header border-0 pb-0">
+                                                    <h5 class="modal-title fw-bold">Add Lesson to Module @moduleIndex</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body p-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label small fw-bold">Lesson Title</label>
+                                                        <input type="text" name="Title" class="form-control" required placeholder="e.g. Introduction to semantic tags">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label small fw-bold">Content Type</label>
+                                                        <select name="ContentType" class="form-select" onchange="toggleContentForm(this, '@module.Id')">
+                                                            <option value="video">Upload Video</option>
+                                                            <option value="link">External Link</option>
+                                                            <option value="text">Rich Text / Article</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3" id="videoField-@module.Id">
+                                                        <label class="form-label small fw-bold">Video File</label>
+                                                        <input type="file" name="VideoFile" class="form-control" accept="video/*">
+                                                    </div>
+                                                    <div class="mb-3 d-none" id="linkField-@module.Id">
+                                                        <label class="form-label small fw-bold">URL Link (External Resources)</label>
+                                                        <input type="url" name="VideoUrl" class="form-control" placeholder="<https://youtube.com/>...">
+                                                    </div>
+                                                    <div class="mb-3 d-none" id="textField-@module.Id">
+                                                        <div class="p-3 border rounded text-center bg-light">
+                                                            <p class="small text-muted mb-2">Write rich text articles using our dedicated full screen editor.</p>
+                                                            <a asp-action="CreateArticle" asp-route-moduleId="@module.Id" asp-route-courseId="@Model.Course.Id" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                                                <i class="bi bi-file-earmark-richtext me-1"></i> Open Article Editor
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer border-0 pt-0">
+                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary" id="lessonSubmitBtn-@module.Id">Add Lesson</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- MODAL FOR ADDING ASSIGNMENT -->
+                                <div class="modal fade" id="assignmentModal-@module.Id" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0 shadow">
+                                            <form asp-action="AddAssignment" method="post" enctype="multipart/form-data">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="moduleId" value="@module.Id">
+                                                <input type="hidden" name="courseId" value="@Model.Course.Id">
+                                                <div class="modal-header border-0 pb-0">
+                                                    <h5 class="modal-title fw-bold">Add Assignment to Module @moduleIndex</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body p-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label small fw-bold">Assignment Title</label>
+                                                        <input type="text" name="title" class="form-control" required placeholder="e.g. Wireframe Dashboard Mockups">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label small fw-bold">Due Date & Time</label>
+                                                        <input type="datetime-local" name="dueDate" class="form-control" required />
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label small fw-bold">Max Score</label>
+                                                        <input type="number" name="maxScore" class="form-control" value="100" min="1" max="100" />
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label small fw-bold">Instruction Sheet (Optional File Upload)</label>
+                                                        <input type="file" name="resourceFile" class="form-control">
+                                                        <p class="text-muted small mt-1" style="font-size: 11px;">Upload PDFs or guidelines files.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer border-0 pt-0">
+                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary">Save Assignment</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                moduleIndex++;
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center py-5 text-secondary">
+                                <i class="bi bi-folder-plus display-4 mb-3 d-block text-muted"></i>
+                                <h5>No modules added yet.</h5>
+                                <p class="small mb-0">Create a module to start building your syllabus.</p>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-5 pt-4 border-top">
+                        <a asp-action="CreateCourse" asp-route-id="@Model.Course.Id" asp-route-step="1" class="btn btn-light"><i class="bi bi-arrow-left me-1"></i> Back to Basics</a>
+                        <a asp-action="Courses" class="btn btn-primary px-4">Finish &amp; Publish <i class="bi bi-check-lg ms-1"></i></a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Course Info Preview Updater -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+                            <h5 class="fw-bold mb-0">Course Details</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <form asp-action="CreateCourse" asp-route-step="2" asp-route-id="@Model.Course.Id" method="post" enctype="multipart/form-data">
+                                @Html.AntiForgeryToken()
+                                <div class="mb-3">
+                                    <label asp-for="CourseDetails.Title" class="form-label small fw-bold text-muted text-uppercase">Title</label>
+                                    <input asp-for="CourseDetails.Title" class="form-control" required />
+                                    <span asp-validation-for="CourseDetails.Title" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="CourseDetails.Description" class="form-label small fw-bold text-muted text-uppercase">Description</label>
+                                    <textarea asp-for="CourseDetails.Description" class="form-control" rows="5" required></textarea>
+                                    <span asp-validation-for="CourseDetails.Description" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="CourseDetails.Price" class="form-label small fw-bold text-muted text-uppercase">Price ($)</label>
+                                    <input asp-for="CourseDetails.Price" class="form-control" type="number" step="0.01" required />
+                                    <span asp-validation-for="CourseDetails.Price" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="CourseDetails.ThumbnailFile" class="form-label small fw-bold text-muted text-uppercase">Thumbnail</label>
+                                    <input asp-for="CourseDetails.ThumbnailFile" class="form-control" type="file" accept="image/*" />
+                                    @if (!string.IsNullOrEmpty(Model.CourseDetails?.ExistingThumbnailUrl))
+                                    {
+                                        <img src="@Model.CourseDetails.ExistingThumbnailUrl" class="img-fluid rounded mt-2 border" style="max-height: 100px;">
+                                    }
+                                </div>
+                                <div class="d-grid mt-4">
+                                    <button type="submit" class="btn btn-primary py-2 fw-semibold">Save Details</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE CREATE MODAL -->
+            <div class="modal fade" id="moduleModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow">
+                        <form asp-action="AddModule" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="courseId" value="@Model.Course.Id">
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title fw-bold">Add Module</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Module Title</label>
+                                    <input type="text" name="moduleTitle" class="form-control" required placeholder="e.g. Module 1: Foundations">
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 pt-0">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Add Module</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleContentForm(selectEl, moduleId) {
+            const val = selectEl.value;
+            const video = document.getElementById(`videoField-${moduleId}`);
+            const link = document.getElementById(`linkField-${moduleId}`);
+            const text = document.getElementById(`textField-${moduleId}`);
+            const submitBtn = document.getElementById(`lessonSubmitBtn-${moduleId}`);
+
+            video.classList.add('d-none');
+            link.classList.add('d-none');
+            text.classList.add('d-none');
+            submitBtn.classList.remove('d-none');
+
+            if (val === 'video') video.classList.remove('d-none');
+            else if (val === 'link') link.classList.remove('d-none');
+            else if (val === 'text') {
+                text.classList.remove('d-none');
+                submitBtn.classList.add('d-none'); // Redirects to full article page on click instead
+            }
+        }
+    </script>
+}

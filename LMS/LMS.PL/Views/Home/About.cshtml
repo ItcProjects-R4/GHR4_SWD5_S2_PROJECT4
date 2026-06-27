@@ -1,4 +1,5 @@
-﻿
+﻿@model LMS.Domain.ViewModels.Home.AboutViewModel
+
 @{
     ViewData["Title"] = "About Us";
     Layout = "_Layout";
@@ -10,16 +11,30 @@
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <div class="d-flex flex-column flex-md-row gap-4 align-items-md-center animate-fade-in">
-                    <div class="instructor-avatar-lg">AK</div>
+                    @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                    {
+                        <img src="@Model.AvatarUrl"
+                             alt="@Model.InstructorName"
+                             class="rounded-circle"
+                             style="width:140px;height:140px;object-fit:cover;">
+                    }
+                    else
+                    {
+                        <div class="instructor-avatar-lg">
+                            @(Model.InstructorName.Substring(0, 1))
+                        </div>
+                    }
                     <div>
-                        <h1 class="h1 fw-bold mb-1 text-white">Alex King</h1>
-                        <p class="h5 mb-3 opacity-75 fw-medium">Senior Software Engineer & Lead Instructor</p>
+                        <h1 class="h1 fw-bold mb-1 text-white">
+                            @Model.InstructorName
+                        </h1>
+                        <p class="h5 mb-3 opacity-75 fw-medium">@Model.Title</p>
                         <div class="d-flex flex-wrap gap-4 mt-2">
                             <div class="instructor-stats-badge">
-                                <i class="bi bi-people-fill text-success"></i> 18,000+ Students
+                                <i class="bi bi-people-fill text-success"></i> @Model.StudentsCount Students
                             </div>
                             <div class="instructor-stats-badge">
-                                <i class="bi bi-collection-play-fill text-accent"></i> 5 Courses
+                                <i class="bi bi-collection-play-fill text-accent"></i> @Model.CoursesCount Courses
                             </div>
                         </div>
                     </div>
@@ -39,7 +54,8 @@
             <div class="col-lg-8">
                 <h2 class="h4 fw-bold mb-4 text-white">Biography</h2>
                 <p class="opacity-75 lead" style="line-height: 1.9;">
-                    With over a decade of experience in full-stack development and software architecture, Alex King has dedicated his career to building high-performance systems and mentoring aspiring engineers. His teaching philosophy focuses on bridging the gap between theoretical computer science and practical, industry-standard engineering practices. Through a curriculum designed for the modern web, he has empowered thousands of developers to master complex technologies and advance their professional careers in global tech firms.
+                    @Model.Biography
+                
                 </p>
             </div>
         </div>

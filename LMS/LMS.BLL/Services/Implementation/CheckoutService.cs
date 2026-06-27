@@ -1,4 +1,3 @@
-using LMS.Domain.ViewModels;
 using LMS.BLL.Services.Interfaces;
 using LMS.DAL.Repositories.Interfaces;
 using LMS.Domain.Enums;
@@ -8,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using LMS.Domain.ViewModels.Student;
 
 namespace LMS.BLL.Services.Implementation
 {
@@ -26,14 +26,14 @@ namespace LMS.BLL.Services.Implementation
             _config = config;
         }
 
-        public async Task<CheckoutResponse> InitiateCheckoutAsync(int courseId, string studentId, string email, string name)
+        public async Task<CheckoutResponseViewModel> InitiateCheckoutAsync(int courseId, string studentId, string email, string name)
         {
             // Note: You need a way to get the course. Assuming your PaymentRepository or CourseRepository can fetch it.
             // For this example, let's pretend PaymentRepository has a GetCourseByIdAsync method.
                 var course = await _courseRepository.GetCourseByIdAsync(courseId);
-                if (course == null) return new CheckoutResponse { Success = false, ErrorMessage = "Course not found." };
+                if (course == null) return new CheckoutResponseViewModel { Success = false, ErrorMessage = "Course not found." };
 
-                var response = new CheckoutResponse { Success = true, CourseTitle = course.Title };
+                var response = new CheckoutResponseViewModel { Success = true, CourseTitle = course.Title };
 
                 if (course.Price == 0)
                 {

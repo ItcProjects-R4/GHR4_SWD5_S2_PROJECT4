@@ -1,4 +1,4 @@
-﻿@model LMS.Domain.ViewModels.BrowseCoursesViewModel
+﻿@model LMS.Domain.ViewModels.Home.BrowseCoursesViewModel
 @{
     Layout = "_Layout";
 }
@@ -11,13 +11,17 @@
     </div>
 </header>
 
-<section class="py-3" style="background:var(--surface-color);border-bottom:1px solid var(--border-color);position:sticky;top:57px;z-index:1010">
+<section class="py-3" style="background:var(--surface-color);border-bottom:1px solid var(--border-color);">             
     <div class="container">
-        <form asp-controller="Course" asp-action="Browse" method="get">
+        <form asp-controller="Course" asp-action="Browse" method="get" id="searchForm">
             <div class="row g-2 align-items-center">
                 <div class="col-lg-5">
                     <div class="input-group">
-                        <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <span class="input-group-text bg-transparent border-end-0"
+                              onclick="document.getElementById('searchForm').submit();"
+                              style="cursor: pointer;">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
                         <input type="text" name="searchString" value="@Model.SearchString" class="form-control border-start-0" placeholder="Search courses…">
                     </div>
                 </div>

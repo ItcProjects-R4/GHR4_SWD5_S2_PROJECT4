@@ -1,10 +1,13 @@
-﻿using LMS.BLL.Services.Implementation;
 using LMS.BLL.Services.Interfaces;
+using LMS.BLL.Services.Implementation;
 using LMS.Domain.Models;
-using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using LMS.Domain.ViewModels.Instructor.CourseDetails;
+
+using LMS.Domain.ViewModels.Assistant;
+using LMS.Domain.ViewModels.Account;
 
 namespace LMS.PL.Controllers
 {
@@ -16,19 +19,31 @@ namespace LMS.PL.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IReportingService _reportingService;
         private readonly IInstructorService _instructorService;
-
+        private readonly IAccountService _accountService;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public InstructorController(IStudentService studentService,
         UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager, 
         IReportingService reportingService,
-        IInstructorService instructorService)
+        IInstructorService instructorService,
+        IAccountService accountService,
+        SignInManager<ApplicationUser> signInManager)
         {
             _studentService = studentService;
             _userManager = userManager;
             _roleManager = roleManager;
             _reportingService = reportingService;
             _instructorService = instructorService;
+            _accountService = accountService;
+            _signInManager = signInManager;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Dashboard()
+        {
+            var dashboard = await _instructorService.GetInstructorDashboardAsync();
+            return View(dashboard);
         }
 
         [HttpGet]
@@ -154,7 +169,7 @@ namespace LMS.PL.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CourseDetails(int id)
+        public async Task<IActionResult> WatchCourse(int id)
         {
             if (id <= 0)
                 return RedirectToAction("NotFound", "Home");
@@ -176,6 +191,324 @@ namespace LMS.PL.Controllers
 
             return View(contentDetails);
         }
+        [HttpGet]
+        public async Task<IActionResult> Courses(string? searchString, string sortBy = "newest", string? successMessage = null, string? errorMessage = null)
+        {
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+
+            var courses = await _instructorService.GetInstructorCoursesAsync(instructorId, searchString, sortBy);
+            return View(new CoursesPageViewModel
+            {
+                Courses = courses,
+                SearchString = searchString,
+                SortBy = sortBy,
+                SuccessMessage = successMessage,
+                ErrorMessage = errorMessage,
+                PageTitle = "Course Management"
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateCourse(int? id, int step = 1, string? successMessage = null, string? errorMessage = null)
+        {
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+
+            if (step == 2 && id.HasValue)
+            {
+                var course = await _instructorService.GetCourseForEditAsync(id.Value, instructorId);
+                if (course == null) return NotFound();
+
+                return View(new CreateCoursePageViewModel
+                {
+                    Step = 2,
+                    Course = course,
+                    CourseDetails = new CreateCourseViewModel
+                    {
+                        Title = course.Title,
+                        Description = course.Description,
+                        Price = course.Price,
+                        ExistingThumbnailUrl = course.ThumbnailUrl
+                    },
+                    SuccessMessage = successMessage,
+                    ErrorMessage = errorMessage,
+                    PageTitle = "Curriculum Builder"
+                });
+            }
+
+            return View(new CreateCoursePageViewModel
+            {
+                Step = 1,
+                CourseDetails = new CreateCourseViewModel(),
+                SuccessMessage = successMessage,
+                ErrorMessage = errorMessage,
+                PageTitle = "Create New Course"
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCourse(CreateCoursePageViewModel model, int step = 1, int? id = null)
+        {
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+
+            if (step == 2 && id.HasValue)
+            {
+                // Action handles basic details update from Step 2
+                if (!ModelState.IsValid)
+                {
+                    var course = await _instructorService.GetCourseForEditAsync(id.Value, instructorId);
+                    model.Course = course;
+                    model.Step = 2;
+                    model.ErrorMessage = "Please correct the errors in the form.";
+                    model.PageTitle = "Curriculum Builder";
+                    return View(model);
+                }
+
+                var updateResult = await _instructorService.UpdateCourseAsync(id.Value, model.CourseDetails, instructorId);
+                string? sMsg = null;
+                string? eMsg = null;
+                if (updateResult)
+                {
+                    sMsg = "Course details updated successfully!";
+                }
+                else
+                {
+                    eMsg = "Failed to update course details.";
+                }
+                return RedirectToAction(nameof(CreateCourse), new { id = id.Value, step = 2, successMessage = sMsg, errorMessage = eMsg });
+            }
+
+            // Step 1 Basics form submission
+            if (!ModelState.IsValid)
+            {
+                model.Step = 1;
+                model.ErrorMessage = "Please correct the errors in the form.";
+                model.PageTitle = "Create New Course";
+                return View(model);
+            }
+
+            var newCourse = await _instructorService.CreateCourseAsync(model.CourseDetails, instructorId);
+            return RedirectToAction(nameof(CreateCourse), new { id = newCourse.Id, step = 2, successMessage = "Course basics saved successfully!" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCourse(int id)
+        {
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+
+            var result = await _instructorService.DeleteCourseAsync(id, instructorId);
+            if (result)
+            {
+                return RedirectToAction(nameof(Courses), new { successMessage = "Course deleted successfully!" });
+            }
+            else
+            {
+                return RedirectToAction(nameof(Courses), new { errorMessage = "Failed to delete course." });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddModule(int courseId, string moduleTitle)
+        {
+            if (string.IsNullOrEmpty(moduleTitle))
+            {
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, errorMessage = "Module title cannot be empty." });
+            }
+
+            await _instructorService.AddModuleAsync(courseId, moduleTitle);
+            return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Module added successfully." });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteModule(int id, int courseId)
+        {
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+
+            var result = await _instructorService.DeleteModuleAsync(id, courseId, instructorId);
+            if (result)
+            {
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Module deleted successfully!" });
+            }
+            else
+            {
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, errorMessage = "Failed to delete module." });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddContent(int moduleId, int courseId, CreateContentViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, errorMessage = "Failed to add content. Please check inputs." });
+            }
+
+            await _instructorService.AddContentAsync(moduleId, model);
+            return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Lesson content added successfully!" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteContent(int id, int courseId)
+        {
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+
+            var result = await _instructorService.DeleteContentAsync(id, courseId, instructorId);
+            if (result)
+            {
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Lesson deleted successfully!" });
+            }
+            else
+            {
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, errorMessage = "Failed to delete lesson." });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddAssignment(int moduleId, int courseId, string title, DateTime dueDate, int maxScore, IFormFile? resourceFile)
+        {
+            if (string.IsNullOrEmpty(title))
+            {
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, errorMessage = "Assignment title is required." });
+            }
+
+            await _instructorService.AddAssignmentAsync(moduleId, title, dueDate, maxScore, resourceFile);
+            return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Assignment added successfully!" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAssignment(int id, int courseId)
+        {
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+
+            var result = await _instructorService.DeleteAssignmentAsync(id, courseId, instructorId);
+            if (result)
+            {
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Assignment deleted successfully!" });
+            }
+            else
+            {
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, errorMessage = "Failed to delete assignment." });
+            }
+        }
+
+        [HttpGet]
+        public IActionResult CreateArticle(int moduleId, int courseId)
+        {
+            return View(new CreateArticleViewModel
+            {
+                ModuleId = moduleId,
+                CourseId = courseId,
+                PageTitle = "Create Article"
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateArticle(CreateArticleViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.PageTitle = "Create Article";
+                return View(model);
+            }
+
+            var contentModel = new CreateContentViewModel
+            {
+                Title = model.Title,
+                Text = model.Text,
+                ContentType = "text"
+            };
+
+            await _instructorService.AddContentAsync(model.ModuleId, contentModel);
+            return RedirectToAction(nameof(CreateCourse), new { id = model.CourseId, step = 2, successMessage = "Text Article lesson created successfully!" });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Submissions(string? searchString, string? statusFilter, string? successMessage = null, string? errorMessage = null)
+        {
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+
+            var submissions = await _instructorService.GetSubmissionsQueueAsync(instructorId, searchString, statusFilter);
+            return View(new SubmissionsPageViewModel
+            {
+                Submissions = submissions,
+                SearchString = searchString,
+                StatusFilter = statusFilter,
+                SuccessMessage = successMessage,
+                ErrorMessage = errorMessage,
+                PageTitle = "Student Submissions"
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Grade(int id)
+        {
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+
+            var submission = await _instructorService.GetSubmissionForGradingAsync(id, instructorId);
+            if (submission == null) return NotFound();
+
+            var file = submission.SubmissionFiles?.FirstOrDefault();
+            var viewModel = new GradeSubmissionViewModel
+            {
+                SubmissionId = submission.Id,
+                Grade = submission.Grade ?? 0,
+                Comment = submission.Comment ?? string.Empty,
+                StudentName = $"{submission.Student.FirstName} {submission.Student.LastName}",
+                StudentAvatarUrl = submission.Student.AvatarUrl ?? string.Empty,
+                AssignmentTitle = submission.Assignment.Title,
+                CourseTitle = submission.Assignment.Module.Course.Title,
+                SubmittedFileName = file?.FileName,
+                SubmittedFileUrl = file?.FileUrl,
+                PageTitle = "Grade Workspace"
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Grade(GradeSubmissionViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.PageTitle = "Grade Workspace";
+                return View(model);
+            }
+
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+
+            var result = await _instructorService.GradeSubmissionAsync(model.SubmissionId, model.Grade, model.Comment, instructorId);
+            string? sMsg = null;
+            string? eMsg = null;
+            if (result)
+            {
+                sMsg = $"{model.StudentName} graded successfully!";
+            }
+            else
+            {
+                eMsg = "Failed to submit grade.";
+            }
+
+            return RedirectToAction(nameof(Submissions), new { successMessage = sMsg, errorMessage = eMsg });
+        }
 
         [HttpGet]
         public async Task<IActionResult> AssignmentDetails(int id)
@@ -189,58 +522,111 @@ namespace LMS.PL.Controllers
                 return PartialView("_AssignmentDetails", assignment);
 
             return View(assignment);
-
         }
-            
-        [Authorize(Roles = "Instructor")]
+
+        [HttpGet]
         public async Task<IActionResult> Settings()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return NotFound();
-           
-            var viewModel = new InstructorSettingsViewModel
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email ?? string.Empty,
-                PhoneNumber = user.PhoneNumber ?? string.Empty
-            };
+            var userId = _userManager.GetUserId(User);
+            var profileData = await _accountService.GetProfileSettingsAsync(userId);
 
-                return View(viewModel);
+            return View(profileData);
         }
 
-        // Istructor profile settings
         [HttpPost]
-        [Authorize(Roles = "Instructor")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Settings(InstructorSettingsViewModel model)
+        public async Task<IActionResult> UpdateProfile(UpdateProfileViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                // If validation fails, reload settings data to re-render the view
+                var userId = _userManager.GetUserId(User);
+                var profileData = await _accountService.GetProfileSettingsAsync(userId);
+                return View("Settings", profileData);
             }
-       
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return NotFound();
-       
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-            user.Email = model.Email;
-            user.PhoneNumber = model.PhoneNumber;
-       
-            var result = await _userManager.UpdateAsync(user);
+
+            var currentUserId = _userManager.GetUserId(User);
+            var result = await _accountService.UpdateProfileAsync(currentUserId, model);
+
             if (result.Succeeded)
             {
-                TempData["SuccessMessage"] = "Profile settings updated successfully.";
+                //refresh the cookie claims immediately so the navbar updates
+                var user = await _userManager.FindByIdAsync(currentUserId);
+                await _signInManager.RefreshSignInAsync(user);
+
+                TempData["SuccessMessage"] = "Profile updated successfully!";
                 return RedirectToAction(nameof(Settings));
             }
-       
+
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
-       
-            return View(model);
-            }
+
+            var reloadData = await _accountService.GetProfileSettingsAsync(currentUserId);
+            return View("Settings", reloadData);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var userId = _userManager.GetUserId(User);
+                var profileData = await _accountService.GetProfileSettingsAsync(userId);
+                return View("Settings", profileData);
+            }
+
+            var currentUserId = _userManager.GetUserId(User);
+            var result = await _accountService.UpdatePasswordAsync(currentUserId, model);
+
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Password updated successfully!";
+                return RedirectToAction(nameof(Settings));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            var reloadData = await _accountService.GetProfileSettingsAsync(currentUserId);
+            return View("Settings", reloadData);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateAvatar(IFormFile avatarFile)
+        {
+            if (avatarFile == null || avatarFile.Length == 0)
+            {
+                TempData["ErrorMessage"] = "Please select a valid image file.";
+                return RedirectToAction(nameof(Settings));
+            }
+
+            var currentUserId = _userManager.GetUserId(User);
+            try
+            {
+                //upload to Cloudinary and update db
+                await _accountService.UpdateAvatarAsync(currentUserId, avatarFile);
+
+                //refresh claims so the navbar profile picture updates immediately
+                var user = await _userManager.FindByIdAsync(currentUserId);
+                await _signInManager.RefreshSignInAsync(user);
+
+                TempData["SuccessMessage"] = "Avatar updated successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Failed to upload avatar: " + ex.Message;
+            }
+
+            return RedirectToAction(nameof(Settings));
+        }
+
+
+
+    }
 }

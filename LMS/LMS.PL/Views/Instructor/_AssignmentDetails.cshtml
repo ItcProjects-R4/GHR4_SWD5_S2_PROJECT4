@@ -92,7 +92,7 @@
                                         }
                                         else
                                         {
-                                            <div class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center bg-light text-dark fw-bold" style="width: 38px; height: 38px; font-size: 0.85rem; border: 1.5px solid #e2e8f0;">
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center bg-light text-dark fw-bold" style="width: 38px; height: 38px; font-size: 0.85rem; border: 1.5px solid #e2e8f0;">
                                                 @(string.IsNullOrEmpty(submission.StudentFullName) ? "S" : submission.StudentFullName.Substring(0, 1).ToUpper())
                                             </div>
                                         }
@@ -121,7 +121,7 @@
                                             @foreach (var file in submission.SubmissionFiles)
                                             {
                                                 var displayName = !string.IsNullOrEmpty(file.FileName) ? file.FileName : System.IO.Path.GetFileName(file.FileUrl);
-                                                <a href="@file.FileUrl" target="_blank" download class="btn btn-xs btn-outline-secondary rounded-pill px-2.5 py-1 text-decoration-none d-inline-flex align-items-center gap-1.5 small file-download-link" title="@displayName" style="font-size: 0.75rem; transition: all 0.2s;">
+                                                <a href="@file.FileUrl" target="_blank" download class="btn btn-outline-secondary btn-sm rounded-pill px-2.5 py-1 text-decoration-none d-inline-flex align-items-center gap-1.5 small" title="@displayName" style="font-size: 0.75rem; transition: all 0.2s;">
                                                     <i class="bi bi-file-earmark-arrow-down-fill text-secondary"></i>
                                                     <span class="text-truncate" style="max-width: 150px;">@displayName</span>
                                                 </a>
