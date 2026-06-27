@@ -230,6 +230,8 @@ namespace LMS.BLL.Services.Implementation
                     ArticleUrl = c.ArticleUrl,
                     Text = c.Text,
                     CourseId = c.Module.CourseId,
+                    ModuleTitle = c.Module.Title,
+                    ModuleOrderIndex = c.Module.OrderIndex,
                     IsCompleted = context.Progresses.Any(p => p.ContentId == c.Id &&
                                                              p.StudentId == studentId &&
                                                              p.IsCompleted)
@@ -477,6 +479,7 @@ namespace LMS.BLL.Services.Implementation
                                 {
                                     Id = content.Id,
                                     Title = content.Title,
+                                    ArticleUrl = content.ArticleUrl
                                 }).ToList(),
 
                             Assignment = module.Assignment == null ? null : new AssignmentViewModel
