@@ -47,11 +47,27 @@ namespace LMS.PL.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl)
         {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+                
+                if (User.IsInRole("Instructor"))
+                {
+                    return RedirectToAction("Dashboard", "Instructor");
+                }
+                if (User.IsInRole("Assistant"))
+                {
+                    return RedirectToAction("Dashboard", "Assistant");
+                }
+                return RedirectToAction("Dashboard", "Student");
+            }
             var model = new LoginViewModel
             {
                 ReturnUrl = returnUrl
             };
-
             return View(model);
         }
 
