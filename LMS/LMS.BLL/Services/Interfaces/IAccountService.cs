@@ -1,5 +1,5 @@
 ﻿using LMS.Domain.Models.Results;
-using LMS.Domain.ViewModels;
+using LMS.Domain.ViewModels.Account;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 

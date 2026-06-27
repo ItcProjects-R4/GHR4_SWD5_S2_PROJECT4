@@ -1,14 +1,13 @@
-﻿using LMS.BLL.Services.Implementation;
 using LMS.BLL.Services.Interfaces;
 using LMS.Domain.Models;
-using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using LMS.Domain.ViewModels.Instructor.CourseDetails;
-using LMS.Domain.Models;
-using System;
-using Microsoft.AspNetCore.Http;
+
+using LMS.Domain.ViewModels.Assistant;
+using LMS.Domain.ViewModels.Account;
+
 namespace LMS.PL.Controllers
 {
     [Authorize(Roles = "Instructor")]
@@ -19,19 +18,31 @@ namespace LMS.PL.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IReportingService _reportingService;
         private readonly IInstructorService _instructorService;
-
+        private readonly IAccountService _accountService;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public InstructorController(IStudentService studentService,
         UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager, 
         IReportingService reportingService,
-        IInstructorService instructorService)
+        IInstructorService instructorService,
+        IAccountService accountService,
+        SignInManager<ApplicationUser> signInManager)
         {
             _studentService = studentService;
             _userManager = userManager;
             _roleManager = roleManager;
             _reportingService = reportingService;
             _instructorService = instructorService;
+            _accountService = accountService;
+            _signInManager = signInManager;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Dashboard()
+        {
+            var dashboard = await _instructorService.GetInstructorDashboardAsync();
+            return View(dashboard);
         }
 
         [HttpGet]
@@ -157,7 +168,7 @@ namespace LMS.PL.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CourseDetails(int id)
+        public async Task<IActionResult> WatchCourse(int id)
         {
             if (id <= 0)
                 return RedirectToAction("NotFound", "Home");
@@ -510,58 +521,111 @@ namespace LMS.PL.Controllers
                 return PartialView("_AssignmentDetails", assignment);
 
             return View(assignment);
-
         }
-            
-        [Authorize(Roles = "Instructor")]
+
+        [HttpGet]
         public async Task<IActionResult> Settings()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return NotFound();
-           
-            var viewModel = new InstructorSettingsViewModel
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email ?? string.Empty,
-                PhoneNumber = user.PhoneNumber ?? string.Empty
-            };
+            var userId = _userManager.GetUserId(User);
+            var profileData = await _accountService.GetProfileSettingsAsync(userId);
 
-                return View(viewModel);
+            return View(profileData);
         }
 
-        // Istructor profile settings
         [HttpPost]
-        [Authorize(Roles = "Instructor")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Settings(InstructorSettingsViewModel model)
+        public async Task<IActionResult> UpdateProfile(UpdateProfileViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                // If validation fails, reload settings data to re-render the view
+                var userId = _userManager.GetUserId(User);
+                var profileData = await _accountService.GetProfileSettingsAsync(userId);
+                return View("Settings", profileData);
             }
-       
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return NotFound();
-       
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-            user.Email = model.Email;
-            user.PhoneNumber = model.PhoneNumber;
-       
-            var result = await _userManager.UpdateAsync(user);
+
+            var currentUserId = _userManager.GetUserId(User);
+            var result = await _accountService.UpdateProfileAsync(currentUserId, model);
+
             if (result.Succeeded)
             {
-                TempData["SuccessMessage"] = "Profile settings updated successfully.";
+                //refresh the cookie claims immediately so the navbar updates
+                var user = await _userManager.FindByIdAsync(currentUserId);
+                await _signInManager.RefreshSignInAsync(user);
+
+                TempData["SuccessMessage"] = "Profile updated successfully!";
                 return RedirectToAction(nameof(Settings));
             }
-       
+
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
-       
-            return View(model);
-            }
+
+            var reloadData = await _accountService.GetProfileSettingsAsync(currentUserId);
+            return View("Settings", reloadData);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var userId = _userManager.GetUserId(User);
+                var profileData = await _accountService.GetProfileSettingsAsync(userId);
+                return View("Settings", profileData);
+            }
+
+            var currentUserId = _userManager.GetUserId(User);
+            var result = await _accountService.UpdatePasswordAsync(currentUserId, model);
+
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Password updated successfully!";
+                return RedirectToAction(nameof(Settings));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            var reloadData = await _accountService.GetProfileSettingsAsync(currentUserId);
+            return View("Settings", reloadData);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateAvatar(IFormFile avatarFile)
+        {
+            if (avatarFile == null || avatarFile.Length == 0)
+            {
+                TempData["ErrorMessage"] = "Please select a valid image file.";
+                return RedirectToAction(nameof(Settings));
+            }
+
+            var currentUserId = _userManager.GetUserId(User);
+            try
+            {
+                //upload to Cloudinary and update db
+                await _accountService.UpdateAvatarAsync(currentUserId, avatarFile);
+
+                //refresh claims so the navbar profile picture updates immediately
+                var user = await _userManager.FindByIdAsync(currentUserId);
+                await _signInManager.RefreshSignInAsync(user);
+
+                TempData["SuccessMessage"] = "Avatar updated successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Failed to upload avatar: " + ex.Message;
+            }
+
+            return RedirectToAction(nameof(Settings));
+        }
+
+
+
+    }
 }

@@ -1,4 +1,4 @@
-﻿using LMS.BLL.Services.Interfaces;
+using LMS.BLL.Services.Interfaces;
 using LMS.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,12 +23,17 @@ namespace LMS.PL.Controllers
         [HttpGet]
         public async Task<IActionResult> Checkout(int courseId)
         {
-            // Assuming you have access to a course repository to get the course details
             var course = await _courseRepository.GetCourseByIdAsync(courseId);
-
             if (course == null) return NotFound();
-
-            return View(course);
+           
+            var viewModel = new Domain.ViewModels.Shared.CourseViewModel
+            {
+                Id = course.Id,
+                Title = course.Title,
+                Price = course.Price,
+                Description = course.Description
+            };
+            return View(viewModel);
         }
 
         [Authorize]
@@ -36,8 +41,11 @@ namespace LMS.PL.Controllers
         public async Task<IActionResult> Pay(int courseId)
         {
             var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var email = User.FindFirstValue(ClaimTypes.Email) ?? "student@test.com";
-            var name = User.Identity.Name ?? "Student";
+            var emailClaim = User.FindFirstValue(ClaimTypes.Email);
+            var email = string.IsNullOrWhiteSpace(emailClaim) ? "student@test.com" : emailClaim;
+            
+            var nameClaim = User.Identity?.Name;
+            var name = string.IsNullOrWhiteSpace(nameClaim) ? "Student" : nameClaim;
 
             var result = await _checkoutService.InitiateCheckoutAsync(courseId, studentId, email, name);
 

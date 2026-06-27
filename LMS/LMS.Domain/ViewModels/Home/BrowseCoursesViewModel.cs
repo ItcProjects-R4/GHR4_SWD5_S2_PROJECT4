@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LMS.Domain.ViewModels
+namespace LMS.Domain.ViewModels.Home
 {
     public class BrowseCoursesViewModel
     {

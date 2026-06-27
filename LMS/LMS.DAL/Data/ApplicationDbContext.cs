@@ -24,7 +24,6 @@ namespace LMS.DAL.Data
         public DbSet<Module> Modules { get; set; }
 
         public DbSet<Progress> Progresses { get; set; }
-
         public DbSet<Content> Contents { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Payment> Payments { get; set; }

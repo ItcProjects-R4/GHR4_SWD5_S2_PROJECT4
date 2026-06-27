@@ -118,7 +118,7 @@
                                     <span class="text-muted" style="font-size: 0.7rem;">@file.FileType · @formattedSize</span>
                                 </div>
                             </div>
-                            <a href="@file.FileUrl" target="_blank" download class="btn btn-xs btn-outline-primary rounded-pill px-2 py-0.5" style="font-size: 0.65rem;">
+                            <a href="@file.FileUrl" target="_blank" download class="btn btn-outline-primary btn-sm rounded-pill px-2 py-0.5" style="font-size: 0.65rem;">
                                 <i class="bi bi-download"></i>
                             </a>
                         </div>
@@ -136,7 +136,7 @@
             <form id="assignmentSubmissionForm" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="id" value="@Model.Id" />
                 
-                <div id="dragDropArea" class="border-2 border-dashed rounded-4 p-4 text-center cursor-pointer mb-3" style="background: #fafafa; border-color: #d9d9d9; transition: all 0.25s; cursor: pointer;">
+                <div id="dragDropArea" class="drag-drop-area border-2 border-dashed rounded-4 p-4 text-center cursor-pointer mb-3" style="border-color: #d9d9d9;">
                     <i class="bi bi-cloud-arrow-up-fill text-warning display-5 mb-2 d-block"></i>
                     <h6 class="fw-bold text-dark mb-1">Drag & drop files here</h6>
                     <p class="text-muted small mb-0">or <span class="text-warning fw-bold">browse files</span> from your device</p>

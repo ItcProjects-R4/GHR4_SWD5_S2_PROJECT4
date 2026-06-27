@@ -342,7 +342,6 @@ namespace LMS.DAL.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("TransactionId")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 

@@ -5,10 +5,10 @@
     
 
 }
-<main class="main-content py-2">
+<div class="main-content py-2">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-5 animate-fade-in">
         <div>
-            <h1 class="page-title mb-1">Welcome back, @Model.FirstName! 👋</h1>
+            <h1 class="page-title mb-1">Welcome back, @Model.FirstName! </h1>
             <p class="text-muted mb-0">Ready to continue your learning journey?</p>
         </div>
     </div>
@@ -78,12 +78,12 @@
                                  onerror="this.style.background='#1a1a2e';this.removeAttribute('src')" />
 
                             <div class="course-card-body">
-                                <div class="course-title-row">
+                                <div class="d-flex align-items-start justify-content-between gap-2 mb-1">
                                     <h4 class="course-title">@course.CourseTitle</h4>
-                                    <span class="badge-active">Active</span>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1.5 fw-medium rounded-pill">Active</span>
                                 </div>
 
-                                <div class="course-progress">
+                                <div class="progress mb-2" style="height: 6px;">
                                     @{
                                         var progressColor = course.ProgressPercentage switch
                                         {
@@ -94,14 +94,12 @@
                                             _ => "bg-danger"
                                         };
                                     }
-                                    <div class="progress">
-                                        <div class="progress-bar @progressColor"
-                                             role="progressbar"
-                                             style="width: @course.ProgressPercentage%"
-                                             aria-valuenow="@course.ProgressPercentage"
-                                             aria-valuemin="0"
-                                             aria-valuemax="100">
-                                        </div>
+                                    <div class="progress-bar @progressColor"
+                                         role="progressbar"
+                                         style="width: @course.ProgressPercentage%"
+                                         aria-valuenow="@course.ProgressPercentage"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100">
                                     </div>
                                 </div>
 
@@ -110,9 +108,9 @@
                                     <span>@course.CompletedLessonsCount/@course.TotalLessonsCount Contents</span>
                                 </div>
 
-                                <a asp-action="CourseDetails"
+                                <a asp-action="WatchCourse"
                                        asp-route-id="@course.CourseId"
-                                       class="btn-continue btn-continue-active">
+                                       class="btn btn-primary w-100 py-2 rounded-pill">
                                     Continue Learning
                                 </a>
                             </div>
@@ -141,7 +139,7 @@
                 @foreach (var course in Model.RecentlyAddedCourses)
                 {
                     <div class="col-sm-6 col-md-6 col-xl-4">
-                        <div class="course-card border-0 shadow-sm" style="transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                        <div class="card course-card border-0 shadow-sm" style="transition: transform 0.3s ease, box-shadow 0.3s ease;">
                             <img src="@course.ThumbnailUrl"
                                  class="course-card-img"
                                  alt="@course.CourseTitle"
@@ -152,7 +150,7 @@
                                 
                                 <div class="d-flex justify-content-between align-items-center mt-auto">
                                     <span class="fw-bold fs-5 text-primary">@course.Price.ToString("C")</span>
-                                    <a asp-action="CourseDetails" asp-controller="Student" asp-route-id="@course.CourseId" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                    <a asp-action="WatchCourse" asp-controller="Student" asp-route-id="@course.CourseId" class="btn btn-outline-primary btn-sm rounded-pill px-3">
                                         Enroll
                                     </a>
                                 </div>
@@ -163,4 +161,4 @@
             </div>
         }
     </div>
-</main>
+</div>

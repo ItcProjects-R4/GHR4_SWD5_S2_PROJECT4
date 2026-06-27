@@ -17,10 +17,14 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 // Set your Cloudinary credentials
-DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
+
 
 
 var builder = WebApplication.CreateBuilder(args);
+if (builder.Environment.IsDevelopment())
+{
+    DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
+}
 
 builder.Services.AddHttpClient<IPaymobService, PaymobService>();
 
@@ -35,6 +39,8 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 
 
+builder.Services.AddScoped<ISubmissionService, SubmissionService>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -46,7 +52,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 
 
 // Register Cloudinary
-Cloudinary cloudinary = new Cloudinary(builder.Configuration["CLOUDINARY_URL"]); cloudinary.Api.Secure = true;
+Cloudinary cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"));
+cloudinary.Api.Secure = true;
+// Read directly from appsettings.json
+//string cloudinaryUrl = builder.Configuration["CLOUDINARY_URL"];
+//Cloudinary cloudinary = new Cloudinary(cloudinaryUrl);
+//cloudinary.Api.Secure = true;
+
 
 builder.Services.AddSingleton(cloudinary);
 

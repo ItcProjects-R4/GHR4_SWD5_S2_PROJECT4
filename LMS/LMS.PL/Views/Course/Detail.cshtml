@@ -81,7 +81,14 @@
                 <div class="text-center mb-4">
                     <div class="h1 fw-bold text-primary">@(Model.Price == 0 ? "Free" : $"${Model.Price:F2}")</div>
                 </div>
-                <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg w-100 mb-3 py-3 rounded-3 fw-bold">Enroll Now</a>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Checkout" asp-action="Checkout" asp-route-courseId="@Model.Id" class="btn btn-primary btn-lg w-100 mb-3 py-3 rounded-3 fw-bold">Enroll Now</a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Checkout", "Checkout", new { courseId = Model.Id })" class="btn btn-primary btn-lg w-100 mb-3 py-3 rounded-3 fw-bold">Enroll Now</a>
+                }
                 <p class="text-center text-muted small mb-0">30-Day Money-Back Guarantee</p>
             </div>
         </div>

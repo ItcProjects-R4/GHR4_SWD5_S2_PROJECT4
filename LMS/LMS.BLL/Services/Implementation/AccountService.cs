@@ -2,7 +2,7 @@
 using LMS.BLL.Services.Interfaces;
 using LMS.Domain.Models;
 using LMS.Domain.Models.Results;
-using LMS.Domain.ViewModels;
+using LMS.Domain.ViewModels.Account;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;

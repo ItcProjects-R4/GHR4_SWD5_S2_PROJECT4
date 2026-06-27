@@ -1,49 +1,44 @@
 <aside class="sidebar">
-    <div class="sidebar-content">
-        <div class="sidebar-header">
-            <span class="sidebar-title">Workspace</span>
-            <button class="btn-sidebar-toggle" id="sidebarCloseToggle" title="Collapse Sidebar">
-                <i class="bi bi-layout-sidebar"></i>
-            </button>
-        </div>
-        <ul class="sidebar-menu">
-            <li class="menu-item">
-                <a asp-controller="Instructor" asp-action="Dashboard" class="menu-link @(IsActive("Instructor", "Dashboard"))">
-                    <i class="bi bi-speedometer2"></i> Dashboard
-                </a>
-            </li>
-            <li class="menu-item">
-                <a asp-controller="Instructor" asp-action="Users" class="menu-link @(IsActive("Instructor", "Users"))">
-                    <i class="bi bi-people"></i> Users
-                </a>
-            </li>
-            <li class="menu-item">
-                <a asp-controller="Instructor" asp-action="Courses" class="menu-link @(IsActive("Instructor", "Courses"))">
-                    <i class="bi bi-book"></i> Courses
-                </a>
-            </li>
-            <li class="menu-item">
-                <a asp-controller="Instructor" asp-action="Enrollments" class="menu-link @(IsActive("Instructor", "Enrollments"))">
-                    <i class="bi bi-person-check"></i> Enrollments
-                </a>
-            </li>
-            <li class="menu-item">
-                <a asp-controller="Instructor" asp-action="Submissions" class="menu-link @(IsActive("Instructor", "Submissions"))">
-                    <i class="bi bi-file-earmark-check"></i> Submissions
-                </a>
-            </li>
-            <li class="menu-item">
-                <a asp-controller="Instructor" asp-action="Payments" class="menu-link @(IsActive("Instructor", "Payments"))">
-                    <i class="bi bi-credit-card"></i> Payments
-                </a>
-            </li>
-            <li class="menu-item">
-                <a asp-controller="Instructor" asp-action="Settings" class="menu-link @(IsActive("Instructor", "Settings"))">
-                    <i class="bi bi-gear"></i> Settings
-                </a>
-            </li>
-        </ul>
-    </div>
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a asp-controller="Instructor" asp-action="Dashboard" class="menu-link @(IsActive("Instructor", "Dashboard"))">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Instructor" asp-action="Users" class="menu-link @(IsActive("Instructor", "Users"))">
+                <i class="bi bi-people"></i> Users
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Instructor" asp-action="Courses" class="menu-link @(IsActive("Instructor", "Courses"))">
+                <i class="bi bi-book"></i> Courses
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Instructor" asp-action="Submissions" class="menu-link @(IsActive("Instructor", "Submissions"))">
+                <i class="bi bi-file-earmark-check"></i> Submissions
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Instructor" asp-action="Payments" class="menu-link @(IsActive("Instructor", "Payments"))">
+                <i class="bi bi-credit-card"></i> Payments
+            </a>
+        </li>
+        <li class="menu-item">
+            <a asp-controller="Instructor" asp-action="Settings" class="menu-link @(IsActive("Instructor", "Settings"))">
+                <i class="bi bi-gear"></i> Settings
+            </a>
+        </li>
+        <li class="menu-item mt-auto border-top pt-2">
+            <form asp-controller="Account" asp-action="Logout" method="post" id="sidebarLogoutForm" class="d-none">
+                @Html.AntiForgeryToken()
+            </form>
+            <a href="javascript:document.getElementById('sidebarLogoutForm').submit();" class="menu-link text-danger">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+        </li>
+    </ul>
 </aside>
 
 @functions {
