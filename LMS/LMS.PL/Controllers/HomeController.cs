@@ -55,7 +55,7 @@ namespace LMS.PL.Controllers
         {
             var instructors = await _userManager.GetUsersInRoleAsync("Instructor");
 
-            var instructor = instructors.FirstOrDefault();
+            var instructor = instructors.FirstOrDefault(i => i.Email == "kk@gmail.com") ?? instructors.FirstOrDefault();
 
             var model = new AboutViewModel
             {
