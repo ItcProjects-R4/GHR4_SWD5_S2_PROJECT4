@@ -81,7 +81,11 @@ namespace LMS.BLL.Services.Implementation
 
         public async Task<bool> GradeSubmissionAsync(int id, int grade, string feedback)
         {
-            var submission = await _context.Submissions.FindAsync(id);
+            var submission = await _context.Submissions
+                   .Include(s => s.Student)
+                   .Include(s => s.Assignment)
+                   .Include(s => s.SubmissionFiles)
+                   .FirstOrDefaultAsync(s => s.Id == id);
             if (submission == null) return false;
 
             submission.Grade = grade;

@@ -34,7 +34,7 @@ builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 
-
+builder.Services.AddScoped<IAssistantService, AssistantService>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 
 // Add services to the container.

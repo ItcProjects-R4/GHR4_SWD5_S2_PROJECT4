@@ -19,78 +19,50 @@ namespace LMS.PL.Controllers
         private readonly ICloudinaryService _cloudinaryService;
         private readonly ISubmissionService _submissionService;
         private readonly IAccountService _accountService;
+        private readonly IAssistantService _assistantService;
 
         public AssistantController(
        UserManager<ApplicationUser> userManager,
        SignInManager<ApplicationUser> signInManager,
        ISubmissionService submissionService,
        IAccountService accountService,
-       ICloudinaryService cloudinaryService)
+       ICloudinaryService cloudinaryService,
+       IAssistantService assistantService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _submissionService = submissionService;
             _cloudinaryService = cloudinaryService;
             _accountService = accountService;
+            _assistantService = assistantService;
+
         }
 
         // ── Dashboard Action ──────────────────────────────────────
         [HttpGet]
         public async Task<IActionResult> Dashboard()
         {
+            var model = await _assistantService.GetDashboardAsync();
+
             var user = await _userManager.GetUserAsync(User);
             var claims = user != null ? await _userManager.GetClaimsAsync(user) : null;
-            var permissionsList = claims != null ? string.Join(", ", claims.Where(c => c.Type == "Permission").Select(c => c.Value)) : "None";
 
-            var recentSubmissions = await _submissionService.GetRecentSubmissionsAsync(5);
+            model.ActivePermissions = claims != null
+                ? string.Join(", ", claims.Where(c => c.Type == "Permission").Select(c => c.Value))
+                : "None";
 
-            var recentViewModels = recentSubmissions.Select(s => new SubmissionListItemViewModel
-            {
-                Id = s.Id,
-                StudentName = s.Student != null ? $"{s.Student.FirstName} {s.Student.LastName}".Trim() : "Unknown",
-                StudentInitial = !string.IsNullOrEmpty(s.Student?.FirstName) ? s.Student.FirstName.Substring(0, 1).ToUpper() : "U",
-                CourseTitle = s.Assignment?.Title ?? "Untitled Assignment",
-                SubmittedAt = s.SubmittedAt,
-                IsGraded = s.Status == LMS.Domain.Enums.SubmissionStatus.Graded,
-                Grade = s.Grade ?? 0,
-                Feedback = s.Comment ?? "No feedback provided."
-            });
-
-            var viewModel = new AssistantDashboardViewModel
-            {
-                PendingSubmissionsCount = await _submissionService.GetPendingSubmissionsCountAsync(),
-                GradedTodayCount = await _submissionService.GetGradedTodayCountAsync(),
-                ActivePermissions = string.IsNullOrEmpty(permissionsList) ? "None" : permissionsList,
-                RecentSubmissions = recentViewModels
-            };
-            return View(viewModel);
+            return View(model);
         }
 
         // ── Submissions Action ───────────────────────────────────
         [HttpGet]
         public async Task<IActionResult> Submissions(string searchString, string statusFilter)
         {
-            var submissions = await _submissionService.GetFilteredSubmissionsAsync(searchString, statusFilter);
+            var model = await _assistantService.GetSubmissionsAsync(searchString, statusFilter);
 
-            var viewModel = submissions.Select(s => new SubmissionListItemViewModel
-            {
-                Id = s.Id,
-                StudentName = s.Student != null ? $"{s.Student.FirstName} {s.Student.LastName}".Trim() : "Unknown",
-                StudentInitial = !string.IsNullOrEmpty(s.Student?.FirstName) ? s.Student.FirstName.Substring(0, 1).ToUpper() : "U",
-                CourseTitle = s.Assignment?.Title ?? "Untitled Assignment",
-                SubmittedAt = s.SubmittedAt,
-                IsGraded = s.Status == LMS.Domain.Enums.SubmissionStatus.Graded,
-                Grade = s.Grade ?? 0,
-                Feedback = s.Comment ?? "No feedback provided."
-            });
-
-            return View(viewModel);
+            return View(model);
         }
-
         // ── Settings Actions ──────────────────────────────────────
-
-
-
         [HttpGet]
        
         public async Task<IActionResult> Settings()
@@ -194,8 +166,6 @@ namespace LMS.PL.Controllers
             return RedirectToAction(nameof(Settings));
         }
 
-
-
         // GRADE SUBMISSION ACTIONS
 
         [HttpGet]
@@ -207,7 +177,6 @@ namespace LMS.PL.Controllers
                 TempData["ErrorMessage"] = "Submission not found.";
                 return RedirectToAction(nameof(Submissions));
             }
-
             // If already graded, redirect to submissions
             if (submission.Status == LMS.Domain.Enums.SubmissionStatus.Graded)
             {
