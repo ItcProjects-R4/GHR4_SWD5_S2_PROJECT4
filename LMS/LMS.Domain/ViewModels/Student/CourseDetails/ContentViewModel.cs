@@ -12,5 +12,7 @@ namespace LMS.Domain.ViewModels.Student.CourseDetails
         public int CourseId { get; set; }
         public string? ModuleTitle { get; set; }
         public int ModuleOrderIndex { get; set; }
+
+        public int OrderIndex { get; set; }
     }
 }

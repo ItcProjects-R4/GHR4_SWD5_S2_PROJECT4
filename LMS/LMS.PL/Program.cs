@@ -70,6 +70,7 @@ builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<UserProfile>();
+    cfg.AddProfile<CourseProfile>();
 });
 
 // Register Identity with roles
