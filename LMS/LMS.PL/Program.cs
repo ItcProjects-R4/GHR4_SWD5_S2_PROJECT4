@@ -59,6 +59,7 @@ cloudinary.Api.Secure = true;
 //Cloudinary cloudinary = new Cloudinary(cloudinaryUrl);
 //cloudinary.Api.Secure = true;
 
+
 builder.Services.AddSingleton(cloudinary);
 
 // Register the CloudinaryService
