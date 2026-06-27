@@ -19,7 +19,7 @@ namespace LMS.PL.Controllers
             _courseRepository = courseRepository;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Student")]
         [HttpGet]
         public async Task<IActionResult> Checkout(int courseId)
         {
@@ -36,7 +36,7 @@ namespace LMS.PL.Controllers
             return View(viewModel);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Student")]
         [HttpPost]
         public async Task<IActionResult> Pay(int courseId)
         {
@@ -69,7 +69,7 @@ namespace LMS.PL.Controllers
             return Ok();
         }
 
-        [Authorize]
+        [Authorize(Roles = "Student")]
         [HttpGet]
         public async Task<IActionResult> PurchaseHistory()
         {
@@ -78,6 +78,7 @@ namespace LMS.PL.Controllers
             return View(history);
         }
 
+        [Authorize(Roles = "Student")]
         [HttpGet]
         public IActionResult PaymentSuccess()
         {

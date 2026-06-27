@@ -4,3 +4,5 @@ obj/
 *.user
 *.suo
 /LMS/LMS.PL/.env
+/LMS/LMS.PL/appsettings.json
+/LMS/LMS.PL/appsettings.json
