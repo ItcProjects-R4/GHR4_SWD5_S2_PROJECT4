@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using LMS.Domain.ViewModels.Shared;
+using System.Collections.Generic;
 
-namespace LMS.Domain.ViewModels
+namespace LMS.Domain.ViewModels.Assistant
 {
     public class AssistantDashboardViewModel
     {

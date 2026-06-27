@@ -1,4 +1,4 @@
-﻿using LMS.Domain.ViewModels;
+﻿using LMS.Domain.ViewModels.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;

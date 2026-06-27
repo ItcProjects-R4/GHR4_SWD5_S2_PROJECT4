@@ -1,7 +1,7 @@
 using LMS.BLL.Services.Implementation;
 using LMS.BLL.Services.Interfaces;
 using LMS.Domain.Models;
-using LMS.Domain.ViewModels;
+using LMS.Domain.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

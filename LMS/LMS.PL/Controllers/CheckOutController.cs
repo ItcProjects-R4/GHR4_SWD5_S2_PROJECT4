@@ -23,12 +23,17 @@ namespace LMS.PL.Controllers
         [HttpGet]
         public async Task<IActionResult> Checkout(int courseId)
         {
-            // Assuming you have access to a course repository to get the course details
             var course = await _courseRepository.GetCourseByIdAsync(courseId);
-
             if (course == null) return NotFound();
-
-            return View(course);
+           
+            var viewModel = new Domain.ViewModels.Shared.CourseViewModel
+            {
+                Id = course.Id,
+                Title = course.Title,
+                Price = course.Price,
+                Description = course.Description
+            };
+            return View(viewModel);
         }
 
         [Authorize]

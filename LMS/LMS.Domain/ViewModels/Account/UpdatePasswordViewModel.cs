@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace LMS.Domain.ViewModels
+namespace LMS.Domain.ViewModels.Account
 {
     public class UpdatePasswordViewModel
     {
