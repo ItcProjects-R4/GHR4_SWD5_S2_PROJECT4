@@ -1,12 +1,12 @@
 using LMS.BLL.Services.Interfaces;
-using LMS.Domain.ViewModels;
-﻿using LMS.BLL.Services.Implementation;
+using LMS.BLL.Services.Implementation;
 using LMS.BLL.Services.Interfaces;
 using LMS.Domain.Models;
-using LMS.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using LMS.Domain.ViewModels.Assistant;
+using LMS.Domain.ViewModels.Account;
 
 namespace LMS.PL.Controllers
 {

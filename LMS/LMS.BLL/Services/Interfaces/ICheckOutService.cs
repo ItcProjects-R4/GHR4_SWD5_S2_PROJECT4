@@ -1,9 +1,9 @@
-﻿using LMS.Domain.ViewModels;
-using LMS.Domain.Models;
+﻿using LMS.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using LMS.Domain.ViewModels.Student;
 
 namespace LMS.BLL.Services.Interfaces
 {

@@ -33,7 +33,6 @@ namespace LMS.Domain.Models
         [ForeignKey("CourseId")]
         public Course Course { get; set; }
 
-        // Optional: 1-to-1 link to the final enrollment (can be nullable)
         public int? EnrollmentId { get; set; }
         [ForeignKey("EnrollmentId")]
         public Enrollment? Enrollment { get; set; }

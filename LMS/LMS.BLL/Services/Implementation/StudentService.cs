@@ -7,7 +7,7 @@ using LMS.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using LMS.Domain.ViewModels;
+using LMS.Domain.ViewModels.Student;
 
 namespace LMS.BLL.Services.Implementation
 {

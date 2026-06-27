@@ -1,4 +1,4 @@
-﻿namespace LMS.Domain.ViewModels
+﻿namespace LMS.Domain.ViewModels.Student
 {
     public class CheckoutResponseViewModel
     {

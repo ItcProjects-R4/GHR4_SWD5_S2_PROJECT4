@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LMS.Domain.ViewModels
+namespace LMS.Domain.ViewModels.Shared
 {
     public class SubmissionListItemViewModel
     {
