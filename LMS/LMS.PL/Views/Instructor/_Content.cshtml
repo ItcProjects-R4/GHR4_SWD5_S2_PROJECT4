@@ -1,24 +1,8 @@
 @model ContentViewModel
 
-<div class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom">
-    <div class="d-flex align-items-center gap-3">
-        <div class="bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #e0e7ff;">
-            <i class="bi bi-play-circle-fill fs-4" style="color: #4338ca;"></i>
-        </div>
-        <div>
-            <h3 class="fw-bold mb-1 text-dark" style="font-size: 1.25rem;">@Model.Title</h3>
-        </div>
-    </div>
-    <div>
-        <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2" style="font-size: 0.8rem; background: #e0e7ff; color: #4338ca !important; border: 1px solid #c7d2fe;">
-            <i class="bi bi-eye-fill me-1"></i>Instructor Preview Mode
-        </span>
-    </div>
-</div>
-
 <div class="lesson-body-wrapper">
-    <div class="video-wrapper mb-4" id="videoSection">
-        <div class="video-container">
+    <div class="video-wrapper mb-4" id="videoSection" style="border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05);">
+        <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; background: #0b0f19;">
             <video controls
                    playsinline
                    preload="metadata"
@@ -30,68 +14,105 @@
         </div>
     </div>
 
-    @if (!string.IsNullOrEmpty(Model.ArticleUrl))
-    {
-        @if (Model.ArticleUrl.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
-        {
-            <div class="pdf-viewer-card mb-4 rounded-4 overflow-hidden shadow-sm" style="border: 1px solid #e2e8f0;">
-                <div class="pdf-viewer-header bg-dark text-white px-3 py-2.5 d-flex align-items-center justify-content-between">
-                    <span class="fw-semibold" style="font-size:0.875rem;">
-                        <i class="bi bi-file-earmark-pdf-fill text-danger me-2 fs-5"></i>@System.IO.Path.GetFileName(Url.Content(Model.ArticleUrl))
-                    </span>
-                    <a href="@Model.ArticleUrl" target="_blank" class="btn btn-sm btn-outline-light rounded-pill px-3">
-                        <i class="bi bi-download me-1"></i>Download PDF
-                    </a>
-                </div>
-                <div class="pdf-container" style="height: 550px; background: #525659;">
-                    <iframe src="@Url.Content(Model.ArticleUrl)" style="border: none; width: 100%; height: 100%;"></iframe>
-                </div>
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1 text-dark" style="font-size: 1.5rem; letter-spacing: -0.025em; font-family: var(--font-heading);">@Model.Title</h2>
+            <span class="text-secondary small fw-medium">
+                Module @Model.ModuleOrderIndex: @Model.ModuleTitle • Published @DateTime.Now.ToString("MMMM dd, yyyy")
+            </span>
+        </div>
+        <div>
+            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2" style="font-size: 0.8rem; background: #e0e7ff; color: #4338ca !important; border: 1px solid #c7d2fe;">
+                <i class="bi bi-eye-fill me-1"></i>Instructor Preview Mode
+            </span>
+        </div>
+    </div>
+
+    <ul class="nav watch-tabs border-bottom mb-4" id="contentTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" 
+                    id="description-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#description-tab-pane" 
+                    type="button" 
+                    role="tab" 
+                    aria-controls="description-tab-pane" 
+                    aria-selected="true">
+                Description
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" 
+                    id="attach-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#attach-tab-pane" 
+                    type="button" 
+                    role="tab" 
+                    aria-controls="attach-tab-pane" 
+                    aria-selected="false">
+                Attach File
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="contentTabsContent">
+        <div class="tab-pane fade show active" id="description-tab-pane" role="tabpanel" aria-labelledby="description-tab" tabindex="0">
+            <div class="content-description-text mb-4 text-dark" style="font-size: 0.95rem; line-height: 1.7; color: #334155;">
+                @if (!string.IsNullOrEmpty(Model.Text))
+                {
+                    @Html.Raw(Model.Text)
+                }
+                else
+                {
+                    <p class="text-muted">No description available for this lecture.</p>
+                }
             </div>
-        }
-        else
-        {
-            <div class="article-link-card mb-4 p-3 rounded-4" style="background: #f8f6ff; border: 1px solid #e9d5ff;">
-                <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+
+            <div class="action-bar-pane d-flex align-items-center justify-content-between pt-4 border-top mt-5 flex-wrap gap-3">
+                <button type="button" id="prevLessonBtn" class="btn btn-outline-secondary fw-semibold d-inline-flex align-items-center gap-2 px-4 py-2">
+                    <i class="bi bi-chevron-left"></i> Previous Lecture
+                </button>
+
+                <div class="text-muted" style="font-size: 0.85rem; font-weight: 500;">
+                    Reviewing content as instructor
+                </div>
+
+                <button type="button" id="nextLessonBtn" class="btn btn-primary fw-semibold d-inline-flex align-items-center gap-2 px-4 py-2">
+                    Next Lecture <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="attach-tab-pane" role="tabpanel" aria-labelledby="attach-tab" tabindex="0">
+            @if (!string.IsNullOrEmpty(Model.ArticleUrl))
+            {
+                <div class="d-flex align-items-center justify-content-between p-3 mb-3 border rounded-3 bg-white shadow-sm" style="border-radius: 10px;">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="article-icon-wrap bg-white rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border: 1px solid #e9d5ff;">
-                            <i class="bi bi-link-45deg fs-4" style="color:#7c3aed;"></i>
+                        <div class="d-flex align-items-center justify-content-center bg-light text-primary rounded-3" style="width: 48px; height: 48px; border: 1px solid #e2e8f0;">
+                            @if (Model.ArticleUrl.Contains(".pdf", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <i class="bi bi-file-earmark-pdf fs-4 text-danger"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-file-earmark-zip fs-4 text-info"></i>
+                            }
                         </div>
                         <div>
-                            <div class="fw-bold text-dark" style="font-size:0.9rem;">Reference Article</div>
-                            <a href="@Model.ArticleUrl" target="_blank" rel="noopener noreferrer" class="text-primary text-decoration-none article-url-text" style="font-size: 0.8rem; word-break: break-all;">
-                                @Model.ArticleUrl
-                            </a>
+                            <div class="fw-semibold text-dark" style="font-size: 0.95rem;">@System.IO.Path.GetFileName(Model.ArticleUrl)</div>
+                            <div class="text-muted small">File Attachment</div>
                         </div>
                     </div>
-                    <a href="@Model.ArticleUrl" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                        <i class="bi bi-box-arrow-up-right me-1"></i>Open Article
-                    </a>
+                    <a href="@Model.ArticleUrl" target="_blank" class="btn btn-light border px-4 py-2 fw-semibold" style="border-radius: 8px;"><i class="bi bi-download me-2"></i>Download</a>
                 </div>
-            </div>
-        }
-    }
-
-    @if (!string.IsNullOrEmpty(Model.Text))
-    {
-        <div class="content-text-card mb-4 rounded-4 overflow-hidden border shadow-sm" style="background:#fff;">
-            <div class="content-text-header px-4 py-3 bg-light border-bottom d-flex align-items-center gap-2">
-                <i class="bi bi-journal-text text-primary fs-5"></i>
-                <span class="fw-bold text-dark">Content Notes</span>
-            </div>
-            <div class="content-text-body p-4 lesson-html-content" style="font-size: 0.925rem; line-height: 1.75; color: #374151;">
-                @Html.Raw(Model.Text)
-            </div>
-        </div>
-    }
-
-    <div class="action-bar-pane d-flex align-items-center justify-content-between p-3 bg-light border rounded-4 mb-2 shadow-sm">
-        <div>
-            <button type="button" id="nextLessonBtn" class="btn fw-medium d-flex align-items-center gap-1" style="background-color: #4338ca; color: white; border: none; border-radius: 6px; padding: 0.5rem 1.25rem; font-size: 0.95rem; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#312e81'" onmouseout="this.style.backgroundColor='#4338ca'">
-                Next Content <i class="bi bi-chevron-right" style="font-size: 0.85rem; padding-top: 2px;"></i>
-            </button>
-        </div>
-        <div class="text-muted" style="font-size: 0.8rem;">
-            Reviewing content as instructor
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-folder2-open display-6 d-block mb-3 opacity-50"></i>
+                    <p class="mb-0">No files attached to this lecture.</p>
+                </div>
+            }
         </div>
     </div>
 </div>
