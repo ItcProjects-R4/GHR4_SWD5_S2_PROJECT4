@@ -88,7 +88,7 @@
         <div class="col-lg-4">
             <div class="card p-4 shadow border-0 rounded-4 sticky-top text-white" style="top: 100px; background: linear-gradient(135deg, #1e293b, #0f172a);">
                 <div class="d-flex align-items-center justify-content-between mb-4">
-                    <span class="fs-3 fw-bold">@(Model.Price == 0 ? "Free" : $"${Model.Price:F2}")</span>
+                    <span class="fs-3 fw-bold">@(Model.Price == 0 ? "Free" : $"{Model.Price:N2} EGP")</span>
                 </div>
 
                 <h5 class="fw-bold text-warning mb-2 d-flex align-items-center gap-2">
