@@ -46,35 +46,42 @@
             </div>
 
 
-                @* Password *@
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <div class="input-group">
-                        <input asp-for="Password" class="form-control border-end-0" placeholder="••••••••">
-        
-          
-                        <button class="btn btn-light border border-start-0" type="button" onclick="this.previousElementSibling.type=this.previousElementSibling.type==='password'?'text':'password'">
-                            <i class="bi bi-eye"></i>
-                        </button> 
-                    </div>
-                    <span asp-validation-for="Password" class="text-danger"></span>
+            @* Password *@
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <div class="input-group">
+                    <input asp-for="Password" class="form-control border-end-0" placeholder="••••••••">
+                    <button class="btn btn-light border border-start-0" type="button" onclick="togglePasswordVisibility(this)">
+                        <i class="bi bi-eye"></i>
+                    </button>
                 </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
 
-                @* ConfirmPassword *@
-                <div class="mb-4">
-                    <label class="form-label">Confirm Password</label>
-                    <input asp-for="ConfirmPassword" class="form-control" placeholder="••••••••">
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            @* ConfirmPassword *@
+            <div class="mb-4">
+                <label class="form-label">Confirm Password</label>
+                <div class="input-group">
+                    <input asp-for="ConfirmPassword" class="form-control border-end-0" placeholder="••••••••">
+                    <button class="btn btn-light border border-start-0" type="button" onclick="togglePasswordVisibility(this)">
+                        <i class="bi bi-eye"></i>
+                    </button>
                 </div>
-                <button type="submit" class="btn btn-primary w-100 mb-3">Create Account</button>
-                <p class="text-center mb-0" style="font-size:13px;color:var(--text-muted)">
-                    Already have an account? <a asp-action="Login" asp-controller="Account" class="fw-semibold">Sign in</a>
-                </p>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+
+
+            <button type="submit" class="btn btn-primary w-100 mb-3">Create Account</button>
+            <p class="text-center mb-0" style="font-size:13px;color:var(--text-muted)">
+                 Already have an account? <a asp-action="Login" asp-controller="Account" class="fw-semibold">Sign in</a>
+            </p>
             </form>
         </div>
  </div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/password-toggle.js" asp-append-version="true"></script>
    
 }
 @section Styles {

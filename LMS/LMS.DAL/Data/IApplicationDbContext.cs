@@ -1,4 +1,5 @@
 using LMS.Domain.Models;
+using LMS.Domain.Models.LMS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LMS.DAL.Data
@@ -15,6 +16,8 @@ namespace LMS.DAL.Data
         DbSet<Assignment> Assignments { get; }
         DbSet<SubmissionFile> SubmissionFiles { get; }
         DbSet<ApplicationUser> Users { get; }
+        DbSet<NewsletterSubscriber> NewsletterSubscribers { get; }
+
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
