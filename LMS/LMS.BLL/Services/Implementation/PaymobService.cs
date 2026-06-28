@@ -70,41 +70,50 @@ namespace LMS.BLL.Services.Implementation
             return keyResponse.GetProperty("token").GetString();
         }
 
-        private string GetHmacValue(JsonElement element)
+        // Safe property extractor that checks if property exists before retrieving it to avoid KeyNotFoundExceptions
+        private string GetSafeHmacValue(JsonElement parent, string propertyName)
         {
-            if (element.ValueKind == JsonValueKind.True) return "true";
-            if (element.ValueKind == JsonValueKind.False) return "false";
-            if (element.ValueKind == JsonValueKind.Null) return "";
-            return element.ToString() ?? "";
+            if (parent.ValueKind == JsonValueKind.Object && parent.TryGetProperty(propertyName, out var element))
+            {
+                if (element.ValueKind == JsonValueKind.True) return "true";
+                if (element.ValueKind == JsonValueKind.False) return "false";
+                if (element.ValueKind == JsonValueKind.Null) return "";
+                return element.ToString() ?? "";
+            }
+            return "";
         }
 
         public bool VerifyHmac(JsonElement payload, string receivedHmac)
         {
-            var secret = Environment.GetEnvironmentVariable("PAYMOB_HMAC_SECRET") ?? _config["PAYMOB_HMAC_SECRET"]??throw new InvalidOperationException("PAYMOB_HMAC_SECRET is not configured");
+            var secret = Environment.GetEnvironmentVariable("PAYMOB_HMAC_SECRET") ?? _config["PAYMOB_HMAC_SECRET"] ?? throw new InvalidOperationException("PAYMOB_HMAC_SECRET is not configured");
             var obj = payload.GetProperty("obj");
+
+            // 💡 Safely extract sub-objects to prevent KeyNotFoundException crashes on non-card transactions
+            var sourceData = obj.TryGetProperty("source_data", out var sd) ? sd : default;
+            var orderObj = obj.TryGetProperty("order", out var ord) ? ord : default;
 
             // Paymob requires exact alphabetical concatenation of these fields
             string concatenatedString =
-                GetHmacValue(obj.GetProperty("amount_cents")) +
-                GetHmacValue(obj.GetProperty("created_at")) +
-                GetHmacValue(obj.GetProperty("currency")) +
-                GetHmacValue(obj.GetProperty("error_occured")) +
-                GetHmacValue(obj.GetProperty("has_parent_transaction")) +
-                GetHmacValue(obj.GetProperty("id")) +
-                GetHmacValue(obj.GetProperty("integration_id")) +
-                GetHmacValue(obj.GetProperty("is_3d_secure")) +
-                GetHmacValue(obj.GetProperty("is_auth")) +
-                GetHmacValue(obj.GetProperty("is_capture")) +
-                GetHmacValue(obj.GetProperty("is_refunded")) +
-                GetHmacValue(obj.GetProperty("is_standalone_payment")) +
-                GetHmacValue(obj.GetProperty("is_voided")) +
-                GetHmacValue(obj.GetProperty("order").GetProperty("id")) +
-                GetHmacValue(obj.GetProperty("owner")) +
-                GetHmacValue(obj.GetProperty("pending")) +
-                GetHmacValue(obj.GetProperty("source_data").GetProperty("pan")) +
-                GetHmacValue(obj.GetProperty("source_data").GetProperty("sub_type")) +
-                GetHmacValue(obj.GetProperty("source_data").GetProperty("type")) +
-                GetHmacValue(obj.GetProperty("success"));
+                GetSafeHmacValue(obj, "amount_cents") +
+                GetSafeHmacValue(obj, "created_at") +
+                GetSafeHmacValue(obj, "currency") +
+                GetSafeHmacValue(obj, "error_occured") +
+                GetSafeHmacValue(obj, "has_parent_transaction") +
+                GetSafeHmacValue(obj, "id") +
+                GetSafeHmacValue(obj, "integration_id") +
+                GetSafeHmacValue(obj, "is_3d_secure") +
+                GetSafeHmacValue(obj, "is_auth") +
+                GetSafeHmacValue(obj, "is_capture") +
+                GetSafeHmacValue(obj, "is_refunded") +
+                GetSafeHmacValue(obj, "is_standalone_payment") +
+                GetSafeHmacValue(obj, "is_voided") +
+                (orderObj.ValueKind == JsonValueKind.Object ? GetSafeHmacValue(orderObj, "id") : "") +
+                GetSafeHmacValue(obj, "owner") +
+                GetSafeHmacValue(obj, "pending") +
+                (sourceData.ValueKind == JsonValueKind.Object ? GetSafeHmacValue(sourceData, "pan") : "") +
+                (sourceData.ValueKind == JsonValueKind.Object ? GetSafeHmacValue(sourceData, "sub_type") : "") +
+                (sourceData.ValueKind == JsonValueKind.Object ? GetSafeHmacValue(sourceData, "type") : "") +
+                GetSafeHmacValue(obj, "success");
 
             var keyBytes = Encoding.UTF8.GetBytes(secret);
             var hashBytes = Encoding.UTF8.GetBytes(concatenatedString);

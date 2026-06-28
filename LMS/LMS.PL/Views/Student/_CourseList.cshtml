@@ -64,16 +64,16 @@ else
                         @if (course.EnrollmentStatus == "Completed")
                         {
                             <a asp-action="WatchCourse"
-                                   asp-route-id="@course.CourseId"
-                                   class="btn btn-success w-100 py-2 d-flex align-items-center justify-content-center gap-2 rounded-pill">
+                               asp-route-id="@course.CourseId"
+                               class="btn btn-outline-success w-100 py-2 d-flex align-items-center justify-content-center gap-2">
                                 <i class="bi bi-check-circle-fill"></i> Completed
                             </a>
                         }
                         else
                         {
                             <a asp-action="WatchCourse"
-                                   asp-route-id="@course.CourseId"
-                                   class="btn btn-primary w-100 py-2 rounded-pill">
+                               asp-route-id="@course.CourseId"
+                               class="btn btn-outline-primary w-100 py-2">
                                 Continue Learning
                             </a>
                         }
