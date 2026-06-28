@@ -15,18 +15,26 @@
                 <i class="bi bi-person-check"></i> Enrollments
             </a>
         </li>
+        <!-- Courses Dropdown Menu -->
         <li class="menu-item">
-            <a href="#coursesSubmenu" data-bs-toggle="collapse" class="menu-link d-flex align-items-center w-100 @(IsActive("Instructor", "Courses") != "" || IsActive("Instructor", "CreateCourse") != "" ? "" : "collapsed")" aria-expanded="@(IsActive("Instructor", "Courses") != "" || IsActive("Instructor", "CreateCourse") != "" ? "true" : "false")">
-                <i class="bi bi-book"></i> Courses <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+            <a href="#coursesSubmenu" data-bs-toggle="collapse"
+               class="menu-link d-flex align-items-center w-100 @(IsActive("Instructor", "Courses") != "" || IsActive("Instructor", "CreateCourse") != "" ? "" : "collapsed")"
+               aria-expanded="@(IsActive("Instructor", "Courses") != "" || IsActive("Instructor", "CreateCourse") != "" ? "true" : "false")">
+                <i class="bi bi-book"></i> Courses
+                <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
             </a>
             <ul class="collapse list-unstyled @(IsActive("Instructor", "Courses") != "" || IsActive("Instructor", "CreateCourse") != "" ? "show" : "")" id="coursesSubmenu">
                 <li class="menu-item mt-1">
-                    <a asp-controller="Instructor" asp-action="Courses" class="menu-link py-2 @(IsActive("Instructor", "Courses"))" style="padding-left: 3rem; font-size: 0.9rem;">
+                    <a asp-controller="Instructor" asp-action="Courses"
+                       class="menu-link py-2 @(IsActive("Instructor", "Courses"))"
+                       style="padding-left: 3rem; font-size: 0.9rem;">
                         <i class="bi bi-grid"></i> All Courses
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a asp-controller="Instructor" asp-action="CreateCourse" class="menu-link py-2 @(IsActive("Instructor", "CreateCourse"))" style="padding-left: 3rem; font-size: 0.9rem;">
+                    <a asp-controller="Instructor" asp-action="CreateCourse"
+                       class="menu-link py-2 @(IsActive("Instructor", "CreateCourse"))"
+                       style="padding-left: 3rem; font-size: 0.9rem;">
                         <i class="bi bi-plus-circle"></i> Create New Course
                     </a>
                 </li>
