@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace LMS.PL.Controllers
 {
@@ -12,20 +12,32 @@ namespace LMS.PL.Controllers
     {
         private readonly ICheckoutService _checkoutService;
         private readonly ICourseRepository _courseRepository;
+        private readonly DAL.Data.IApplicationDbContext _context;
 
-        public CheckoutController(ICheckoutService checkoutService, ICourseRepository courseRepository)
+
+        public CheckoutController(ICheckoutService checkoutService, ICourseRepository courseRepository, DAL.Data.IApplicationDbContext context)
         {
             _checkoutService = checkoutService;
             _courseRepository = courseRepository;
+            _context = context;
+
         }
 
         [Authorize(Roles = "Student")]
         [HttpGet]
         public async Task<IActionResult> Checkout(int courseId)
         {
+            var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Redirect if already enrolled
+            var isEnrolled = await _context.Enrollments.AnyAsync(e => e.StudentId == studentId && e.CourseId == courseId);
+            if (isEnrolled)
+            {
+                return RedirectToAction("WatchCourse", "Student", new { id = courseId });
+            }
             var course = await _courseRepository.GetCourseByIdAsync(courseId);
             if (course == null) return NotFound();
-           
+
             var viewModel = new Domain.ViewModels.Shared.CourseViewModel
             {
                 Id = course.Id,
@@ -41,22 +53,25 @@ namespace LMS.PL.Controllers
         public async Task<IActionResult> Pay(int courseId)
         {
             var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Redirect if already enrolled
+            var isEnrolled = await _context.Enrollments.AnyAsync(e => e.StudentId == studentId && e.CourseId == courseId);
+            if (isEnrolled)
+            {
+                return RedirectToAction("WatchCourse", "Student", new { id = courseId });
+            }
             var emailClaim = User.FindFirstValue(ClaimTypes.Email);
             var email = string.IsNullOrWhiteSpace(emailClaim) ? "student@test.com" : emailClaim;
-            
+
             var nameClaim = User.Identity?.Name;
             var name = string.IsNullOrWhiteSpace(nameClaim) ? "Student" : nameClaim;
-
             var result = await _checkoutService.InitiateCheckoutAsync(courseId, studentId, email, name);
-
             if (!result.Success) return NotFound(result.ErrorMessage);
-
             if (result.IsFree)
             {
                 TempData["CourseTitle"] = result.CourseTitle;
                 return RedirectToAction("PaymentSuccess");
             }
-
             return Redirect(result.PaymobRedirectUrl);
         }
 

@@ -33,6 +33,12 @@ namespace LMS.PL.Controllers
             _cloudinaryService = cloudinaryService;
             _accountService = accountService;
         }
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return RedirectToAction(nameof(Dashboard));
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> Dashboard()

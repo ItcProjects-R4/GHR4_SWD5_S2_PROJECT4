@@ -140,7 +140,15 @@ namespace LMS.PL.Controllers
            
             return View();
         }
-        
+
+        [HttpGet]
+        [Route("Home/NotFoundPage")]
+        public IActionResult NotFoundPage()
+        {
+            return View();
+        }
+
+
     }
 }
 
