@@ -110,7 +110,7 @@ namespace LMS.PL.Controllers
             ";
 
             await _emailSender.SendEmailAsync(
-                "amira@gmail.com",
+                "@gmail.com",
                 subject,
                 body
             );

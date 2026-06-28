@@ -121,9 +121,30 @@ namespace LMS.PL.Controllers
 
         [Authorize(Roles = "Student")]
         [HttpGet]
-        public IActionResult PaymentSuccess()
+        public async Task<IActionResult> PaymentSuccess([FromQuery] string? success)
         {
-            return View(); 
+            // If Paymob redirected with a failed status, show error and redirect to Dashboard
+            if (!string.IsNullOrEmpty(success) && success.Equals("false", StringComparison.OrdinalIgnoreCase))
+            {
+                TempData["ErrorMessage"] = "Payment was declined by the provider. Please try again using test credentials.";
+                return RedirectToAction("Dashboard", "Student");
+            }
+            var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var lastEnrollment = await _context.Enrollments
+                .Include(e => e.Course)
+                .Where(e => e.StudentId == studentId)
+                .OrderByDescending(e => e.EnrolledAt)
+                .FirstOrDefaultAsync();
+            int courseId = 0;
+            string courseTitle = "your new course";
+            if (lastEnrollment != null)
+            {
+                courseId = lastEnrollment.CourseId;
+                courseTitle = lastEnrollment.Course.Title;
+            }
+            ViewBag.CourseId = courseId;
+            ViewBag.CourseTitle = courseTitle;
+            return View();
         }
     }
 }
