@@ -52,9 +52,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 
 
 // Register Cloudinary
-Cloudinary cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"));
+var cloudinaryUrl = Environment.GetEnvironmentVariable("CLOUDINARY_URL") ?? builder.Configuration["CLOUDINARY_URL"];
+Cloudinary cloudinary = new Cloudinary(cloudinaryUrl);
 cloudinary.Api.Secure = true;
-
 
 builder.Services.AddSingleton(cloudinary);
 
@@ -77,8 +77,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 // add this block to fix the SameSite cookie redirects
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
-    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
 });
 
 // add emailsender

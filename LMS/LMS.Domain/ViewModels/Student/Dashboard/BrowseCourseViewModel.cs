@@ -7,5 +7,6 @@ namespace LMS.Domain.ViewModels.Student.Dashboard
         public string CourseTitle { get; set; } = string.Empty;
         public string ThumbnailUrl { get; set; } = string.Empty;
         public decimal Price { get; set; }
+        public bool IsEnrolled { get; set; }
     }
 }
