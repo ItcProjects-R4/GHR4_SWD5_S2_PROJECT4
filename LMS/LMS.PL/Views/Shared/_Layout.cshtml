@@ -156,6 +156,18 @@
                 </div>
                 <div class="col-lg-4 ms-lg-auto">
                     <div class="footer-heading fw-bold mb-3" style="color:var(--text-primary);">Stay Updated</div>
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success border-0 p-2 mb-2 small" style="border-radius: 8px; font-size: 13px;">
+                            <i class="bi bi-check-circle-fill me-1"></i> @TempData["SuccessMessage"]
+                        </div>
+                    }
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger border-0 p-2 mb-2 small" style="border-radius: 8px; font-size: 13px;">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> @TempData["ErrorMessage"]
+                        </div>
+                    }
                    
                     <form asp-controller="Home" asp-action="Subscribe" method="post">
                         <div class="input-group">

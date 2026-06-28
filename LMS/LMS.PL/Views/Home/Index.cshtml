@@ -22,7 +22,7 @@
             </div>
             <div class="col-lg-6 animate-fade-in" style="animation-delay:0.15s">
                 <div class="hero-image-wrap">
-                    <img src="~/assets/images/hero_bg.png" alt="Student learning online" class="img-fluid w-100">
+                    <img src="https://res.cloudinary.com/dx1jq63vm/image/upload/v1782624280/hero_bg_wbyx0m.jpg" alt="Student learning online" class="img-fluid w-100">
                 </div>
             </div>
         </div>
@@ -69,41 +69,50 @@
 </section>
 
 <!-- How It Works -->
-<section class="section-padding" style="background: var(--bg-color); border-top: 1px solid var(--border-color);">
-    <div class="container">
-        <div class="text-center section-header">
-            <div class="section-label">Simple Process</div>
-            <h2 class="section-title">How It Works</h2>
-            <p class="text-muted mb-0" style="font-size:14px">Start learning in three easy steps.</p>
+@if (User.Identity?.IsAuthenticated != true)
+{
+    <!-- How It Works -->
+    <section class="section-padding" style="background: var(--bg-color); border-top: 1px solid var(--border-color);">
+        <div class="container">
+            <div class="text-center section-header">
+                <div class="section-label">Simple Process</div>
+                <h2 class="section-title">How It Works</h2>
+                <p class="text-muted mb-0" style="font-size:14px">Start learning in three easy steps.</p>
+            </div>
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="step-icon"><i class="bi bi-person-plus"></i></div>
+                    <h5 class="fw-semibold mb-2" style="color:var(--text-primary)">1. Create Account</h5>
+                    <p class="text-muted mb-0" style="font-size:14px">Sign up free and set up your personalized profile in minutes.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="step-icon"><i class="bi bi-journal-check"></i></div>
+                    <h5 class="fw-semibold mb-2" style="color:var(--text-primary)">2. Enroll in a Course</h5>
+                    <p class="text-muted mb-0" style="font-size:14px">Browse hundreds of courses and enroll with a single click.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="step-icon"><i class="bi bi-trophy"></i></div>
+                    <h5 class="fw-semibold mb-2" style="color:var(--text-primary)">3. Grow in your career path</h5>
+                    <p class="text-muted mb-0" style="font-size:14px">Grow your career with new skills and knowledge.</p>
+                </div>
+            </div>
         </div>
-        <div class="row g-4 text-center">
-            <div class="col-md-4">
-                <div class="step-icon"><i class="bi bi-person-plus"></i></div>
-                <h5 class="fw-semibold mb-2" style="color:var(--text-primary)">1. Create Account</h5>
-                <p class="text-muted mb-0" style="font-size:14px">Sign up free and set up your personalized profile in minutes.</p>
-            </div>
-            <div class="col-md-4">
-                <div class="step-icon"><i class="bi bi-journal-check"></i></div>
-                <h5 class="fw-semibold mb-2" style="color:var(--text-primary)">2. Enroll in a Course</h5>
-                <p class="text-muted mb-0" style="font-size:14px">Browse hundreds of courses and enroll with a single click.</p>
-            </div>
-            <div class="col-md-4">
-                <div class="step-icon"><i class="bi bi-trophy"></i></div>
-                <h5 class="fw-semibold mb-2" style="color:var(--text-primary)">3. Grow in your career path</h5>
-                <p class="text-muted mb-0" style="font-size:14px">Grow your career with new skills and knowledge.</p>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
+}
+
 
 <!-- CTA -->
-<section class="cta-section">
-    <div class="container text-center">
-        <h2 class="cta-title">Ready to start learning?</h2>
-        <p class="text-muted mb-4" style="font-size:15px">Join thousands of students building their careers today.</p>
-        <div class="d-flex gap-2 justify-content-center flex-wrap">
-            <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg px-5">Create account</a>
-            <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-lg px-5">Sign in</a>
+@if (User.Identity?.IsAuthenticated != true)
+{
+   
+    <section class="cta-section">
+        <div class="container text-center">
+            <h2 class="cta-title">Ready to start learning?</h2>
+            <p class="text-muted mb-4" style="font-size:15px">Join thousands of students building their careers today.</p>
+            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg px-5">Create account</a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-lg px-5">Sign in</a>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+}
