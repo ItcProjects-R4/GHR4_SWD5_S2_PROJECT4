@@ -97,7 +97,7 @@ namespace LMS.PL.Controllers
         [HttpGet]
         public IActionResult PaymentSuccess()
         {
-            return View(); // Assumes TempData or a BLL call provides the course title in the view as established earlier
+            return View(); 
         }
     }
 }
