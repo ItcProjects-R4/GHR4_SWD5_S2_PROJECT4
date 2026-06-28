@@ -15,11 +15,11 @@ namespace LMS.BLL.Services.Interfaces
         Task<Course?> GetCourseForEditAsync(int courseId, string instructorId);
         Task<bool> UpdateCourseAsync(int courseId, CreateCourseViewModel model, string instructorId);
         Task<bool> DeleteCourseAsync(int courseId, string instructorId);
-        Task<Module> AddModuleAsync(int courseId, string moduleTitle);
+        Task<Module> AddModuleAsync(int courseId, string moduleTitle, string instructorId);
         Task<bool> DeleteModuleAsync(int moduleId, int courseId, string instructorId);
-        Task<Content> AddContentAsync(int moduleId, CreateContentViewModel model);
+        Task<Content> AddContentAsync(int moduleId, CreateContentViewModel model, string instructorId);
         Task<bool> DeleteContentAsync(int contentId, int courseId, string instructorId);
-        Task<Assignment> AddAssignmentAsync(int moduleId, string title, DateTime dueDate, int maxScore, IFormFile? resourceFile);
+        Task<Assignment> AddAssignmentAsync(int moduleId, string title, DateTime dueDate, int maxScore, IFormFile? resourceFile, string instructorId);
         Task<bool> DeleteAssignmentAsync(int assignmentId, int courseId, string instructorId);
         Task<List<Submission>> GetSubmissionsQueueAsync(string instructorId, string? searchString, string? statusFilter);
         Task<Submission?> GetSubmissionForGradingAsync(int submissionId, string instructorId);
