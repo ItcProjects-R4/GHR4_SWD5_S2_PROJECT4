@@ -63,7 +63,7 @@
                         </div>
                         <p class="text-muted small mb-3">Modules: @(course.Modules?.Count ?? 0) · Lessons: @course.TotalLessonCount</p>
                         <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="fw-bold text-primary">@(course.Price == 0 ? "Free" : $"${course.Price:N2}")</span>
+                            <span class="fw-bold text-primary">@(course.Price == 0 ? "Free" : $"{course.Price:N2} EGP")</span>
                             <div class="d-flex gap-2">
                                 <a asp-action="CourseDetails" asp-route-id="@course.Id" class="btn btn-light btn-sm shadow-sm" title="View Details"><i class="bi bi-eye"></i></a>
                                 <a asp-action="CreateCourse" asp-route-id="@course.Id" asp-route-step="2" class="btn btn-light btn-sm shadow-sm text-primary" title="Edit Curriculum"><i class="bi bi-pencil"></i></a>

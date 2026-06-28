@@ -1,5 +1,4 @@
-﻿
-@model IEnumerable<LMS.Domain.ViewModels.Shared.CourseViewModel>
+﻿@model IEnumerable<LMS.Domain.ViewModels.Shared.CourseViewModel>
 @{
     ViewData["Title"] = "LMS Platform - Learn Without Limits";
     Layout = "_Layout";
@@ -17,7 +16,15 @@
                     Start, switch, or advance your career with expert-led courses, professional certificates, and a community of learners.
                 </p>
                 <div class="d-flex gap-2 flex-wrap">
-                    <a asp-controller="Course" asp-action="Browse" class="btn btn-primary btn-lg px-5">Browse Courses</a>
+                    <!-- 💡 Conditional redirection for Browse Courses hero button -->
+                    @if (User.IsInRole("Student"))
+                    {
+                        <a asp-controller="Student" asp-action="BrowseCourses" class="btn btn-primary btn-lg px-5">Browse Courses</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Course" asp-action="Browse" class="btn btn-primary btn-lg px-5">Browse Courses</a>
+                    }
                 </div>
             </div>
             <div class="col-lg-6 animate-fade-in" style="animation-delay:0.15s">
@@ -38,9 +45,19 @@
                 <h2 class="section-title mb-1">Featured Courses</h2>
                 <p class="text-muted mb-0" style="font-size:14px">Our most enrolled courses this month.</p>
             </div>
-            <a asp-controller="Course" asp-action="Browse" class="btn btn-light btn-sm d-none d-md-inline-flex align-items-center gap-1">
-                View All <i class="bi bi-arrow-right"></i>
-            </a>
+            <!-- 💡 Conditional redirection for View All featured courses link -->
+            @if (User.IsInRole("Student"))
+            {
+                <a asp-controller="Student" asp-action="BrowseCourses" class="btn btn-light btn-sm d-none d-md-inline-flex align-items-center gap-1">
+                    View All <i class="bi bi-arrow-right"></i>
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Course" asp-action="Browse" class="btn btn-light btn-sm d-none d-md-inline-flex align-items-center gap-1">
+                    View All <i class="bi bi-arrow-right"></i>
+                </a>
+            }
         </div>
         <div class="row g-4">
             @if (Model != null && Model.Any())
@@ -56,7 +73,7 @@
                                     <span><i class="bi bi-book"></i> @course.TotalLessonCount Lessons</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="course-price">@(course.Price == 0 ? "Free" : $"${course.Price:F2}")</span>
+                                    <span class="course-price">@(course.Price == 0 ? "Free" : $"{course.Price:N2} EGP")</span>
                                     <a asp-controller="Course" asp-action="Detail" asp-route-id="@course.Id" class="btn btn-outline-primary btn-sm">View Course</a>
                                 </div>
                             </div>
@@ -100,11 +117,9 @@
     </section>
 }
 
-
 <!-- CTA -->
 @if (User.Identity?.IsAuthenticated != true)
 {
-   
     <section class="cta-section">
         <div class="container text-center">
             <h2 class="cta-title">Ready to start learning?</h2>

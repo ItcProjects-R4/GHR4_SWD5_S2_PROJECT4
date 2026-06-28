@@ -439,11 +439,13 @@ namespace LMS.BLL.Services.Implementation
         }
 
 
-        public async Task<Module> AddModuleAsync(int courseId, string moduleTitle)
+        public async Task<Module> AddModuleAsync(int courseId, string moduleTitle, string instructorId)
         {
-            var course = await context.Courses.Include(c => c.Modules).FirstOrDefaultAsync(c => c.Id == courseId);
-            if (course == null) throw new ArgumentException("Course not found.");
+            var course = await context.Courses
+             .Include(c => c.Modules)
+             .FirstOrDefaultAsync(c => c.Id == courseId && c.InstructorId == instructorId);
 
+            if (course == null) throw new UnauthorizedAccessException("You do not own this course.");
             var orderIndex = course.Modules.Count + 1;
             var module = new Module
             {
@@ -452,7 +454,6 @@ namespace LMS.BLL.Services.Implementation
                 OrderIndex = orderIndex,
                 Contents = []
             };
-
             context.Modules.Add(module);
             await context.SaveChangesAsync();
             return module;
@@ -470,11 +471,14 @@ namespace LMS.BLL.Services.Implementation
             return true;
         }
 
-        public async Task<Content> AddContentAsync(int moduleId, CreateContentViewModel model)
+        public async Task<Content> AddContentAsync(int moduleId, CreateContentViewModel model, string instructorId)
         {
-            var module = await context.Modules.Include(m => m.Contents).FirstOrDefaultAsync(m => m.Id == moduleId);
-            if (module == null) throw new ArgumentException("Module not found.");
+            var module = await context.Modules
+             .Include(m => m.Contents)
+             .Include(m => m.Course)
+             .FirstOrDefaultAsync(m => m.Id == moduleId && m.Course.InstructorId == instructorId);
 
+            if (module == null) throw new UnauthorizedAccessException("You do not own this course.");
             string? videoUrl = null;
             if (model.ContentType == "video" && model.VideoFile != null)
             {
@@ -484,7 +488,6 @@ namespace LMS.BLL.Services.Implementation
             {
                 videoUrl = model.VideoUrl;
             }
-
             var orderIndex = module.Contents.Count + 1;
             var content = new Content
             {
@@ -496,15 +499,12 @@ namespace LMS.BLL.Services.Implementation
                 Text = model.Text,
                 Progresses = []
             };
-
             context.Contents.Add(content);
-
-            var course = await context.Courses.FirstOrDefaultAsync(c => c.Id == module.CourseId);
+            var course = module.Course;
             if (course != null)
             {
                 course.TotalLessonCount++;
             }
-
             await context.SaveChangesAsync();
             return content;
         }
@@ -530,14 +530,18 @@ namespace LMS.BLL.Services.Implementation
             return true;
         }
 
-        public async Task<Assignment> AddAssignmentAsync(int moduleId, string title, DateTime dueDate, int maxScore, IFormFile? resourceFile)
+        public async Task<Assignment> AddAssignmentAsync(int moduleId, string title, DateTime dueDate, int maxScore, IFormFile? resourceFile, string instructorId)
         {
+            var module = await context.Modules
+         .Include(m => m.Course)
+         .FirstOrDefaultAsync(m => m.Id == moduleId && m.Course.InstructorId == instructorId);
+
+            if (module == null) throw new UnauthorizedAccessException("You do not own this course.");
             string fileUrl = string.Empty;
             if (resourceFile != null)
             {
                 fileUrl = await cloudinaryService.UploadFileAsync(resourceFile);
             }
-
             var assignment = new Assignment
             {
                 ModuleId = moduleId,
@@ -547,7 +551,6 @@ namespace LMS.BLL.Services.Implementation
                 MaxScore = maxScore,
                 Submissions = []
             };
-
             context.Assignments.Add(assignment);
             await context.SaveChangesAsync();
             return assignment;

@@ -25,30 +25,28 @@ namespace LMS.BLL.Services.Implementation
             var apiKey = Environment.GetEnvironmentVariable("PAYMOB_API_KEY") ?? _config["PAYMOB_API_KEY"];
             var integrationId = int.Parse(Environment.GetEnvironmentVariable("PAYMOB_INTEGRATION_ID") ?? _config["PAYMOB_INTEGRATION_ID"]);
             var amountCents = (int)(amount * 100);
-
             // 1. Get Auth Token
             var authResponse = await PostAsync("https://accept.paymob.com/api/auth/tokens", new { api_key = apiKey });
             var authToken = authResponse.GetProperty("token").GetString();
-
-            // 2. Register Order
+            // 2. Register Order => Updated types and added empty items array
             var orderRequest = new
             {
                 auth_token = authToken,
-                delivery_needed = "false",
-                amount_cents = amountCents.ToString(),
+                delivery_needed = false,  // changed from "false" to false (boolean)
+                amount_cents = amountCents, // changed from amountCents.ToString() to numeric integer
                 currency = "EGP",
-                merchant_order_id = dbPaymentId // Ties Paymob order to your DB
+                merchant_order_id = dbPaymentId, // Ties Paymob order to your DB
+                items = Array.Empty<object>()   // added empty items array
             };
             var orderResponse = await PostAsync("https://accept.paymob.com/api/ecommerce/orders", orderRequest);
             var paymobOrderId = orderResponse.GetProperty("id").GetInt32();
-
-            // 3. Get Payment Key
+            // 3. Get Payment Key (Updated amount_cents and order_id to integers)
             var paymentKeyRequest = new
             {
                 auth_token = authToken,
-                amount_cents = amountCents.ToString(),
+                amount_cents = amountCents,  // changed to numeric integer
                 expiration = 3600,
-                order_id = paymobOrderId.ToString(),
+                order_id = paymobOrderId,   // changed from paymobOrderId.ToString() to numeric integer
                 billing_data = new
                 {
                     apartment = "NA",
@@ -68,7 +66,6 @@ namespace LMS.BLL.Services.Implementation
                 currency = "EGP",
                 integration_id = integrationId
             };
-
             var keyResponse = await PostAsync("https://accept.paymob.com/api/acceptance/payment_keys", paymentKeyRequest);
             return keyResponse.GetProperty("token").GetString();
         }
@@ -123,7 +120,14 @@ namespace LMS.BLL.Services.Implementation
         {
             var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(url, content);
-            response.EnsureSuccessStatusCode();
+
+            // Read the error response if it fails
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Request to {url} failed with status {response.StatusCode}. Response: {errorBody}");
+            }
+
             var responseString = await response.Content.ReadAsStringAsync();
             return JsonDocument.Parse(responseString).RootElement;
         }
