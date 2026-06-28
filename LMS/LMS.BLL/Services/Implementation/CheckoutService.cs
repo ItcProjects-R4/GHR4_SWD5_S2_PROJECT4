@@ -28,8 +28,7 @@ namespace LMS.BLL.Services.Implementation
 
         public async Task<CheckoutResponseViewModel> InitiateCheckoutAsync(int courseId, string studentId, string email, string name)
         {
-            // Note: You need a way to get the course. Assuming your PaymentRepository or CourseRepository can fetch it.
-            // For this example, let's pretend PaymentRepository has a GetCourseByIdAsync method.
+            
                 var course = await _courseRepository.GetCourseByIdAsync(courseId);
                 if (course == null) return new CheckoutResponseViewModel { Success = false, ErrorMessage = "Course not found." };
 
@@ -37,13 +36,13 @@ namespace LMS.BLL.Services.Implementation
 
                 if (course.Price == 0)
                 {
-                    // BUSINESS LOGIC: Free Course
+                    // Free Course
                     await _paymentRepository.CreateActiveEnrollmentAsync(studentId, courseId);
                     response.IsFree = true;
                     return response;
                 }
 
-                // BUSINESS LOGIC: Paid Course
+                // Paid Course
                 var pendingPayment = new Payment
                 {
                     CourseId = courseId,
@@ -54,7 +53,8 @@ namespace LMS.BLL.Services.Implementation
                 };
 
                 var savedPayment = await _paymentRepository.AddPendingPaymentAsync(pendingPayment);
-                var token = await _paymobService.GetPaymentKeyAsync(course.Price, email, name, "Student", savedPayment.Id.ToString());
+                var uniqueMerchantOrderId = $"LMS-{savedPayment.Id}-{DateTime.UtcNow.Ticks}";
+                var token = await _paymobService.GetPaymentKeyAsync(course.Price, email, name, "Student", uniqueMerchantOrderId);
 
                 var iframeId = Environment.GetEnvironmentVariable("PAYMOB_IFRAME_ID") ?? _config["PAYMOB_IFRAME_ID"];
                 response.IsFree = false;
@@ -66,13 +66,21 @@ namespace LMS.BLL.Services.Implementation
         public async Task<bool> ProcessPaymobWebhookAsync(string hmac, JsonElement payload)
         {
             if (!_paymobService.VerifyHmac(payload, hmac)) return false;
-
             var obj = payload.GetProperty("obj");
             bool success = obj.GetProperty("success").GetBoolean();
             string merchantOrderId = obj.GetProperty("order").GetProperty("merchant_order_id").GetString();
             string transactionId = obj.GetProperty("id").GetInt32().ToString();
-
-            if (success && int.TryParse(merchantOrderId, out int paymentId))
+            // 💡 Parse the database payment ID from our unique format "LMS-{paymentId}-{ticks}"
+            int paymentId = 0;
+            if (!string.IsNullOrEmpty(merchantOrderId) && merchantOrderId.StartsWith("LMS-"))
+            {
+                var parts = merchantOrderId.Split('-');
+                if (parts.Length > 1)
+                {
+                    int.TryParse(parts[1], out paymentId);
+                }
+            }
+            if (success && paymentId > 0)
             {
                 var payment = await _paymentRepository.GetPaymentByIdAsync(paymentId);
                 if (payment != null && payment.Status == PaymentStatus.Pending)
