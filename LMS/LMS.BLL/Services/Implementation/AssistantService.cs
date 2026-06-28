@@ -1,6 +1,8 @@
 ﻿using LMS.BLL.Services.Interfaces;
 using LMS.Domain.Enums;
-using LMS.Domain.ViewModels;
+using LMS.Domain.ViewModels.Assistant;
+using LMS.Domain.ViewModels.Shared;
+
 
 namespace LMS.BLL.Services.Implementation
 {

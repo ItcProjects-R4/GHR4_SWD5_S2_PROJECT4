@@ -83,7 +83,7 @@ namespace LMS.PL.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // If validation fails, reload settings data to re-render the view
+               
                 var userId = _userManager.GetUserId(User);
                 var profileData = await _accountService.GetProfileSettingsAsync(userId);
                 return View("Settings", profileData);
@@ -94,7 +94,6 @@ namespace LMS.PL.Controllers
 
             if (result.Succeeded)
             {
-                //refresh the cookie claims immediately so the navbar updates
                 var user = await _userManager.FindByIdAsync(currentUserId);
                 await _signInManager.RefreshSignInAsync(user);
 
@@ -153,10 +152,8 @@ namespace LMS.PL.Controllers
             var currentUserId = _userManager.GetUserId(User);
             try
             {
-                //upload to Cloudinary and update db
                 await  _accountService.UpdateAvatarAsync(currentUserId, avatarFile);
 
-                //refresh claims so the navbar profile picture updates immediately
                 var user = await _userManager.FindByIdAsync(currentUserId);
                 await _signInManager.RefreshSignInAsync(user);
 
@@ -170,7 +167,7 @@ namespace LMS.PL.Controllers
             return RedirectToAction(nameof(Settings));
         }
 
-        // GRADE SUBMISSION ACTIONS
+        //  grade submission actions 
 
 
         [HttpGet]

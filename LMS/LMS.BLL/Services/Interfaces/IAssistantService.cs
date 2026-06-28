@@ -1,4 +1,7 @@
-﻿using LMS.Domain.ViewModels;
+﻿using LMS.Domain.ViewModels.Assistant;
+using LMS.Domain.ViewModels.Shared;
+
+
 
 namespace LMS.BLL.Services.Interfaces
 {
