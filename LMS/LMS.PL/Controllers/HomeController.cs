@@ -1,7 +1,8 @@
+using AutoMapper;
 using LMS.BLL.Services.Interfaces;
 using LMS.DAL.Data;
 using LMS.Domain.Models;
-using LMS.Domain.ViewModels;
+using LMS.Domain.Models.LMS.Domain.Models;
 using LMS.Domain.ViewModels.Home;
 using LMS.Domain.ViewModels.Shared;
 using Microsoft.AspNetCore.Identity;
@@ -9,8 +10,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using AutoMapper;
-
 
 namespace LMS.PL.Controllers
 {
@@ -133,13 +132,43 @@ namespace LMS.PL.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-      
-        [HttpGet]
-        public IActionResult Subscribe()
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Subscribe(string email)
         {
-           
-            return View();
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                TempData["ErrorMessage"] = "Please enter a valid email address.";
+                return RedirectToAction("Index");
+            }
+
+            // save to database if not already subscribed
+            var alreadySubscribed = await _context.NewsletterSubscribers.AnyAsync(s => s.Email == email);
+            if (!alreadySubscribed)
+            {
+                var subscriber = new NewsletterSubscriber { Email = email };
+                await _context.NewsletterSubscribers.AddAsync(subscriber);
+                await _context.SaveChangesAsync();
+            }
+
+            // send welcome email using the HTML template file
+            try
+            {
+                var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "WelcomeEmail.html");
+                var body = await System.IO.File.ReadAllTextAsync(templatePath);
+
+                await _emailSender.SendEmailAsync(email, "Thank you for subscribing!", body);
+                TempData["SuccessMessage"] = "Thank you for subscribing!";
+            }
+            catch (Exception)
+            {
+                TempData["SuccessMessage"] = "Thank you for subscribing! (Could not send verification email)";
+            }
+
+            return RedirectToAction("Index");
         }
+
 
         [HttpGet]
         [Route("Home/NotFoundPage")]

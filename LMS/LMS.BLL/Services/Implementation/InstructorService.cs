@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using LMS.Domain.ViewModels.Instructor.Enrollments;
 using LMS.Domain.ViewModels.Student.CourseDetails;
 using LMS.Domain.ViewModels.Instructor.Dashboard;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 
 namespace LMS.BLL.Services.Implementation
@@ -15,7 +16,8 @@ namespace LMS.BLL.Services.Implementation
     public class InstructorService(
         IApplicationDbContext context,
         ICurrentUserService currentUserService,
-        ICloudinaryService cloudinaryService)
+        ICloudinaryService cloudinaryService,
+        IEmailSender emailSender)
         : IInstructorService
     {
         public async Task<List<CourseEnrollmentGroupViewModel>> GetEnrollmentsAsync(string search)
@@ -290,6 +292,33 @@ namespace LMS.BLL.Services.Implementation
 
             context.Courses.Add(course);
             await context.SaveChangesAsync();
+
+            // email all subscribers about the new course in the background
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    var subscribers = await context.NewsletterSubscribers.Select(s => s.Email).ToListAsync();
+                    if (subscribers.Count > 0)
+                    {
+                        var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "NewCourseEmail.html");
+                        var templateHtml = await System.IO.File.ReadAllTextAsync(templatePath);
+                        var body = templateHtml
+                            .Replace("{{CourseTitle}}", course.Title)
+                            .Replace("{{CourseDescription}}", course.Description)
+                            .Replace("{{CoursePrice}}", course.Price == 0 ? "Free" : $"${course.Price:F2}")
+                            .Replace("{{CourseId}}", course.Id.ToString());
+                        foreach (var email in subscribers)
+                        {
+                            await emailSender.SendEmailAsync(email, $"New Course Published: {course.Title}", body);
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // fails silently so course creation doesn't crash if SMTP server is down
+                }
+            });
             return course;
         }
 
@@ -323,13 +352,92 @@ namespace LMS.BLL.Services.Implementation
 
         public async Task<bool> DeleteCourseAsync(int courseId, string instructorId)
         {
-            var course = await context.Courses.FirstOrDefaultAsync(c => c.Id == courseId && c.InstructorId == instructorId);
+            var course = await context.Courses
+                .Include(c => c.Enrollments)
+                .Include(c => c.Payments)
+                .Include(c => c.Modules)
+                    .ThenInclude(m => m.Contents)
+                        .ThenInclude(c => c.Progresses)
+                .Include(c => c.Modules)
+                    .ThenInclude(m => m.Assignment)
+                        .ThenInclude(a => a!.Submissions)
+                            .ThenInclude(s => s.SubmissionFiles)
+                .FirstOrDefaultAsync(c => c.Id == courseId && c.InstructorId == instructorId);
+
             if (course == null) return false;
 
+            // 1. Remove related student lesson progress records
+            var progresses = course.Modules.SelectMany(m => m.Contents).SelectMany(c => c.Progresses).ToList();
+            if (progresses.Any())
+            {
+                context.Progresses.RemoveRange(progresses);
+            }
+
+            // 2. Remove student assignment submission files
+            var submissionFiles = course.Modules
+                .Where(m => m.Assignment != null)
+                .Select(m => m.Assignment!)
+                .SelectMany(a => a.Submissions)
+                .SelectMany(s => s.SubmissionFiles)
+                .ToList();
+            if (submissionFiles.Any())
+            {
+                context.SubmissionFiles.RemoveRange(submissionFiles);
+            }
+
+            // 3. Remove student assignment submissions
+            var submissions = course.Modules
+                .Where(m => m.Assignment != null)
+                .Select(m => m.Assignment!)
+                .SelectMany(a => a.Submissions)
+                .ToList();
+            if (submissions.Any())
+            {
+                context.Submissions.RemoveRange(submissions);
+            }
+
+            // 4. Remove assignments
+            var assignments = course.Modules
+                .Where(m => m.Assignment != null)
+                .Select(m => m.Assignment!)
+                .ToList();
+            if (assignments.Any())
+            {
+                context.Assignments.RemoveRange(assignments);
+            }
+
+            // 5. Remove course contents/lessons
+            var contents = course.Modules.SelectMany(m => m.Contents).ToList();
+            if (contents.Any())
+            {
+                context.Contents.RemoveRange(contents);
+            }
+
+            // 6. Remove course modules
+            if (course.Modules.Any())
+            {
+                context.Modules.RemoveRange(course.Modules);
+            }
+
+            // 7. Remove student enrollments
+            if (course.Enrollments.Any())
+            {
+                context.Enrollments.RemoveRange(course.Enrollments);
+            }
+
+            // 8. Remove payment histories
+            if (course.Payments.Any())
+            {
+                context.Payments.RemoveRange(course.Payments);
+            }
+
+            // 9. Finally, remove the course itself
             context.Courses.Remove(course);
+
             await context.SaveChangesAsync();
             return true;
         }
+
 
         public async Task<Module> AddModuleAsync(int courseId, string moduleTitle)
         {
