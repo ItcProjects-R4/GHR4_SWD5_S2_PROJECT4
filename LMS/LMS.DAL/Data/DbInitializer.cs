@@ -63,7 +63,7 @@ namespace LMS.DAL.Data
                     var emptyCourse = new Course
                     {
                         Title = emptyCourseTitle,
-                        ThumbnailUrl = "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+                        ThumbnailUrl = "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
                         Price = 19.99m,
                         Description = "An introductory course to AI, Machine Learning, and Deep Learning without any modules or content yet.",
                         InstructorId = "instructor-1",
@@ -231,7 +231,7 @@ namespace LMS.DAL.Data
                 new Course
                 {
                     Title = "Introduction to Artificial Intelligence",
-                    ThumbnailUrl = "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+                    ThumbnailUrl = "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
                     Price = 19.99m,
                     Description = "An introductory course to AI, Machine Learning, and Deep Learning without any modules or content yet.",
                     InstructorId = instructor.Id,

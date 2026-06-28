@@ -326,9 +326,18 @@ namespace LMS.PL.Controllers
             {
                 return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, errorMessage = "Module title cannot be empty." });
             }
-
-            await _instructorService.AddModuleAsync(courseId, moduleTitle);
-            return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Module added successfully." });
+            // Get current instructor ID
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+            try
+            {
+                await _instructorService.AddModuleAsync(courseId, moduleTitle, instructorId);
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Module added successfully." });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
         }
 
         [HttpPost]
@@ -357,9 +366,19 @@ namespace LMS.PL.Controllers
             {
                 return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, errorMessage = "Failed to add content. Please check inputs." });
             }
+            // Get current instructor ID
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+            try
+            {
+                await _instructorService.AddContentAsync(moduleId, model, instructorId);
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Lesson content added successfully!" });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
 
-            await _instructorService.AddContentAsync(moduleId, model);
-            return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Lesson content added successfully!" });
         }
 
         [HttpPost]
@@ -388,9 +407,18 @@ namespace LMS.PL.Controllers
             {
                 return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, errorMessage = "Assignment title is required." });
             }
-
-            await _instructorService.AddAssignmentAsync(moduleId, title, dueDate, maxScore, resourceFile);
-            return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Assignment added successfully!" });
+            // Get current instructor ID:
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+            try
+            {
+                await _instructorService.AddAssignmentAsync(moduleId, title, dueDate, maxScore, resourceFile, instructorId);
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Assignment added successfully!" });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
         }
 
         [HttpPost]
@@ -431,16 +459,25 @@ namespace LMS.PL.Controllers
                 model.PageTitle = "Create Article";
                 return View(model);
             }
-
             var contentModel = new CreateContentViewModel
             {
                 Title = model.Title,
                 Text = model.Text,
                 ContentType = "text"
             };
+            // Get current instructor ID:
+            var instructorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(instructorId)) return Challenge();
+            try
+            {
+                await _instructorService.AddContentAsync(model.ModuleId, contentModel, instructorId);
+                return RedirectToAction(nameof(CreateCourse), new { id = model.CourseId, step = 2, successMessage = "Text Article lesson created successfully!" });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
 
-            await _instructorService.AddContentAsync(model.ModuleId, contentModel);
-            return RedirectToAction(nameof(CreateCourse), new { id = model.CourseId, step = 2, successMessage = "Text Article lesson created successfully!" });
         }
 
         [HttpGet]

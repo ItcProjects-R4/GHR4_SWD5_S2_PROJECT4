@@ -206,8 +206,14 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold">Password</label>
-                        <input type="password" name="Password" class="form-control" placeholder="Create a strong password" required>
+                        <div class="input-group">
+                            <input type="password" name="Password" class="form-control border-end-0" placeholder="Create a strong password" required>
+                            <button class="btn btn-light border border-start-0" type="button" onclick="togglePasswordVisibility(this)">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                     </div>
+
                     <div class="mb-4">
                         <label class="form-label small fw-bold">Role Permissions</label>
                         <div class="row">
@@ -313,6 +319,7 @@
 
 
 @section Scripts {
+    <script src="~/js/password-toggle.js" asp-append-version="true"></script>
     <script>
         function viewUserDetails(name, role, initials, email, assistantId, permissions) {
             document.getElementById('modal-user-name').textContent = name;

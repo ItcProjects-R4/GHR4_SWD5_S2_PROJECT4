@@ -131,14 +131,14 @@ namespace LMS.BLL.Services.Implementation
 
             var browseCourses = await context.Courses
                 .AsNoTracking()
-                .Where(c => !c.Enrollments.Any(e => e.StudentId == studentId && e.CourseId == c.Id))
                 .OrderBy(c => c.Title)
                 .Select(c => new BrowseCourseViewModel
                 {
                     CourseId = c.Id,
                     CourseTitle = c.Title,
                     ThumbnailUrl = c.ThumbnailUrl,
-                    Price = c.Price
+                    Price = c.Price,
+                    IsEnrolled = c.Enrollments.Any(e => e.StudentId == studentId)
                 }).ToListAsync();
 
             return browseCourses;
