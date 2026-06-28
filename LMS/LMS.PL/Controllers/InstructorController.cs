@@ -38,6 +38,12 @@ namespace LMS.PL.Controllers
             _accountService = accountService;
             _signInManager = signInManager;
         }
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return RedirectToAction(nameof(Dashboard));
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> Dashboard()
