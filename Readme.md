@@ -79,60 +79,62 @@ The platform integrates standard learning management features directly with a **
     ```
 
 ---
-
-## 📸 Screenshots & MVC Project Features
+## 📸 Screenshots & Features
 
 ### 1. Interactive Course Player (Student Workspace)
 
 *The unified split-pane student course player that streams lectures, reads articles, and displays assignments without refreshing pages.*
 
-<img src="screenshots/student_course_player.png" width="800">
+| | | |
+|---|---|---|
+| ![](screenshots/21.png) | ![](screenshots/22.png) | ![](screenshots/23.png) |
+| ![](screenshots/24.png) | ![](screenshots/25.png) | |
 
-<img src="screenshots/21.png" width="800">
-<img src="screenshots/22.png" width="800">
-<img src="screenshots/23.png" width="800">
-<img src="screenshots/24.png" width="800">
-<img src="screenshots/25.png" width="800">
+---
 
 ### 2. Curriculum Builder (Instructor Workspace)
 
 *The step-by-step course builder allowing instructors to add modules, videos, articles, quizzes, and assignments.*
 
-<img src="screenshots/instructor_courses.png" width="800">
+| | | |
+|---|---|---|
+| ![](screenshots/5.png) | ![](screenshots/6.png) | ![](screenshots/7.png) |
+| ![](screenshots/8.png) | ![](screenshots/9.png) | ![](screenshots/10.png) |
+| ![](screenshots/11.png) | ![](screenshots/12.png) | ![](screenshots/13.png) |
+| ![](screenshots/14.png) | ![](screenshots/15.png) | |
 
-<img src="screenshots/5.png" width="800">
-<img src="screenshots/6.png" width="800">
-<img src="screenshots/7.png" width="800">
-<img src="screenshots/8.png" width="800">
-<img src="screenshots/9.png" width="800">
-<img src="screenshots/10.png" width="800">
-<img src="screenshots/11.png" width="800">
-<img src="screenshots/12.png" width="800">
-<img src="screenshots/13.png" width="800">
-<img src="screenshots/14.png" width="800">
-<img src="screenshots/15.png" width="800">
+---
 
 ### 3. Staff Delegation & Access Control
 
 *Manage instructors, teaching assistants, and permissions through a centralized access-control system.*
 
-<img src="screenshots/instructor_dashboard.png" width="800">
+| | | |
+|---|---|---|
+| ![](screenshots/16.png) | ![](screenshots/17.png) | ![](screenshots/18.png) |
+
+---
 
 ### 4. Financial Ledger & Checkout Tracking
 
 *Track payments, purchases, enrollment transactions, and checkout activity in a single financial dashboard.*
 
-<img src="screenshots/instructor_payments.png" width="800">
+| | | |
+|---|---|---|
+| ![](screenshots/19.png) | ![](screenshots/20.png) | |
+
+---
 
 ### 5. Public Portal & Discovery
 
 *A responsive public-facing website showcasing courses, platform features, instructor information, and enrollment options.*
 
-<img src="screenshots/landing_page.png" width="800">
+| | | |
+|---|---|---|
+| ![](screenshots/1.png) | ![](screenshots/2.png) | ![](screenshots/3.png) |
+| ![](screenshots/4.png) | | |
 
-<img src="screenshots/2.png" width="800">
-<img src="screenshots/3.png" width="800">
-<img src="screenshots/4.png" width="800">
+---
 
 ---
 
