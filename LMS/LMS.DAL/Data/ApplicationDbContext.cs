@@ -1,4 +1,4 @@
-﻿using LMS.Domain.Models;
+using LMS.Domain.Models;
 using LMS.Domain.Models.LMS.Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +28,7 @@ namespace LMS.DAL.Data
         public DbSet<Content> Contents { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
 
         public DbSet<Submission> Submissions { get; set; }

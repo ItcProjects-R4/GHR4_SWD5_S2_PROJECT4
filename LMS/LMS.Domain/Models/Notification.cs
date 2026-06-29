@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations;
+using LMS.Domain.Enums;
 
 namespace LMS.Domain.Models
 {
@@ -16,8 +16,13 @@ namespace LMS.Domain.Models
 
         public bool IsRead { get; set; } = false;
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        public NotificationType Type { get; set; } = NotificationType.General;
 
+        [Required]
+        public string UserId { get; set; }
+
+        public ApplicationUser User { get; set; }
     }
 }
