@@ -5,11 +5,19 @@
                 <i class="bi bi-speedometer2"></i> Dashboard
             </a>
         </li>
+
+        <li class="menu-item">
+            <a asp-controller="Student" asp-action="BrowseCourses" class="menu-link @(IsActive("Student", "BrowseCourses"))">
+                <i class="bi bi-compass"></i> Browse Courses
+            </a>
+        </li>
+
         <li class="menu-item">
             <a asp-controller="Student" asp-action="Courses" class="menu-link @(IsActive("Student", "Courses"))">
                 <i class="bi bi-book"></i> Courses
             </a>
         </li>
+
         <li class="menu-item">
             <a asp-controller="Student" asp-action="PurchaseHistory" class="menu-link @(IsActive("Student", "PurchaseHistory"))">
                 <i class="bi bi-credit-card"></i> Purchase History

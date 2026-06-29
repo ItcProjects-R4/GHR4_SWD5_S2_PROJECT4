@@ -83,7 +83,7 @@ namespace LMS.BLL.Services.Implementation
 
         public bool VerifyHmac(JsonElement payload, string receivedHmac)
         {
-            var secret = Environment.GetEnvironmentVariable("PAYMOB_HMAC_SECRET") ?? _config["PAYMOB_HMAC_SECRET"]??throw new InvalidOperationException("PAYMOB_HMAC_SECRET is not configured");
+            var secret = Environment.GetEnvironmentVariable("PAYMOB_HMAC_SECRET") ?? _config["PAYMOB_HMAC_SECRET"] ?? throw new InvalidOperationException("PAYMOB_HMAC_SECRET is not configured");
             var obj = payload.GetProperty("obj");
 
             // Paymob requires exact alphabetical concatenation of these fields

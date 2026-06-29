@@ -8,9 +8,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@Model.PageTitle</title>
-    <link href="<https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800&display=swap>" rel="stylesheet">
-    <link href="<https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css>" rel="stylesheet">
-    <link rel="stylesheet" href="<https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/index.css">
 </head>
 <body class="bg-light">
@@ -38,7 +38,7 @@
             </div>
         </nav>
 
-        <div class="dashboard-container d-flex flex-column py-4 px-5">
+        <div class="d-flex flex-column py-4 px-5" style="max-width: 1200px; margin: 0 auto; width: 100%;">
             <div class="mb-4">
                 <a href="@Url.Action("CreateCourse", new { id = Model.CourseId, step = 2 })" class="btn btn-light btn-sm">
                     <i class="bi bi-arrow-left me-1"></i> Back to Curriculum
@@ -56,20 +56,24 @@
             <div class="row g-4">
                 <div class="col-lg-9">
                     <div class="editor-container animate-fade-in border rounded bg-white shadow-sm overflow-hidden">
+
+                        <!-- 💡 Updated toolbar to use custom CSS button classes and dividers -->
                         <div class="editor-toolbar d-flex align-items-center bg-light border-bottom p-2 gap-1 flex-wrap">
-                            <button type="button" class="btn btn-sm btn-light border" onclick="execCmd('bold')" title="Bold"><i class="bi bi-type-bold"></i></button>
-                            <button type="button" class="btn btn-sm btn-light border" onclick="execCmd('italic')" title="Italic"><i class="bi bi-type-italic"></i></button>
-                            <button type="button" class="btn btn-sm btn-light border" onclick="execCmd('underline')" title="Underline"><i class="bi bi-type-underline"></i></button>
+                            <button type="button" class="toolbar-btn" onclick="execCmd('bold')" title="Bold"><i class="bi bi-type-bold"></i></button>
+                            <button type="button" class="toolbar-btn" onclick="execCmd('italic')" title="Italic"><i class="bi bi-type-italic"></i></button>
+                            <button type="button" class="toolbar-btn" onclick="execCmd('underline')" title="Underline"><i class="bi bi-type-underline"></i></button>
 
-                            <div style="width: 1px; height: 20px; background: #ccc; margin: 0 4px;"></div>
+                            <div class="toolbar-divider"></div>
 
-                            <button type="button" class="btn btn-sm btn-light border" onclick="execCmd('insertUnorderedList')" title="Bullet List"><i class="bi bi-list-ul"></i></button>
-                            <button type="button" class="btn btn-sm btn-light border" onclick="execCmd('insertOrderedList')" title="Numbered List"><i class="bi bi-list-ol"></i></button>
+                            <button type="button" class="toolbar-btn" onclick="execCmd('insertUnorderedList')" title="Bullet List"><i class="bi bi-list-ul"></i></button>
+                            <button type="button" class="toolbar-btn" onclick="execCmd('insertOrderedList')" title="Numbered List"><i class="bi bi-list-ol"></i></button>
 
-                            <div style="width: 1px; height: 20px; background: #ccc; margin: 0 4px;"></div>
+                            <div class="toolbar-divider"></div>
 
-                            <button type="button" class="btn btn-sm btn-light border" onclick="execCmd('createLink', prompt('Enter URL:'))" title="Insert Link"><i class="bi bi-link-45deg"></i></button>
-                            <button type="button" class="btn btn-sm btn-light border" onclick="execCmd('removeFormat')" title="Clear Formatting"><i class="bi bi-eraser"></i></button>
+                            <button type="button" class="toolbar-btn" data-bs-toggle="modal" data-bs-target="#linkModal" title="Insert Link">
+                                <i class="bi bi-link-45deg"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" onclick="execCmd('removeFormat')" title="Clear Formatting"><i class="bi bi-eraser"></i></button>
                         </div>
 
                         <div class="editor-content p-5">
@@ -97,7 +101,7 @@
         </div>
     </form>
 
-    <script src="<https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function execCmd(command, arg = null) {
         document.execCommand(command, false, arg);
@@ -108,6 +112,46 @@
         const editorContent = document.getElementById('editor').innerHTML;
         document.getElementById('articleBodyInput').value = editorContent;
         });
+
+        // 💡 Handles link creation from the Bootstrap modal safely
+        function insertLinkFromModal() {
+        const urlInput = document.getElementById('linkUrlInput');
+        const url = urlInput.value;
+
+        if (url && url !== 'https://') {
+        // Refocus the editor to ensure the selected text is highlighted
+        document.getElementById('editor').focus();
+        document.execCommand('createLink', false, url);
+        }
+
+        // Reset inputs and close modal
+        urlInput.value = 'https://';
+        const modalEl = document.getElementById('linkModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        modal?.hide();
+        }
     </script>
+
+    <!-- 💡 Modal HTML Wrapper -->
+    <div class="modal fade" id="linkModal" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
+                <div class="modal-header border-0 pb-0">
+                    <h6 class="modal-title fw-bold">Insert Link</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <div class="mb-0">
+                        <label class="form-label small fw-bold text-muted">URL Address</label>
+                        <input type="url" id="linkUrlInput" class="form-control form-control-sm" placeholder="https://example.com" value="https://">
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="insertLinkFromModal()">Insert</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

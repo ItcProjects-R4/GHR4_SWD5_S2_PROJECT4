@@ -44,9 +44,13 @@
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="Index" class="nav-link @(currentController == "Home" && currentAction == "Index" ? "active" : "")">Home</a>
                             </li>
-                        <li class="nav-item">
-                            <a asp-controller="Course" asp-action="Browse" class="nav-link @(currentController == "Course" && currentAction == "Browse" ? "active" : "")">Browse Courses</a>
+                        @if (!User.IsInRole("Student"))
+                        {
+                            <li class="nav-item">
+                                <a asp-controller="Course" asp-action="Browse" class="nav-link @(currentController == "Course" && currentAction == "Browse" ? "active" : "")">Browse Courses</a>
                             </li>
+                        }
+
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="About" class="nav-link @(currentController == "Home" && currentAction == "About" ? "active" : "")">About</a>
                             </li>

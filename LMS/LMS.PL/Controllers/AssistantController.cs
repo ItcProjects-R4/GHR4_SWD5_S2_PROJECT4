@@ -250,9 +250,17 @@ namespace LMS.PL.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GradeSubmission(int id, int grade, string feedback)
         {
-            if (grade < 0 || grade > 100)
+            var submission = await _submissionService.GetSubmissionByIdAsync(id);
+            if (submission == null)
             {
-                TempData["ErrorMessage"] = "Grade must be between 0 and 100.";
+                TempData["ErrorMessage"] = "Submission not found.";
+                return RedirectToAction(nameof(Submissions));
+            }
+
+            var maxScore = submission.Assignment?.MaxScore ?? 100;
+            if (grade < 0 || grade > maxScore)
+            {
+                TempData["ErrorMessage"] = $"Grade must be between 0 and {maxScore}.";
                 return RedirectToAction(nameof(GradeSubmission), new { id });
             }
 
@@ -269,8 +277,10 @@ namespace LMS.PL.Controllers
                 return RedirectToAction(nameof(GradeSubmission), new { id });
             }
 
-            TempData["SuccessMessage"] = $"Submission graded successfully with score {grade}/100!";
+            // Dynamically show the max score here:
+            TempData["SuccessMessage"] = $"Submission graded successfully with score {grade}/{maxScore}!";
             return RedirectToAction(nameof(Submissions));
         }
+
     }
 }
