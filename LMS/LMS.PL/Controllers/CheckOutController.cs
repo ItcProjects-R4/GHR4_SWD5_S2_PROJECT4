@@ -54,7 +54,6 @@ namespace LMS.PL.Controllers
             if (result.IsFree)
             {
                 TempData["CourseTitle"] = result.CourseTitle;
-                TempData["CourseId"] = result.CourseId;
                 return RedirectToAction("PaymentSuccess");
             }
 

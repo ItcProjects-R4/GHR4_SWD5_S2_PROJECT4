@@ -372,7 +372,7 @@ namespace LMS.PL.Controllers
             try
             {
                 await _instructorService.AddContentAsync(moduleId, model, instructorId);
-                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Lesson content added successfully!" });
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Content added successfully!" });
             }
             catch (UnauthorizedAccessException)
             {
@@ -391,11 +391,11 @@ namespace LMS.PL.Controllers
             var result = await _instructorService.DeleteContentAsync(id, courseId, instructorId);
             if (result)
             {
-                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Lesson deleted successfully!" });
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, successMessage = "Content deleted successfully!" });
             }
             else
             {
-                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, errorMessage = "Failed to delete lesson." });
+                return RedirectToAction(nameof(CreateCourse), new { id = courseId, step = 2, errorMessage = "Failed to delete content." });
             }
         }
 
@@ -471,7 +471,7 @@ namespace LMS.PL.Controllers
             try
             {
                 await _instructorService.AddContentAsync(model.ModuleId, contentModel, instructorId);
-                return RedirectToAction(nameof(CreateCourse), new { id = model.CourseId, step = 2, successMessage = "Text Article lesson created successfully!" });
+                return RedirectToAction(nameof(CreateCourse), new { id = model.CourseId, step = 2, successMessage = "Text Article created successfully!" });
             }
             catch (UnauthorizedAccessException)
             {
