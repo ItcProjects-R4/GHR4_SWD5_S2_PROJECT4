@@ -10,20 +10,6 @@ connection.start().then(function () {
     return console.error(err.toString());
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const initialSpan = document.getElementById("initialUnreadCount");
-    if (initialSpan) {
-        const count = parseInt(initialSpan.getAttribute("data-count")) || 0;
-        if (count > 0) {
-            const badge = document.getElementById("notificationBadge");
-            if (badge) {
-                badge.innerText = count;
-                badge.style.display = "block";
-            }
-        }
-    }
-});
-
 // Listen for notifications
 connection.on("ReceiveNotification", function (notification) {
     console.log("New Notification:", notification);
