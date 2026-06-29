@@ -8,8 +8,6 @@
     <div class="container py-4">
         <div class="d-flex align-items-center mb-4">
             <a asp-action="Courses" asp-controller="Student" class="btn btn-light rounded-circle me-3 d-flex align-items-center justify-content-center p-0 border" style="width: 32px; height: 32px; background: #fff; color: #475569; border-color: #cbd5e1;">
-    <i class="bi bi-arrow-left"></i>
-</a>
                 <i class="bi bi-arrow-left"></i>
             </a>
             <nav aria-label="breadcrumb">
@@ -49,12 +47,9 @@
                                     <i class="bi bi-lock-fill display-1 text-warning mb-3 d-block opacity-50"></i>
                                     <h4 class="fw-bold text-dark">Course is Preview-Only</h4>
                                     <p class="text-muted mb-4" style="max-width: 400px; margin: 0 auto;">You are not enrolled in this course yet. Enroll now to access content, submit assignments, and track your progress!</p>
-                                    <form asp-action="Enroll" asp-controller="Student" method="post" class="d-inline-block m-0">
-                                        <input type="hidden" name="courseId" value="@Model.Course.CourseId" />
-                                        <button type="submit" class="btn btn-warning rounded-pill px-5 py-2.5 fw-bold text-dark shadow-sm">
-                                            <i class="bi bi-plus-circle-fill me-2"></i>Enroll Now
-                                        </button>
-                                    </form>
+                                    <a asp-controller="Checkout" asp-action="Checkout" asp-route-courseId="@Model.Course.CourseId" class="btn btn-warning rounded-pill px-5 py-2.5 fw-bold text-dark shadow-sm">
+                                      <i class="bi bi-plus-circle-fill me-2"></i>Enroll Now
+                                    </a>
                                 </div>
                             </div>
                         }

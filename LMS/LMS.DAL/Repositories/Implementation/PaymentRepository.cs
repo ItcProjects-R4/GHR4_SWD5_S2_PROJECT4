@@ -42,6 +42,10 @@ namespace LMS.DAL.Repositories.Implementation
 
         public async Task CreateActiveEnrollmentAsync(string studentId, int courseId)
         {
+            var alreadyEnrolled = await _context.Enrollments
+             .AnyAsync(e => e.StudentId == studentId && e.CourseId == courseId);
+
+            if (alreadyEnrolled) return;
             var enrollment = new Enrollment
             {
                 StudentId = studentId,

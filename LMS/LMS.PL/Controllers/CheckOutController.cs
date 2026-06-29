@@ -55,8 +55,15 @@ namespace LMS.PL.Controllers
             var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (Request.Host.Host == "localhost" || Request.Host.Host == "127.0.0.1")
             {
+                // Prevent duplicate enrollments locally
+                var isEnrolledLocal = await _context.Enrollments.AnyAsync(e => e.StudentId == studentId && e.CourseId == courseId);
+                if (isEnrolledLocal)
+                {
+                    return RedirectToAction("WatchCourse", "Student", new { id = courseId });
+                }
                 // Instantly create the pending payment
                 await _checkoutService.InitiateCheckoutAsync(courseId, studentId, "student@test.com", "Local Student");
+
                 // Find the payment and set it to completed
                 var payment = await _context.Payments
                     .FirstOrDefaultAsync(p => p.StudentId == studentId && p.CourseId == courseId && p.Status == Domain.Enums.PaymentStatus.Pending);
@@ -64,8 +71,7 @@ namespace LMS.PL.Controllers
                 {
                     payment.Status = Domain.Enums.PaymentStatus.Completed;
                     payment.TransactionId = "LOCAL_TEST_" + Guid.NewGuid().ToString().Substring(0, 8);
-
-                    // Create the active enrollment locally so the student is immediately enrolled!
+                    // Create the active enrollment locally
                     var enrollment = new Domain.Models.Enrollment
                     {
                         StudentId = studentId,
@@ -74,7 +80,6 @@ namespace LMS.PL.Controllers
                         EnrolledAt = DateTime.UtcNow
                     };
                     await _context.Enrollments.AddAsync(enrollment);
-
                     await _context.SaveChangesAsync();
                 }
                 TempData["SuccessMessage"] = "Local development bypass: Enrolled successfully!";
@@ -92,7 +97,13 @@ namespace LMS.PL.Controllers
             var nameClaim = User.Identity?.Name;
             var name = string.IsNullOrWhiteSpace(nameClaim) ? "Student" : nameClaim;
             var result = await _checkoutService.InitiateCheckoutAsync(courseId, studentId, email, name);
-            if (!result.Success) return NotFound(result.ErrorMessage);
+
+            if (!result.Success)
+            {
+                TempData["ErrorMessage"] = $"Payment initiation failed: {result.ErrorMessage}";
+                return RedirectToAction("Checkout", new { courseId });
+            }
+
             if (result.IsFree)
             {
                 TempData["CourseTitle"] = result.CourseTitle;
