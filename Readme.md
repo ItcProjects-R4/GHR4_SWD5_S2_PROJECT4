@@ -1,4 +1,4 @@
-# 🎓 Lmsify - E-Learning Platform (LMS)
+# 🎓 LMSify - E-Learning Platform (LMS)
 
 A production-ready, secure, and modern private e-learning academy platform built with **ASP.NET Core 8.0 MVC (C#)**. It is designed for independent educators and academies to host, showcase, and sell their courses in a unified portal without third-party portal dependencies.
 
