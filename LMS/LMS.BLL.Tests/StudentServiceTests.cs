@@ -73,7 +73,8 @@ namespace LMS.BLL.Tests.Services
                 Id = assignmentId, 
                 Title = "Final Project", 
                 Module = mockModule,
-                ModuleId = 20
+                ModuleId = 20,
+                Submissions = new List<Submission>()
             };
 
             var assignments = new List<Assignment> { mockAssignment };
