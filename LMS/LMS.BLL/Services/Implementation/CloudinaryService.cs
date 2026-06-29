@@ -18,7 +18,8 @@ namespace LMS.BLL.Services.Implementation
             var result = await _cloudinary.UploadAsync(new RawUploadParams
             {
                 File = new FileDescription(file.FileName, stream),
-                Folder = "lms/files"
+                Folder = "lms/files",
+                AccessMode = "public"
             });
             return result.SecureUrl.ToString();
         }

@@ -53,38 +53,39 @@ namespace LMS.PL.Controllers
         public async Task<IActionResult> Pay(int courseId)
         {
             var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (Request.Host.Host == "localhost" || Request.Host.Host == "127.0.0.1")
-            {
-                // Prevent duplicate enrollments locally
-                var isEnrolledLocal = await _context.Enrollments.AnyAsync(e => e.StudentId == studentId && e.CourseId == courseId);
-                if (isEnrolledLocal)
-                {
-                    return RedirectToAction("WatchCourse", "Student", new { id = courseId });
-                }
-                // Instantly create the pending payment
-                await _checkoutService.InitiateCheckoutAsync(courseId, studentId, "student@test.com", "Local Student");
+            //bypassing payment locally temp disabled for live presentation
+            //if (Request.Host.Host == "localhost" || Request.Host.Host == "127.0.0.1")
+            //{
+            //    // Prevent duplicate enrollments locally
+            //    var isEnrolledLocal = await _context.Enrollments.AnyAsync(e => e.StudentId == studentId && e.CourseId == courseId);
+            //    if (isEnrolledLocal)
+            //    {
+            //        return RedirectToAction("WatchCourse", "Student", new { id = courseId });
+            //    }
+            //    // Instantly create the pending payment
+            //    await _checkoutService.InitiateCheckoutAsync(courseId, studentId, "student@test.com", "Local Student");
 
-                // Find the payment and set it to completed
-                var payment = await _context.Payments
-                    .FirstOrDefaultAsync(p => p.StudentId == studentId && p.CourseId == courseId && p.Status == Domain.Enums.PaymentStatus.Pending);
-                if (payment != null)
-                {
-                    payment.Status = Domain.Enums.PaymentStatus.Completed;
-                    payment.TransactionId = "LOCAL_TEST_" + Guid.NewGuid().ToString().Substring(0, 8);
-                    // Create the active enrollment locally
-                    var enrollment = new Domain.Models.Enrollment
-                    {
-                        StudentId = studentId,
-                        CourseId = courseId,
-                        Status = Domain.Enums.EnrollmentStatus.Active,
-                        EnrolledAt = DateTime.UtcNow
-                    };
-                    await _context.Enrollments.AddAsync(enrollment);
-                    await _context.SaveChangesAsync();
-                }
-                TempData["SuccessMessage"] = "Local development bypass: Enrolled successfully!";
-                return RedirectToAction("WatchCourse", "Student", new { id = courseId });
-            }
+            //    // Find the payment and set it to completed
+            //    var payment = await _context.Payments
+            //        .FirstOrDefaultAsync(p => p.StudentId == studentId && p.CourseId == courseId && p.Status == Domain.Enums.PaymentStatus.Pending);
+            //    if (payment != null)
+            //    {
+            //        payment.Status = Domain.Enums.PaymentStatus.Completed;
+            //        payment.TransactionId = "LOCAL_TEST_" + Guid.NewGuid().ToString().Substring(0, 8);
+            //        // Create the active enrollment locally
+            //        var enrollment = new Domain.Models.Enrollment
+            //        {
+            //            StudentId = studentId,
+            //            CourseId = courseId,
+            //            Status = Domain.Enums.EnrollmentStatus.Active,
+            //            EnrolledAt = DateTime.UtcNow
+            //        };
+            //        await _context.Enrollments.AddAsync(enrollment);
+            //        await _context.SaveChangesAsync();
+            //    }
+            //    TempData["SuccessMessage"] = "Local development bypass: Enrolled successfully!";
+            //    return RedirectToAction("WatchCourse", "Student", new { id = courseId });
+            //}
             // Redirect if already enrolled
             var isEnrolled = await _context.Enrollments.AnyAsync(e => e.StudentId == studentId && e.CourseId == courseId);
             if (isEnrolled)
