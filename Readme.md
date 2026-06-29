@@ -188,6 +188,8 @@ LMS/ (Solution Root)
 ## 🎥 Presentation & Explainer Video Links
 
 *   **Live Hosted Platform:** [LMSify Live Portal](https://lms-platform.runasp.net)
-*   **Walkthrough Explainer Video:** [Watch Explainer Video on YouTube]() 
-*   **Documentation:** [View Google Slides / PDF Presentation]()
+*   **Walkthrough Explainer Video 01:** [Watch Explainer Video](https://app.guidde.com/share/playbooks/9Jg4w17reFf5df9czYGdFB?origin=k8vyYVqxYSeFzgAdtHwB5rOs2ZE3&mode=videoAndDoc)
+*  **Walkthrough Explainer Video 02:** [Watch Explainer Video](https://app.guidde.com/share/playbooks/1eu71QKw9f42nCf9SwuzUq?origin=k8vyYVqxYSeFzgAdtHwB5rOs2ZE3&mode=videoAndDoc) 
+*   **Documentation:** [PDF Documentation](https://drive.google.com/file/d/1MgNDMWDg9t0cAjVGRjy4TKycadIVjDg8/view?usp=sharing)
+*   **Presentation:** [PDF Presentation]([https://canva.link/fva8enlz424wr20](https://drive.google.com/file/d/1oNnYs2Q-GgENVQlFWWRVKkvDU0Qny7h_/view?usp=sharing))
 ```
