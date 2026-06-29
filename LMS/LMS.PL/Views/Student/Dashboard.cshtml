@@ -109,8 +109,8 @@
                                 </div>
 
                                 <a asp-action="WatchCourse"
-                                       asp-route-id="@course.CourseId"
-                                       class="btn btn-primary w-100 py-2 rounded-pill">
+                                   asp-route-id="@course.CourseId"
+                                   class="btn btn-outline-primary w-100 py-2">
                                     Continue Learning
                                 </a>
                             </div>
@@ -154,11 +154,10 @@
                                 <h4 class="course-title mb-2" style="font-size: 1.1rem;">@course.CourseTitle</h4>
 
                                 <div class="d-flex justify-content-between align-items-center mt-auto">
-                                    <span class="fw-bold fs-5 text-primary">@(course.Price == 0 ? "Free" : $"{course.Price.ToString("N2")} EGP")</span>
+                                    <span class="fw-bold fs-5 text-primary">@course.Price.ToString("N2") EGP</span>
 
-                                    <!-- Changed link to redirect to the public Details page for purchase/enrollment -->
-                                    <a asp-action="Detail" asp-controller="Course" asp-route-id="@course.CourseId" class="btn btn-primary btn-sm rounded-pill px-3 text-white">
-                                        View Details
+                                    <a asp-action="WatchCourse" asp-controller="Student" asp-route-id="@course.CourseId" class="btn btn-outline-primary btn-sm">
+                                        View Course
                                     </a>
                                 </div>
                             </div>
@@ -168,5 +167,6 @@
             </div>
         }
     </div>
+
 
 </div>

@@ -17,7 +17,8 @@ namespace LMS.BLL.Services.Implementation
         IApplicationDbContext context,
         ICurrentUserService currentUserService,
         ICloudinaryService cloudinaryService,
-        IEmailSender emailSender)
+        IEmailSender emailSender,
+        INotificationService notificationService)
         : IInstructorService
     {
         public async Task<List<CourseEnrollmentGroupViewModel>> GetEnrollmentsAsync(string search)
@@ -292,6 +293,8 @@ namespace LMS.BLL.Services.Implementation
 
             context.Courses.Add(course);
             await context.SaveChangesAsync();
+
+            await notificationService.CreateAndSendToRoleAsync("Student", "New Course Available", $"A new course '{course.Title}' has been published.", NotificationType.SystemAlert);
 
             // email all subscribers about the new course in the background
             _ = Task.Run(async () =>
@@ -627,6 +630,13 @@ namespace LMS.BLL.Services.Implementation
             submission.UpdatedAt = DateTime.UtcNow;
 
             await context.SaveChangesAsync();
+
+            await notificationService.CreateAndSendToUserAsync(
+                submission.StudentId, 
+                "Assignment Graded", 
+                $"Your assignment '{submission.Assignment.Title}' in course '{submission.Assignment.Module.Course.Title}' has been graded.", 
+                NotificationType.AssignmentUpdate);
+
             return true;
         }
     
