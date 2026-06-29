@@ -14,12 +14,12 @@ namespace LMS.BLL.Services.Implementation
 {
     public class NotificationService : INotificationService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly IRealTimeNotificationService _realTimeService;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public NotificationService(
-            ApplicationDbContext context, 
+            IApplicationDbContext context, 
             IRealTimeNotificationService realTimeService,
             UserManager<ApplicationUser> userManager)
         {
