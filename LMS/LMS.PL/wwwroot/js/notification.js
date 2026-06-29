@@ -72,3 +72,34 @@ connection.on("ReceiveNotification", function (notification) {
         badge.style.display = "block";
     }
 });
+
+// Mark all as read when dropdown is opened
+document.addEventListener("DOMContentLoaded", function () {
+    const notifBtn = document.getElementById("notificationDropdownBtn");
+    if (notifBtn) {
+        notifBtn.addEventListener("click", function () {
+            const badge = document.getElementById("notificationBadge");
+            if (badge && badge.style.display !== "none") {
+                // hide badge
+                badge.style.display = "none";
+                badge.innerText = "0";
+
+                // change background of unread notifications to white
+                const unreadItems = document.querySelectorAll(".unread-notification");
+                unreadItems.forEach(item => {
+                    item.style.backgroundColor = "";
+                    item.classList.remove("unread-notification");
+                });
+
+                // Call API
+                fetch('/api/Notification/MarkAllAsRead', {
+                    method: 'POST'
+                }).then(response => {
+                    if (response.ok) {
+                        console.log("Notifications marked as read.");
+                    }
+                }).catch(err => console.error("Error marking notifications as read:", err));
+            }
+        });
+    }
+});

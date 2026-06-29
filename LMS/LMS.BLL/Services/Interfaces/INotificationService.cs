@@ -10,6 +10,7 @@ namespace LMS.BLL.Services.Interfaces
         Task<NotificationDto> CreateAndSendToUserAsync(string userId, string title, string message, NotificationType type);
         Task<NotificationDto> CreateAndSendToRoleAsync(string roleName, string title, string message, NotificationType type);
         Task MarkAsReadAsync(int notificationId, string userId);
+        Task MarkAllAsReadAsync(string userId);
         Task<IEnumerable<NotificationDto>> GetUserNotificationsAsync(string userId);
     }
 }

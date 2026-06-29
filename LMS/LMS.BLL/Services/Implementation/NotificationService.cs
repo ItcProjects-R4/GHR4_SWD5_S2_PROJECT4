@@ -102,6 +102,23 @@ namespace LMS.BLL.Services.Implementation
             }
         }
 
+        public async Task MarkAllAsReadAsync(string userId)
+        {
+            var unreadNotifications = await _context.Notifications
+                .Where(n => n.UserId == userId && !n.IsRead)
+                .ToListAsync();
+
+            if (unreadNotifications.Any())
+            {
+                foreach (var notification in unreadNotifications)
+                {
+                    notification.IsRead = true;
+                }
+                _context.Notifications.UpdateRange(unreadNotifications);
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public async Task<IEnumerable<NotificationDto>> GetUserNotificationsAsync(string userId)
         {
             var notifications = await _context.Notifications
