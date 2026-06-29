@@ -79,24 +79,62 @@ The platform integrates standard learning management features directly with a **
     ```
 
 ---
-
-## 📸 Screenshots & MVC Project Features
+## 📸 Screenshots & Features
 
 ### 1. Interactive Course Player (Student Workspace)
+
 *The unified split-pane student course player that streams lectures, reads articles, and displays assignments without refreshing pages.*
-![Student Course Player](LMS/screenshots/student_course_player.png)
+
+| | | |
+|---|---|---|
+| ![](screenshots/21.png) | ![](screenshots/22.png) | ![](screenshots/23.png) |
+| ![](screenshots/24.png) | ![](screenshots/25.png) | |
+
+---
+
 ### 2. Curriculum Builder (Instructor Workspace)
-*The step-by-step course builder allowing instructors to add modules, contents, videos, articles, and assignments easily.*
-![Course Syllabus Builder](LMS/screenshots/instructor_courses.png)
+
+*The step-by-step course builder allowing instructors to add modules, videos, articles, quizzes, and assignments.*
+
+| | | |
+|---|---|---|
+| ![](screenshots/5.png) | ![](screenshots/6.png) | ![](screenshots/7.png) |
+| ![](screenshots/8.png) | ![](screenshots/9.png) | ![](screenshots/10.png) |
+| ![](screenshots/11.png) | ![](screenshots/12.png) | ![](screenshots/13.png) |
+| ![](screenshots/14.png) | ![](screenshots/15.png) | |
+
+---
+
 ### 3. Staff Delegation & Access Control
-*A management center displaying completion analytics, total revenue tracking, and student enrollments.*
-![Instructor Dashboard](LMS/screenshots/instructor_dashboard.png)
+
+*Manage instructors, teaching assistants, and permissions through a centralized access-control system.*
+
+| | | |
+|---|---|---|
+| ![](screenshots/16.png) | ![](screenshots/17.png) | ![](screenshots/18.png) |
+
+---
+
 ### 4. Financial Ledger & Checkout Tracking
-*A complete transaction ledger detailing successful and pending student checkouts, amounts, and item titles.*
-![Financial Reports Ledger](LMS/screenshots/instructor_payments.png)
+
+*Track payments, purchases, enrollment transactions, and checkout activity in a single financial dashboard.*
+
+| | | |
+|---|---|---|
+| ![](screenshots/19.png) | ![](screenshots/20.png) | |
+
+---
+
 ### 5. Public Portal & Discovery
-*A beautifully formatted, responsive public landing page highlighting featured courses, platform details, and newsletter subscriptions.*
-![LMSify Public Landing Page](LMS/screenshots/landing_page.png)
+
+*A responsive public-facing website showcasing courses, platform features, instructor information, and enrollment options.*
+
+| | | |
+|---|---|---|
+| ![](screenshots/1.png) | ![](screenshots/2.png) | ![](screenshots/3.png) |
+| ![](screenshots/4.png) | | |
+
+---
 
 ---
 
