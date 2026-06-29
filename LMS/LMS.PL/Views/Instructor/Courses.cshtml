@@ -61,11 +61,13 @@
                             <h5 class="course-title mb-0">@course.Title</h5>
                             <span class="badge bg-primary-subtle text-primary rounded-pill px-2">@(course.Enrollments?.Count ?? 0) students</span>
                         </div>
-                        <p class="text-muted small mb-3">Modules: @(course.Modules?.Count ?? 0) · Lessons: @course.TotalLessonCount</p>
+                        <p class="text-muted small mb-3">Modules: @(course.Modules?.Count ?? 0) · Contents: @course.TotalLessonCount</p>
                         <div class="d-flex justify-content-between align-items-center mt-auto">
                             <span class="fw-bold text-primary">@(course.Price == 0 ? "Free" : $"{course.Price:N2} EGP")</span>
                             <div class="d-flex gap-2">
-                                <a asp-action="CourseDetails" asp-route-id="@course.Id" class="btn btn-light btn-sm shadow-sm" title="View Details"><i class="bi bi-eye"></i></a>
+                                <a asp-action="WatchCourse" asp-route-id="@course.Id" class="btn btn-light btn-sm shadow-sm" title="View Details">
+                                    <i class="bi bi-eye"></i>
+                                </a>
                                 <a asp-action="CreateCourse" asp-route-id="@course.Id" asp-route-step="2" class="btn btn-light btn-sm shadow-sm text-primary" title="Edit Curriculum"><i class="bi bi-pencil"></i></a>
                                 <button type="button" class="btn btn-outline-danger btn-sm shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal-@course.Id" title="Delete"><i class="bi bi-trash"></i></button>
                             </div>
