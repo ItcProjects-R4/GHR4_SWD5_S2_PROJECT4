@@ -5,7 +5,7 @@ A production-ready, secure, and modern private e-learning academy platform built
 ---
 
 ## 📖 Project Concept
-**Lmsify** is a centralized academy platform for a single educational academy or solo instructor (rather than a multi-vendor marketplace like Udemy). 
+**LMSify** is a centralized academy platform for a single educational academy or solo instructor (rather than a multi-vendor marketplace like Udemy). 
 
 The platform integrates standard learning management features directly with a **unified course player workspace**. Instead of redirecting students between disjointed tabs, all lectures, articles, assessments, and progress metrics are loaded dynamically via AJAX, keeping the student fully engaged in a single workspace.
 
@@ -189,7 +189,7 @@ LMS/ (Solution Root)
 
 ## 🎥 Presentation & Explainer Video Links
 
-*   **Live Hosted Platform:** [Lmsify Live Portal](https://lms-platform.runasp.net)
+*   **Live Hosted Platform:** [LMSify Live Portal](https://lms-platform.runasp.net)
 *   **Walkthrough Explainer Video:** [Watch Explainer Video on YouTube]() 
 *   **Documentation:** [View Google Slides / PDF Presentation]()
 ```
