@@ -4,6 +4,7 @@
     // We will pass the Course Title from the controller using TempData
     // If it's empty for some reason, it defaults to "your new course"
     var courseTitle = TempData["CourseTitle"]?.ToString() ?? "your new course";
+    var courseId = TempData["CourseId"] as int?;
 }
 
 <div class="container d-flex align-items-center justify-content-center min-vh-100">
@@ -18,8 +19,20 @@
         </p>
         
         <div class="d-grid gap-3">
-            <a asp-controller="Student" asp-action="Dashboard" class="btn btn-primary btn-lg">
-                Start Learning Now
+            @if (courseId.HasValue && courseId.Value > 0)
+            {
+                <a asp-controller="Student" asp-action="WatchCourse" asp-route-id="@courseId.Value" class="btn btn-primary btn-lg">
+                    Start Learning Now
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Student" asp-action="Courses" class="btn btn-primary btn-lg">
+                    Start Learning Now
+                </a>
+            }
+            <a asp-controller="Student" asp-action="Dashboard" class="btn btn-outline-secondary btn-lg">
+                Go to Dashboard
             </a>
         </div>
     </div>
