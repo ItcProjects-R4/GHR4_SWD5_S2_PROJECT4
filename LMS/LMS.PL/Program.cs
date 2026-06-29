@@ -12,6 +12,8 @@ using LMS.DAL.Seeding;
 using LMS.Domain.Models;
 using LMS.PL.Helpers;
 using LMS.PL.Mapping;
+using LMS.PL.Hubs;
+using LMS.PL.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +43,12 @@ builder.Services.AddScoped<ICourseService, CourseService>();
 
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IRealTimeNotificationService, RealTimeNotificationService>();
+
+// Add SignalR
+builder.Services.AddSignalR();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -52,7 +60,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 
 
 // Register Cloudinary
-Cloudinary cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"));
+//Cloudinary cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"));
+//cloudinary.Api.Secure = true;
+// Read directly from appsettings.json
+string cloudinaryUrl = builder.Configuration["CLOUDINARY_URL"];
+Cloudinary cloudinary = new Cloudinary(cloudinaryUrl);
 cloudinary.Api.Secure = true;
 
 
@@ -125,6 +137,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 //Register IdentitySeeder
 

@@ -14,11 +14,12 @@ namespace LMS.BLL.Services.Implementation
     public class StudentService(
         IApplicationDbContext context,
         ICurrentUserService currentUserService,
-       UserManager<ApplicationUser> userManager, 
-       ICloudinaryService cloudinaryService,
-       ICheckoutService checkoutService
-       )
-       : IStudentService
+        UserManager<ApplicationUser> userManager, 
+        ICloudinaryService cloudinaryService,
+        ICheckoutService checkoutService,
+        INotificationService notificationService
+        )
+        : IStudentService
     {
         public async Task<IEnumerable<ApplicationUser>> GetFilteredUsersAsync(string searchString, string roleFilter)
         {
@@ -445,6 +446,25 @@ namespace LMS.BLL.Services.Implementation
             }
 
             await context.SaveChangesAsync();
+
+            // Fetch instructor and course info to notify
+            var assignmentDetails = await context.Assignments
+                .Include(a => a.Module.Course)
+                .FirstOrDefaultAsync(a => a.Id == AssignmentID);
+                
+            if (assignmentDetails != null)
+            {
+                var instructorId = assignmentDetails.Module.Course.InstructorId;
+                var courseTitle = assignmentDetails.Module.Course.Title;
+                var student = await userManager.FindByIdAsync(studentId);
+                var studentName = student != null ? $"{student.FirstName} {student.LastName}" : "A student";
+                
+                await notificationService.CreateAndSendToUserAsync(
+                    instructorId,
+                    "Assignment Submitted",
+                    $"{studentName} has submitted an assignment for '{courseTitle}'.",
+                    NotificationType.AssignmentUpdate);
+            }
 
             return (await GetAssignmentDetailsAsync(AssignmentID))!;
         }

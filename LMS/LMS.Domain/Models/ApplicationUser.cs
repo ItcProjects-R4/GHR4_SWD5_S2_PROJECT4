@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -20,7 +20,7 @@ namespace LMS.Domain.Models
 
         //waiting for other models to be created to add these navigation properties
         public List<Course> Courses { get; set; }
-        //public List<Notification> Notifications { get; set; }
+        public List<Notification> Notifications { get; set; }
         //public List<Submission> Submissions { get; set; }
         public List<Enrollment> Enrollments { get; set; }
         public List<Payment> Payments { get; set; }
