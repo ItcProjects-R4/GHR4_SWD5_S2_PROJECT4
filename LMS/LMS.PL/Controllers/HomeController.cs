@@ -110,7 +110,7 @@ namespace LMS.PL.Controllers
             ";
 
             await _emailSender.SendEmailAsync(
-                "amira@gmail.com",
+                "lmsify.noreply@gmail.com",
                 subject,
                 body
             );
@@ -143,14 +143,19 @@ namespace LMS.PL.Controllers
                 return RedirectToAction("Index");
             }
 
-            // save to database if not already subscribed
+            // Check if already subscribed
             var alreadySubscribed = await _context.NewsletterSubscribers.AnyAsync(s => s.Email == email);
-            if (!alreadySubscribed)
+            if (alreadySubscribed)
             {
-                var subscriber = new NewsletterSubscriber { Email = email };
-                await _context.NewsletterSubscribers.AddAsync(subscriber);
-                await _context.SaveChangesAsync();
+                // Show error/info alert and redirect immediately
+                TempData["ErrorMessage"] = "You are already subscribed to our newsletter!";
+                return RedirectToAction("Index");
             }
+
+            // If not subscribed, add subscriber to database
+            var subscriber = new NewsletterSubscriber { Email = email };
+            await _context.NewsletterSubscribers.AddAsync(subscriber);
+            await _context.SaveChangesAsync();
 
             // send welcome email using the HTML template file
             try
@@ -168,6 +173,7 @@ namespace LMS.PL.Controllers
 
             return RedirectToAction("Index");
         }
+
 
 
         [HttpGet]
