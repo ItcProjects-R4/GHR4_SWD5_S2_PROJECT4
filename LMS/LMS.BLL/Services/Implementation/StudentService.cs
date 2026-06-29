@@ -126,13 +126,14 @@ namespace LMS.BLL.Services.Implementation
             return enrolledCourses;
         }
 
-        public async Task<List<BrowseCourseViewModel>> GetBrowseCoursesAsync()
+        public async Task<List<BrowseCourseViewModel>> GetBrowseCoursesAsync(string search)
         {
             string studentId = currentUserService.UserId;
 
             var browseCourses = await context.Courses
                 .AsNoTracking()
                 .OrderBy(c => c.Title)
+                .Where(c => string.IsNullOrEmpty(search) || c.Title.ToLower().Contains(search.Trim()))
                 .Select(c => new BrowseCourseViewModel
                 {
                     CourseId = c.Id,
