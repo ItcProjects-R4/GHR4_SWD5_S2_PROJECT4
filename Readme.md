@@ -83,39 +83,57 @@ The platform integrates standard learning management features directly with a **
 ## 📸 Screenshots & MVC Project Features
 
 ### 1. Interactive Course Player (Student Workspace)
+
 *The unified split-pane student course player that streams lectures, reads articles, and displays assignments without refreshing pages.*
-![Student Course Player](screenshots/student_course_player.png)
-![Student Course Player](screenshots/21.png)
-![Student Course Player](screenshots/22.png)
-![Student Course Player](screenshots/23.png)
-![Student Course Player](screenshots/24.png)
-![Student Course Player](screenshots/25.png)
+
+<img src="screenshots/student_course_player.png" width="800">
+
+<img src="screenshots/21.png" width="800">
+<img src="screenshots/22.png" width="800">
+<img src="screenshots/23.png" width="800">
+<img src="screenshots/24.png" width="800">
+<img src="screenshots/25.png" width="800">
+
 ### 2. Curriculum Builder (Instructor Workspace)
-*The step-by-step course builder allowing instructors to add modules, contents, videos, articles, and assignments easily.*
-![Course Syllabus Builder](screenshots/instructor_courses.png)
-![Student Course Player](screenshots/5.png)
-![Student Course Player](screenshots/6.png)
-![Student Course Player](screenshots/7.png)
-![Student Course Player](screenshots/8.png)
-![Student Course Player](screenshots/9.png)
-![Student Course Player](screenshots/10.png)
-![Student Course Player](screenshots/11.png)
-![Student Course Player](screenshots/12.png)
-![Student Course Player](screenshots/13.png)
-![Student Course Player](screenshots/14.png)
-![Student Course Player](screenshots/15.png)
+
+*The step-by-step course builder allowing instructors to add modules, videos, articles, quizzes, and assignments.*
+
+<img src="screenshots/instructor_courses.png" width="800">
+
+<img src="screenshots/5.png" width="800">
+<img src="screenshots/6.png" width="800">
+<img src="screenshots/7.png" width="800">
+<img src="screenshots/8.png" width="800">
+<img src="screenshots/9.png" width="800">
+<img src="screenshots/10.png" width="800">
+<img src="screenshots/11.png" width="800">
+<img src="screenshots/12.png" width="800">
+<img src="screenshots/13.png" width="800">
+<img src="screenshots/14.png" width="800">
+<img src="screenshots/15.png" width="800">
+
 ### 3. Staff Delegation & Access Control
-*A management center displaying completion analytics, total revenue tracking, and student enrollments.*
-![Instructor Dashboard](screenshots/instructor_dashboard.png)
+
+*Manage instructors, teaching assistants, and permissions through a centralized access-control system.*
+
+<img src="screenshots/instructor_dashboard.png" width="800">
+
 ### 4. Financial Ledger & Checkout Tracking
-*A complete transaction ledger detailing successful and pending student checkouts, amounts, and item titles.*
-![Financial Reports Ledger](screenshots/instructor_payments.png)
+
+*Track payments, purchases, enrollment transactions, and checkout activity in a single financial dashboard.*
+
+<img src="screenshots/instructor_payments.png" width="800">
+
 ### 5. Public Portal & Discovery
-*A beautifully formatted, responsive public landing page highlighting featured courses, platform details, and newsletter subscriptions.*
-![Lmsify Public Landing Page](screenshots/landing_page.png)
-![Lmsify Public Landing Page](screenshots/2.png)
-![Lmsify Public Landing Page](screenshots/3.png)
-![Lmsify Public Landing Page](screenshots/4.png)
+
+*A responsive public-facing website showcasing courses, platform features, instructor information, and enrollment options.*
+
+<img src="screenshots/landing_page.png" width="800">
+
+<img src="screenshots/2.png" width="800">
+<img src="screenshots/3.png" width="800">
+<img src="screenshots/4.png" width="800">
+
 ---
 
 ## 🏗️ Architecture & File Directory Explanation
