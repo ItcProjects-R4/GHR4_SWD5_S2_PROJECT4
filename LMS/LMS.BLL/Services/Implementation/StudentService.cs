@@ -464,6 +464,12 @@ namespace LMS.BLL.Services.Implementation
                     "Assignment Submitted",
                     $"{studentName} has submitted an assignment for '{courseTitle}'.",
                     NotificationType.AssignmentUpdate);
+
+                await notificationService.CreateAndSendToRoleAsync(
+                    "Assistant",
+                    "Assignment Submitted",
+                    $"{studentName} has submitted an assignment for '{courseTitle}'.",
+                    NotificationType.AssignmentUpdate);
             }
 
             return (await GetAssignmentDetailsAsync(AssignmentID))!;

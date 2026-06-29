@@ -49,7 +49,7 @@ namespace LMS.BLL.Services.Implementation
                     await _paymentRepository.CreateActiveEnrollmentAsync(studentId, courseId);
                     
                     await _notificationService.CreateAndSendToUserAsync(studentId, "Course Enrolled", $"You successfully bought the course {course.Title}", NotificationType.CoursePurchase);
-                    await _notificationService.CreateAndSendToRoleAsync("Admin", "New Enrollment", $"Student {name} purchased the course {course.Title}", NotificationType.CoursePurchase);
+                    await _notificationService.CreateAndSendToRoleAsync("Instructor", "New Enrollment", $"Student {name} purchased the course {course.Title}", NotificationType.CoursePurchase);
 
                     response.IsFree = true;
                     return response;
@@ -108,7 +108,7 @@ namespace LMS.BLL.Services.Implementation
                     string courseTitle = course != null ? course.Title : "Unknown Course";
 
                     await _notificationService.CreateAndSendToUserAsync(payment.StudentId, "Purchase Successful", $"You successfully bought the course {courseTitle}", NotificationType.CoursePurchase);
-                    await _notificationService.CreateAndSendToRoleAsync("Admin", "New Purchase", $"Student {studentName} purchased the course {courseTitle}", NotificationType.CoursePurchase);
+                    await _notificationService.CreateAndSendToRoleAsync("Instructor", "New Purchase", $"Student {studentName} purchased the course {courseTitle}", NotificationType.CoursePurchase);
 
                     return true;
                 }
