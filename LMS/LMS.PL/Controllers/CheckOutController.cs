@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace LMS.PL.Controllers
 {
@@ -81,8 +82,27 @@ namespace LMS.PL.Controllers
 
         [Authorize(Roles = "Student")]
         [HttpGet]
-        public IActionResult PaymentSuccess()
+        public async Task<IActionResult> PaymentSuccess()
         {
+            if (TempData["CourseId"] == null)
+            {
+                var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var history = await _checkoutService.GetStudentHistoryAsync(studentId);
+                var latestPayment = history
+                    .Where(p => p.Status == Domain.Enums.PaymentStatus.Completed)
+                    .OrderByDescending(p => p.PaidAt)
+                    .FirstOrDefault();
+
+                if (latestPayment != null)
+                {
+                    var course = await _courseRepository.GetCourseByIdAsync(latestPayment.CourseId);
+                    if (course != null)
+                    {
+                        TempData["CourseTitle"] = course.Title;
+                        TempData["CourseId"] = course.Id;
+                    }
+                }
+            }
             return View();
         }
     }

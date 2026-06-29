@@ -12,6 +12,7 @@ namespace LMS.DAL.Data
         DbSet<Content> Contents { get; }
         DbSet<Enrollment> Enrollments { get; }
         DbSet<Payment> Payments { get; }
+        DbSet<Notification> Notifications { get; }
         DbSet<Submission> Submissions { get; }
         DbSet<Assignment> Assignments { get; }
         DbSet<SubmissionFile> SubmissionFiles { get; }
