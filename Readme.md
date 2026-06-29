@@ -1,4 +1,4 @@
-# 🎓 LMSify - E-Learning Platform (LMS)
+<img width="1851" height="887" alt="image" src="https://github.com/user-attachments/assets/f85bcc7a-84bd-4f35-999a-031fc3d0ed46" /># 🎓 LMSify - E-Learning Platform (LMS)
 
 A production-ready, secure, and modern private e-learning academy platform built with **ASP.NET Core 8.0 MVC (C#)**. It is designed for independent educators and academies to host, showcase, and sell their courses in a unified portal without third-party portal dependencies.
 
@@ -85,9 +85,25 @@ The platform integrates standard learning management features directly with a **
 ### 1. Interactive Course Player (Student Workspace)
 *The unified split-pane student course player that streams lectures, reads articles, and displays assignments without refreshing pages.*
 ![Student Course Player](screenshots/student_course_player.png)
+![Student Course Player](screenshots/21.png)
+![Student Course Player](screenshots/22.png)
+![Student Course Player](screenshots/23.png)
+![Student Course Player](screenshots/24.png)
+![Student Course Player](screenshots/25.png)
 ### 2. Curriculum Builder (Instructor Workspace)
 *The step-by-step course builder allowing instructors to add modules, contents, videos, articles, and assignments easily.*
 ![Course Syllabus Builder](screenshots/instructor_courses.png)
+![Student Course Player](screenshots/5.png)
+![Student Course Player](screenshots/6.png)
+![Student Course Player](screenshots/7.png)
+![Student Course Player](screenshots/8.png)
+![Student Course Player](screenshots/9.png)
+![Student Course Player](screenshots/10.png)
+![Student Course Player](screenshots/11.png)
+![Student Course Player](screenshots/12.png)
+![Student Course Player](screenshots/13.png)
+![Student Course Player](screenshots/14.png)
+![Student Course Player](screenshots/15.png)
 ### 3. Staff Delegation & Access Control
 *A management center displaying completion analytics, total revenue tracking, and student enrollments.*
 ![Instructor Dashboard](screenshots/instructor_dashboard.png)
@@ -97,7 +113,9 @@ The platform integrates standard learning management features directly with a **
 ### 5. Public Portal & Discovery
 *A beautifully formatted, responsive public landing page highlighting featured courses, platform details, and newsletter subscriptions.*
 ![Lmsify Public Landing Page](screenshots/landing_page.png)
-
+![Lmsify Public Landing Page](screenshots/2.png)
+![Lmsify Public Landing Page](screenshots/3.png)
+![Lmsify Public Landing Page](screenshots/4.png)
 ---
 
 ## 🏗️ Architecture & File Directory Explanation
