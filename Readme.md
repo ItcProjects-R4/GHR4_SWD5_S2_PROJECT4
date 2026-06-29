@@ -79,62 +79,58 @@ The platform integrates standard learning management features directly with a **
     ```
 
 ---
-## 📸 Screenshots & Features
-
+## 📸 Screenshots & MVC Project Features
+ 
 ### 1. Interactive Course Player (Student Workspace)
-
+ 
 *The unified split-pane student course player that streams lectures, reads articles, and displays assignments without refreshing pages.*
-
+ 
 | | | |
 |---|---|---|
-| ![](screenshots/21.png) | ![](screenshots/22.png) | ![](screenshots/23.png) |
-| ![](screenshots/24.png) | ![](screenshots/25.png) | |
-
+| ![Student Dashboard](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/student_dashboard.png?raw=true) | ![Student Course Player](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/student_course_player.png?raw=true) | ![Student Settings](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/student_settings.png?raw=true) |
+ 
 ---
-
+ 
 ### 2. Curriculum Builder (Instructor Workspace)
-
+ 
 *The step-by-step course builder allowing instructors to add modules, videos, articles, quizzes, and assignments.*
-
+ 
 | | | |
 |---|---|---|
-| ![](screenshots/5.png) | ![](screenshots/6.png) | ![](screenshots/7.png) |
-| ![](screenshots/8.png) | ![](screenshots/9.png) | ![](screenshots/10.png) |
-| ![](screenshots/11.png) | ![](screenshots/12.png) | ![](screenshots/13.png) |
-| ![](screenshots/14.png) | ![](screenshots/15.png) | |
-
+| ![Instructor Dashboard](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_dashboard.png?raw=true) | ![Instructor Courses List](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_courses_list.png?raw=true) | ![Curriculum Builder](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_courses.png?raw=true) |
+| ![Create Course Step 1](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/create_course_step1.png?raw=true) | | |
+ 
 ---
-
+ 
 ### 3. Staff Delegation & Access Control
-
+ 
 *Manage instructors, teaching assistants, and permissions through a centralized access-control system.*
-
+ 
 | | | |
 |---|---|---|
-| ![](screenshots/16.png) | ![](screenshots/17.png) | ![](screenshots/18.png) |
-
+| ![Instructor Users Management](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_users_management.png?raw=true) | ![Instructor Enrollments](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_enrollments.png?raw=true) | ![Assistant Dashboard](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/assistant_dashboard.png?raw=true) |
+| ![Assistant Submissions](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/assistant_submissions.png?raw=true) | ![Grade Submission Workspace](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/grade_submission.png?raw=true) | |
+ 
 ---
-
+ 
 ### 4. Financial Ledger & Checkout Tracking
-
+ 
 *Track payments, purchases, enrollment transactions, and checkout activity in a single financial dashboard.*
-
+ 
 | | | |
 |---|---|---|
-| ![](screenshots/19.png) | ![](screenshots/20.png) | |
-
+| ![Financial Reports Ledger](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_payments.png?raw=true) | | |
+ 
 ---
-
+ 
 ### 5. Public Portal & Discovery
-
+ 
 *A responsive public-facing website showcasing courses, platform features, instructor information, and enrollment options.*
-
+ 
 | | | |
 |---|---|---|
-| ![](screenshots/1.png) | ![](screenshots/2.png) | ![](screenshots/3.png) |
-| ![](screenshots/4.png) | | |
-
----
+| ![LMSify Public Landing Page](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/landing_page.png?raw=true) | ![Course Detail Preview](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/course_detail.png?raw=true) | ![Contact Page](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/contact_page.png?raw=true) |
+| ![Login Page](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/login_page.png?raw=true) | ![Register Page](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/register_page.png?raw=true) | |
 
 ---
 
