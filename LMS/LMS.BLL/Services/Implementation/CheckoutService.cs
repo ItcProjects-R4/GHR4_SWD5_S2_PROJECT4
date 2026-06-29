@@ -41,7 +41,7 @@ namespace LMS.BLL.Services.Implementation
                 var course = await _courseRepository.GetCourseByIdAsync(courseId);
                 if (course == null) return new CheckoutResponseViewModel { Success = false, ErrorMessage = "Course not found." };
 
-                var response = new CheckoutResponseViewModel { Success = true, CourseTitle = course.Title };
+                var response = new CheckoutResponseViewModel { Success = true, CourseTitle = course.Title, CourseId = course.Id };
 
                 if (course.Price == 0)
                 {

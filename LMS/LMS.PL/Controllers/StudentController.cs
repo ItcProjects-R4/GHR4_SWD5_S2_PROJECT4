@@ -45,9 +45,12 @@ namespace LMS.PL.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> BrowseCourses()
+        public async Task<IActionResult> BrowseCourses(string search)
         {
-            var browseCourses = await studentService.GetBrowseCoursesAsync();
+            var browseCourses = await studentService.GetBrowseCoursesAsync(search);
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return PartialView("_BrowseCourseList", browseCourses);
 
             return View(browseCourses);
         }

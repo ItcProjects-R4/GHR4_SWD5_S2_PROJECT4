@@ -117,10 +117,10 @@ namespace LMS.DAL.Data
             var instructor = new ApplicationUser
             {
                 Id = "instructor-1",
-                UserName = "instructor@test.com",
-                Email = "instructor@test.com",
-                FirstName = "John",
-                LastName = "Doe",
+                UserName = "kk@gmail.com",
+                Email = "kk@gmail.com",
+                FirstName = "Karima",
+                LastName = "Karim",
                 EmailConfirmed = true
             };
 
@@ -128,7 +128,7 @@ namespace LMS.DAL.Data
                                     ?? await userManager.FindByEmailAsync(instructor.Email);
             if (existingInstructor == null)
             {
-                var result = await userManager.CreateAsync(instructor, "Password123!");
+                var result = await userManager.CreateAsync(instructor, "1234Aa##");
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(instructor, "Instructor");
