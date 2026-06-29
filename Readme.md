@@ -5,7 +5,7 @@ A production-ready, secure, and modern private e-learning academy platform built
 ---
 
 ## 📖 Project Concept
-**Lmsify** is a centralized academy platform for a single educational academy or solo instructor (rather than a multi-vendor marketplace like Udemy). 
+**LMSify** is a centralized academy platform for a single educational academy or solo instructor (rather than a multi-vendor marketplace like Udemy). 
 
 The platform integrates standard learning management features directly with a **unified course player workspace**. Instead of redirecting students between disjointed tabs, all lectures, articles, assessments, and progress metrics are loaded dynamically via AJAX, keeping the student fully engaged in a single workspace.
 
@@ -84,19 +84,19 @@ The platform integrates standard learning management features directly with a **
 
 ### 1. Interactive Course Player (Student Workspace)
 *The unified split-pane student course player that streams lectures, reads articles, and displays assignments without refreshing pages.*
-![Student Course Player](screenshots/student_course_player.png)
+![Student Course Player](LMS/screenshots/student_course_player.png)
 ### 2. Curriculum Builder (Instructor Workspace)
 *The step-by-step course builder allowing instructors to add modules, contents, videos, articles, and assignments easily.*
-![Course Syllabus Builder](screenshots/instructor_courses.png)
+![Course Syllabus Builder](LMS/screenshots/instructor_courses.png)
 ### 3. Staff Delegation & Access Control
 *A management center displaying completion analytics, total revenue tracking, and student enrollments.*
-![Instructor Dashboard](screenshots/instructor_dashboard.png)
+![Instructor Dashboard](LMS/screenshots/instructor_dashboard.png)
 ### 4. Financial Ledger & Checkout Tracking
 *A complete transaction ledger detailing successful and pending student checkouts, amounts, and item titles.*
-![Financial Reports Ledger](screenshots/instructor_payments.png)
+![Financial Reports Ledger](LMS/screenshots/instructor_payments.png)
 ### 5. Public Portal & Discovery
 *A beautifully formatted, responsive public landing page highlighting featured courses, platform details, and newsletter subscriptions.*
-![Lmsify Public Landing Page](screenshots/landing_page.png)
+![LMSify Public Landing Page](LMS/screenshots/landing_page.png)
 
 ---
 
@@ -153,7 +153,7 @@ LMS/ (Solution Root)
 
 ## 🎥 Presentation & Explainer Video Links
 
-*   **Live Hosted Platform:** [Lmsify Live Portal](https://lms-platform.runasp.net)
+*   **Live Hosted Platform:** [LMSify Live Portal](https://lms-platform.runasp.net)
 *   **Walkthrough Explainer Video:** [Watch Explainer Video on YouTube]() 
 *   **Documentation:** [View Google Slides / PDF Presentation]()
 ```
