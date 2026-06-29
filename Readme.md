@@ -97,8 +97,9 @@ The platform integrates standard learning management features directly with a **
  
 | | | |
 |---|---|---|
-| ![Instructor Dashboard](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_dashboard.png?raw=true) | ![Instructor Courses List](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_courses_list.png?raw=true) | ![Curriculum Builder](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_courses.png?raw=true) |
-| ![Create Course Step 1](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/create_course_step1.png?raw=true) | | |
+| ![Instructor Dashboard](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_dashboard.png?raw=true) | ![Instructor Courses List](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_courses_list.png?raw=true) | ![Create Course Step 1](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/create_course_step1.png?raw=true) |
+| ![Curriculum Builder Step 2](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/d12ecdceb2cb5499684d4d617b5d6347cc441054/LMS/screenshots/curriculum-builder.png?raw=true) | ![Content Type Selector](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/d12ecdceb2cb5499684d4d617b5d6347cc441054/LMS/screenshots/content-type.png?raw=true) | ![Rich Text Article Editor](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/d12ecdceb2cb5499684d4d617b5d6347cc441054/LMS/screenshots/rich-text-editor.png?raw=true) |
+| ![Instructor Courses](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_courses.png?raw=true) | | |
  
 ---
  
@@ -119,7 +120,7 @@ The platform integrates standard learning management features directly with a **
  
 | | | |
 |---|---|---|
-| ![Financial Reports Ledger](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_payments.png?raw=true) | | |
+| ![Financial Reports Ledger](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/instructor_payments.png?raw=true) | ![Payment Success](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/d12ecdceb2cb5499684d4d617b5d6347cc441054/LMS/screenshots/payment-success.png?raw=true) | |
  
 ---
  
@@ -129,8 +130,10 @@ The platform integrates standard learning management features directly with a **
  
 | | | |
 |---|---|---|
-| ![LMSify Public Landing Page](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/landing_page.png?raw=true) | ![Course Detail Preview](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/course_detail.png?raw=true) | ![Contact Page](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/contact_page.png?raw=true) |
-| ![Login Page](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/login_page.png?raw=true) | ![Register Page](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/register_page.png?raw=true) | |
+| ![LMSify Public Landing Page](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/landing_page.png?raw=true) | ![Course Detail & Enroll](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/d12ecdceb2cb5499684d4d617b5d6347cc441054/LMS/screenshots/enroll-now.png?raw=true) | ![Course Preview](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/course_detail.png?raw=true) |
+| ![Contact Page](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/contact_page.png?raw=true) | ![Login Page](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/login_page.png?raw=true) | ![Register Page](https://github.com/ItcProjects-R4/GHR4_SWD5_S2_PROJECT4/blob/cdceb29e3cd5fe56b6a7bda3d38075e6f7261e9c/LMS/screenshots/register_page.png?raw=true) |
+
+---
 
 ---
 
@@ -191,5 +194,5 @@ LMS/ (Solution Root)
 *   **Walkthrough Explainer Video 01:** [Watch Explainer Video](https://app.guidde.com/share/playbooks/9Jg4w17reFf5df9czYGdFB?origin=k8vyYVqxYSeFzgAdtHwB5rOs2ZE3&mode=videoAndDoc)
 *  **Walkthrough Explainer Video 02:** [Watch Explainer Video](https://app.guidde.com/share/playbooks/1eu71QKw9f42nCf9SwuzUq?origin=k8vyYVqxYSeFzgAdtHwB5rOs2ZE3&mode=videoAndDoc) 
 *   **Documentation:** [PDF Documentation](https://drive.google.com/file/d/1MgNDMWDg9t0cAjVGRjy4TKycadIVjDg8/view?usp=sharing)
-*   **Presentation:** [PDF Presentation]([https://canva.link/fva8enlz424wr20](https://drive.google.com/file/d/1oNnYs2Q-GgENVQlFWWRVKkvDU0Qny7h_/view?usp=sharing))
+*   **Presentation:** [PDF Presentation](https://drive.google.com/file/d/1oNnYs2Q-GgENVQlFWWRVKkvDU0Qny7h_/view?usp=sharing)
 ```
